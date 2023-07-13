@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: 'PressStart';
+	src: url('/fonts/Press_Start_2P/PressStart2P-Regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('/fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf') format('truetype');
+}
+
+html {
+	font-family: Roboto, sans-serif;
+	font-size: 16px;
+}
+
+.press-start {
+	font-family: PressStart, sans-serif;
+}
+
+::selection {
+	/* TODO */
+}
