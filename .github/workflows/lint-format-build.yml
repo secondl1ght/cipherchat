@@ -1,0 +1,19 @@
+name: Lint, build CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install modules
+        run: yarn
+
+      - name: run lint
+        run: yarn lint
+
+      - name: build app
+        run: yarn build
