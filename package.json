@@ -1,5 +1,9 @@
 {
-	"name": "my-app",
+	"name": "cypherchat",
+	"description": "Encrypted messaging over the bitcoin lightning network.",
+	"repository": "https://github.com/secondl1ght/cypherchat",
+	"author": "secondl1ght <secondl1ght@protonmail.com>",
+	"license": "AGPL-3.0",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -23,6 +27,7 @@
 		"postcss": "^8.4.25",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
+		"prettier-plugin-tailwindcss": "^0.4.0",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
 		"tailwindcss": "^3.3.2",
