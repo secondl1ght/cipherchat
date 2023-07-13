@@ -1,7 +1,7 @@
 {
-	"name": "cypherchat",
+	"name": "cipherchat",
 	"description": "Encrypted messaging over the bitcoin lightning network.",
-	"repository": "https://github.com/secondl1ght/cypherchat",
+	"repository": "https://github.com/secondl1ght/cipherchat",
 	"author": "secondl1ght <secondl1ght@protonmail.com>",
 	"license": "AGPL-3.0",
 	"version": "0.0.1",
