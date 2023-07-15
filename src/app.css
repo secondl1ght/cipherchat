@@ -15,6 +15,7 @@
 html {
 	font-family: Roboto, sans-serif;
 	font-size: 16px;
+	color: #6e7493;
 }
 
 .press-start {
@@ -22,5 +23,6 @@ html {
 }
 
 ::selection {
-	/* TODO */
+	background-color: #5a7fff;
+	color: #d9e7fa;
 }
