@@ -68,7 +68,7 @@
 				class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
 			>
 				Pairing Phrase <InfoTooltip
-					text="To use Cipherchat you need a lightning node that is compatible with Lightning Node Connect (LNC). Currently this is only LND nodes."
+					text="To use Cipherchat you need a lightning node that is compatible with Lightning Node Connect (LNC). Currently this is only LND nodes and you can pair using Lightning Terminal."
 				/>
 			</label>
 			<input
@@ -136,7 +136,7 @@
 					class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
 				>
 					Mailbox <InfoTooltip
-						text="You can point Cipherchat to your own LNC mailbox or use a provider. Mailbox servers cannot see any private information about your node or messages."
+						text="You can point Cipherchat to your own LNC mailbox or use a provider. Mailbox servers cannot see any private information about your node or messages. NOTE: This also requires config on your Lightning Terminal."
 					/>
 				</label>
 
