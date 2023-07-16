@@ -20,6 +20,7 @@
 		"@sveltejs/kit": "^1.20.4",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"@zerodevx/svelte-toast": "^0.9.5",
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
@@ -38,6 +39,6 @@
 	"type": "module",
 	"dependencies": {
 		"@lightninglabs/lnc-web": "^0.2.5-alpha",
-		"@zerodevx/svelte-toast": "^0.9.5"
+		"tippy.js": "^6.3.7"
 	}
 }
