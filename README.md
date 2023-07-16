@@ -1,6 +1,6 @@
 # Cipherchat
 
-Encrypted messaging over the bitcoin lightning network.
+**Encrypted messaging over the bitcoin lightning network.**
 
 ## Tech Stack
 
