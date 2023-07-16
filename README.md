@@ -47,9 +47,11 @@ You can however use any type of server you'd like to deploy Cipherchat ranging f
 
 I plan on releasing Cipherchat on these plug-and-play node app stores:
 
-[] myNode
-[] Start9 Embassy
-[] Umbrel
+[ ] myNode
+
+[ ] Start9 Embassy
+
+[ ] Umbrel
 
 If there are other app stores you would like to see Cipherchat, please let me know!
 
