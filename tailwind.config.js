@@ -26,7 +26,7 @@ export default {
 				borderOut: '#151824',
 				borderIn: '#0C0E16',
 				boxTop: '#2A2F48',
-				boxBottom: '#B31D2134',
+				boxBottom: '#1D2134',
 				boxFill: '#23273C'
 			}
 		}
