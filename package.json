@@ -37,6 +37,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@lightninglabs/lnc-web": "^0.2.5-alpha"
+		"@lightninglabs/lnc-web": "^0.2.5-alpha",
+		"@zerodevx/svelte-toast": "^0.9.5"
 	}
 }
