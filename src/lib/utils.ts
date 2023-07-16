@@ -12,6 +12,18 @@ export const successToast = (m: string) => {
 	});
 };
 
+export const warningToast = (m: string) => {
+	toast.pop();
+
+	toast.push(m, {
+		theme: {
+			'--toastColor': '#D9E7FA',
+			'--toastBackground': '#23273C',
+			'--toastBarBackground': '#F57F17'
+		}
+	});
+};
+
 export const errorToast = (m: string) => {
 	toast.pop();
 
@@ -19,7 +31,7 @@ export const errorToast = (m: string) => {
 		theme: {
 			'--toastColor': '#D9E7FA',
 			'--toastBackground': '#23273C',
-			'--toastBarBackground': '#B00020'
+			'--toastBarBackground': '#B71C1C'
 		}
 	});
 };
