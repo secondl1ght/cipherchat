@@ -71,7 +71,7 @@
 				bind:value={password}
 				on:keydown={handleEnter}
 				placeholder="Enter to unlock"
-				class="mb-10 mt-2 block h-16 w-full border-2 border-b-boxBottom border-l-boxTop border-r-boxBottom border-t-boxTop bg-boxFill px-2 text-xs text-header placeholder:text-xs md:h-24 md:text-base md:placeholder:text-base"
+				class="mb-10 mt-2 block h-16 w-full border-2 border-b-boxBottom border-l-boxTop border-r-boxBottom border-t-boxTop bg-boxFill px-2 text-xs text-header placeholder:text-xs md:text-base md:placeholder:text-base"
 			/>
 		{:else}
 			<input
@@ -82,7 +82,7 @@
 				bind:value={password}
 				on:keydown={handleEnter}
 				placeholder="Enter to unlock"
-				class="mb-10 mt-2 block h-16 w-full border-2 border-b-boxBottom border-l-boxTop border-r-boxBottom border-t-boxTop bg-boxFill px-2 text-xs text-header placeholder:text-xs md:h-24 md:text-base md:placeholder:text-base"
+				class="mb-10 mt-2 block h-16 w-full border-2 border-b-boxBottom border-l-boxTop border-r-boxBottom border-t-boxTop bg-boxFill px-2 text-xs text-header placeholder:text-xs md:text-base md:placeholder:text-base"
 			/>
 		{/if}
 
@@ -92,7 +92,6 @@
 			disabled={loading || !password}
 			{loading}
 			loadingText="Logging in..."
-			style="!w-full"
 		/>
 
 		<div class="flex justify-center">
