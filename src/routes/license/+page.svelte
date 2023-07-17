@@ -11,7 +11,7 @@
 
 <PublicLayout heroText="LICENSE">
 	<div class="space-y-8">
-		<h1 class="press-start text-center leading-10 text-header md:text-xl">
+		<h1 class="press-start text-center leading-8 text-header md:text-xl md:leading-10">
 			Cipherchat - Encrypted messaging over the bitcoin lightning network.
 		</h1>
 
@@ -27,7 +27,7 @@
 			/>
 		</h3>
 
-		<h4 class="text-justify">
+		<h4>
 			<span class="inline-block w-full text-center">GNU Affero General Public License v3.0</span>
 
 			<br /><br />

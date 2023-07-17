@@ -135,7 +135,7 @@
 				class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
 			>
 				Mailbox <InfoTooltip
-					text="You can point Cipherchat to your own LNC mailbox or use a provider. Mailbox servers cannot see any private information about your node or messages. NOTE: This also requires config on your Lightning Terminal."
+					text="You can point Cipherchat to your own LNC mailbox or use a provider. Mailbox servers cannot see any private information about your node or messages."
 				/>
 			</label>
 

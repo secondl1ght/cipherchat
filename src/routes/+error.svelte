@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { PublicLayout, Button, Icon, Footer } from 'comp';
+	import { PublicLayout, Button, Icon } from 'comp';
 
 	let loading = false;
 </script>
