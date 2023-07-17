@@ -16,16 +16,27 @@
 				{$page.status}: {$page.error?.message || 'Error'}
 			</h2>
 
-			<Button
-				click={() => {
-					loading = true;
-					location.reload();
-				}}
-				title="Refresh"
-				disabled={loading}
-				{loading}
-				loadingText="Refreshing..."
-			/>
+			{#if $page.status === 404}
+				<a href="/">
+					<Button
+						click={() => {
+							return;
+						}}
+						title="Home"
+					/>
+				</a>
+			{:else}
+				<Button
+					click={() => {
+						loading = true;
+						location.reload();
+					}}
+					title="Refresh"
+					disabled={loading}
+					{loading}
+					loadingText="Refreshing..."
+				/>
+			{/if}
 
 			<div class="mt-8 flex justify-center lg:mt-16">
 				<a
