@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Link } from 'comp';
+	import { page } from '$app/stores';
 	import { PUBLIC_COMMIT } from '$env/static/public';
 </script>
 
@@ -11,9 +12,21 @@
 	/>
 
 	<nav class="flex flex-wrap justify-center gap-8 md:gap-24">
-		<Link href="/privacy" title="Privacy" style="text-lg md:text-xl lg:text-2xl" />
-		<Link href="/license" title="License" style="text-lg md:text-xl lg:text-2xl" />
-		<Link href="/donate" title="Donate" style="text-lg md:text-xl lg:text-2xl" />
+		<Link
+			href="/privacy"
+			title="Privacy"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/privacy' ? 'text-button' : ''}"
+		/>
+		<Link
+			href="/license"
+			title="License"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/license' ? 'text-button' : ''}"
+		/>
+		<Link
+			href="/donate"
+			title="Donate"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/donate' ? 'text-button' : ''}"
+		/>
 	</nav>
 
 	<p class="text-center text-xs md:text-sm">

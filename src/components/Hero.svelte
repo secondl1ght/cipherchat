@@ -1,3 +1,7 @@
+<script lang="ts">
+	export let heroText: string;
+</script>
+
 <section class="relative">
 	<img
 		src="/images/bricks/0.svg"
@@ -6,7 +10,7 @@
 	/>
 
 	<img src="/images/logo.png" alt="logo" class="mx-auto" />
-	<h1 class="mt-8 text-center text-xl md:text-2xl lg:text-3xl">CIPHERCHAT</h1>
+	<h1 class="mt-8 text-center text-xl uppercase md:text-2xl lg:text-3xl">{heroText}</h1>
 
 	<img
 		src="/images/bricks/1.svg"

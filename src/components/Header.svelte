@@ -1,9 +1,19 @@
 <script lang="ts">
 	import { Link } from 'comp';
+	import { page } from '$app/stores';
 </script>
 
-<header class="py-8">
-	<nav class="text-center">
-		<Link href="/faq" title="FAQ" style="text-lg md:text-xl lg:text-2xl" />
+<header class="px-2 py-8">
+	<nav class="flex flex-wrap justify-center gap-8 md:gap-24">
+		<Link
+			href="/"
+			title="Home"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/' ? 'text-button' : ''}"
+		/>
+		<Link
+			href="/faq"
+			title="FAQ"
+			style="text-lg md:text-xl lg:text-2xl  {$page.route.id === '/faq' ? 'text-button' : ''}"
+		/>
 	</nav>
 </header>
