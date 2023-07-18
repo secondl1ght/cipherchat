@@ -25,7 +25,11 @@
 			<p>
 				All messages that are sent and received are fully end-to-end encrypted at every step in the
 				communication process. For more detailed information about how this works under the hood
-				please check out the <Link href="/faq" title="FAQ" />.
+				please check out the <Link
+					external
+					href="https://docs.lightning.engineering/lightning-network-tools/lightning-terminal/lightning-node-connect"
+					title="LNC documentation"
+				/>.
 			</p>
 
 			<div class="my-8 flex flex-wrap justify-around gap-8">
@@ -67,9 +71,11 @@
 			<p class="my-4">
 				There are two trusted third parties involved when using a public instance of Cipherchat. The
 				server running the application and the Lightning Node Connect (LNC) - Mailbox relay proxy
-				server. Both of these can be eliminated by self-hosting the software. This is possible
-				because the entire tech stack is <strong>free and open-souce</strong>. To run a fully
-				sovereign instance of Cipherchat you will need to setup the following:
+				server. <Link external href="https://lightning.engineering/" title="Lightning Labs" /> runs the
+				most popular Mailbox, but Cipherchat has also setup it's own. All trusted third parties can be
+				eliminated by self-hosting the software. This is possible because the entire tech stack is
+				<strong>free and open-souce</strong>. To run a fully sovereign instance of Cipherchat you
+				will need to setup the following:
 			</p>
 
 			<ol class="list-inside list-decimal space-y-8">
@@ -111,15 +117,7 @@
 				</li>
 			</ol>
 
-			<p class="my-4">
-				* Steps 1 & 2 can be done easily by using a plug-and-play lightning node.
-				<br />
-				* More information about LNC can be found <Link
-					external
-					href="https://docs.lightning.engineering/lightning-network-tools/lightning-terminal/lightning-node-connect"
-					title="here"
-				/>.
-			</p>
+			<p class="my-4">* Steps 1 & 2 can be done easily by using a plug-and-play lightning node.</p>
 
 			<p class="my-4">
 				If you have any questions or need help setting up any of the above please reach out.
