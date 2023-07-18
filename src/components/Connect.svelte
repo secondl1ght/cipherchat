@@ -4,6 +4,7 @@
 	import { tick } from 'svelte';
 	import { Button, InfoTooltip, Icon } from 'comp';
 	import { errorToast, successToast } from '$lib/utils';
+	import { blur } from 'svelte/transition';
 
 	let start = false;
 	let loading = false;
@@ -61,7 +62,7 @@
 
 	<Button click={() => (start = true)} title="Get started" />
 {:else}
-	<form on:submit={(e) => e.preventDefault()}>
+	<form transition:blur={{ amount: 10 }} on:submit={(e) => e.preventDefault()}>
 		<label
 			for="pairing"
 			class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
@@ -135,7 +136,7 @@
 				class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
 			>
 				Mailbox <InfoTooltip
-					text="You can point Cipherchat to your own LNC mailbox or use a provider. Mailbox servers cannot see any private information about your node or messages."
+					text="You can point Cipherchat to your own LNC mailbox or use a provider. Mailbox servers cannot see any private information about your node or messages. NOTE: This requires additional config on your Lightning Terminal."
 				/>
 			</label>
 
