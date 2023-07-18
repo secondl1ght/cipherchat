@@ -21,7 +21,7 @@
 		</h1>
 
 		<h2 class="text-center font-bold text-header md:text-xl">
-			Thank you for considering to donate.
+			Thank you for considering a donation.
 		</h2>
 
 		<div class="items-center justify-center space-x-3 md:flex">
