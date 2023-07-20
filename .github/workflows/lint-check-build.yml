@@ -1,4 +1,4 @@
-name: Lint, build CI
+name: Lint, check, build CI
 
 on: [push, pull_request]
 
@@ -14,6 +14,9 @@ jobs:
 
       - name: run lint
         run: yarn lint
+
+      - name: run check
+        run: yarn check
 
       - name: build app
         run: yarn build
