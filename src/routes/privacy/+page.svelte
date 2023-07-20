@@ -119,7 +119,7 @@
 				</li>
 			</ol>
 
-			<p class="my-4">* Steps 1 & 2 can be done easily by using a plug-and-play lightning node.</p>
+			<p class="my-4">* See the <Link href="/faq" title="FAQ" /> for more information.</p>
 
 			<p class="my-4">
 				If you have any questions or need help setting up any of the above please reach out.
