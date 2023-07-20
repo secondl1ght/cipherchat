@@ -131,7 +131,7 @@
 					title="amboss.space"
 				/> or <Link external href="https://mempool.space" title="mempool.space" /> to discover node identities.
 			</FaqItem>
-			<FaqItem question="What's the best way to use Cipherchat?">
+			<FaqItem question="What's the best way to use my node with Cipherchat?">
 				For best performance, reliability, and to save on network fees it is recommended to open a
 				channel directly with the peer you are chatting with. Each message will cost <strong
 					>1 sat</strong
