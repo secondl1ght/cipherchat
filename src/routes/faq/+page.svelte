@@ -1,0 +1,220 @@
+<script lang="ts">
+	import { PublicLayout, FaqItem, Link } from 'comp';
+	import { links } from '$lib/links';
+</script>
+
+<svelte:head>
+	<title>Cipherchat - FAQ</title>
+	<meta property="twitter:title" content="Cipherchat - FAQ" />
+</svelte:head>
+
+<PublicLayout heroText="FAQ">
+	<div class="space-y-8">
+		<h1 class="press-start text-center leading-8 text-header md:text-xl md:leading-10">
+			Learn about Cipherchat. 👨‍💻👩‍💻
+		</h1>
+
+		<h2 class="text-center font-bold text-header md:text-xl">
+			Get started using private and secure messaging on the worlds most powerful decentralized
+			network.
+		</h2>
+
+		<ul class="space-y-4">
+			<FaqItem question="What is Cipherchat?">
+				Cipherchat is a private messaging web application powered by bitcoin's lightning network and
+				can be self-hosted.
+			</FaqItem>
+			<FaqItem question="How does it work?">
+				Users connect their lightning node to Cipherchat by using <Link
+					external
+					href="https://lightning.engineering/posts/2021-11-30-lightning-node-connect-deep-dive/"
+					title="Lightning Node Connect"
+				/> (LNC) and entering a pairing phrase obtained through <Link
+					external
+					href="https://docs.lightning.engineering/lightning-network-tools/lightning-terminal"
+					title="Lightning Terminal"
+				/>. This creates an end-to-end encrypted connection between your node running anywhere in
+				the world and the web app. It works by having a <Link
+					external
+					href="https://docs.lightning.engineering/lightning-network-tools/aperture/mailbox"
+					title="LNC Mailbox"
+				/> relay proxy server facilitate the communication. The entire tech stack is
+				<strong>open-source</strong>. Once connected, users use keysend payments attached with
+				messages to communicate with eachother.
+			</FaqItem>
+			<FaqItem question="Is it private?">
+				Yes. All messages that are sent and received can only be read by the sender and the
+				recipient and cannot be intercepted by anyone along the route. Please read the <Link
+					href="/privacy"
+					title="Privacy"
+				/>
+				page for more detailed information.
+			</FaqItem>
+			<FaqItem question="Is it secure?">
+				The protocols used are secure. When establishing your initial connection you will be asked
+				to create a password. This will be used to secure the data stored locally on your device
+				with encryption. Use a strong password for this purpose.
+			</FaqItem>
+			<FaqItem question="How do I get a lightning node?">
+				The easiest way to get started running your own lightning node is to use one of the many
+				great plug-and-play solutions. For example: <Link
+					external
+					href="https://mynodebtc.com/"
+					title="myNode"
+				/>, <Link external href="https://start9.com/" title="Start9 Embassy" />, or <Link
+					external
+					href="https://umbrel.com/"
+					title="Umbrel"
+				/>. These come with app stores that you can install the other required software - Lightning
+				Terminal. There are also options to host a node in the <em>'Cloud'</em> if you would prefer not
+				to deal with hardware.
+			</FaqItem>
+			<FaqItem question="How do I connect my node to the app?">
+				<!-- svelte-ignore a11y-media-has-caption -->
+				<video
+					controls
+					controlslist="nodownload noplaybackrate"
+					disablepictureinpicture
+					src="/videos/lnc-tutorial.webm"
+					class="mb-4"
+				/>
+				<ol class="mb-4 list-inside list-decimal space-y-8">
+					<li>
+						Open the <strong>Lightning Terminal</strong> app that is connected to your lightning
+						node. Navigate to the
+						<strong>Lightning Node Connect</strong> tab in the menu.
+					</li>
+					<li>
+						Next you <strong>create a new session</strong>. You can use the <strong>Admin</strong>
+						permissions or choose <strong>Custom</strong>
+						options. At minimum Cipherchat needs access to <strong>Send</strong> and
+						<strong>Receive</strong>
+						payments. You can select the preset <strong>Payments Manager</strong> option for this.
+					</li>
+					<li>
+						If you would like to use Cipherchat's LNC Mailbox instead of the default Lightning Labs
+						option you will need to click <strong>Advanced Options</strong> and enter
+						<strong>cipherchatmailbox.net:443</strong>.
+					</li>
+					<li>
+						Finally you can choose an <strong>expiry</strong> for this pairing phrase if you would like.
+					</li>
+					<li>
+						Your pairing phrase will be generated and <strong>copied to the clipboard</strong>. You
+						can now paste this information into Cipherchat. You do <strong>not</strong> need to store
+						this phrase anywhere.
+					</li>
+				</ol>
+				<p>
+					* <strong>IMPORTANT</strong>: This pairing phrase is sensitive information that could give
+					others access to your node. It will expire if not used within 10 minutes. You can revoke
+					these sessions at any time. Only one concurrent connection can be established for each
+					pairing phrase. Treat this with the same care as other private node information such as a
+					macaroon or seed phrase. Always make sure you are at the correct URL of the Cipherchat app
+					which is <strong>https://cipherchat.app</strong> and nothing else. Install the app or bookmark
+					the page to be sure.
+				</p>
+			</FaqItem>
+			<FaqItem question="How can I install the web app?">
+				On your mobile phone or any other device simply click <strong>Install</strong> if you are
+				prompted by your browser. You can also go into your browser menu and click
+				<strong>Install</strong>. This will add Cipherchat to your home screen and give you access
+				to features like badge notifications just like a native app.
+			</FaqItem>
+			<FaqItem question="How do I start a conversation?">
+				The only information needed to start a conversation is another node's pubkey.
+			</FaqItem>
+			<FaqItem question="How can I discover public nodes to chat with?">
+				You can use a lightning network explorer like <Link
+					external
+					href="https://amboss.space"
+					title="amboss.space"
+				/> or <Link external href="https://mempool.space" title="mempool.space" /> to discover node identities.
+			</FaqItem>
+			<FaqItem question="What's the best way to use Cipherchat?">
+				For best performance, reliability, and to save on network fees it is recommended to open a
+				channel directly with the peer you are chatting with. Each message will cost <strong
+					>1 sat</strong
+				>
+				(or 1 msat in the future), so you can think of this as your 'message quota'. If you and a peer
+				are messaging back and forth it won't actually cost you anything because the sats will be flowing
+				in each direction. The only fees you would pay are the on-chain fees to open and close the channel.
+				<br /><br />
+				You can make an informed decision based on the type of conversation you plan on having whether
+				it makes sense to open a channel. For example, if you only plan on sending one or a few messages
+				then it wouldn't be necessary. You would be better off paying a few sats or zero sats (many nodes
+				will route 1 sat payments for free) in routing fees. Alternatively, if you want to have a long
+				conversation with a family member, friend, co-worker, or anyone then it would make sense to open
+				a direct channel. This will guarantee your message speed and success. A single communication
+				channel between two peers could remain open for years with no maintenance or rebalancing needed.
+				And if the peer is trusted, you can push half the balance to the remote side to avoid needing
+				a channel on each side or having to perform a loop to balance liquidiity.
+				<br /><br />
+				Finally, it may make sense if you are opening a communication channel to either make it private
+				or set a high routing fee to avoid having it be used by other nodes on the network and affecting
+				your liquidity.
+			</FaqItem>
+			<FaqItem question="Why do messages fail?">
+				Just like any lightning transaction a route must be found from your node to the destination
+				in order for the payment (message) to be successful. This requires being well connected to
+				the network.
+			</FaqItem>
+			<FaqItem question="How can I self-host Cipherchat?">
+				Check out the <Link
+					external
+					href="https://github.com/secondl1ght/cipherchat#self-hosting"
+					title="README"
+				/> on the Cipherchat GitHub repository for instructions.
+			</FaqItem>
+			<FaqItem question="Can I install Cipherchat easily on myNode, Embassy, Umbrel etc.?">
+				I plan to release a version of Cipherchat for these plug-and-play app stores that does not
+				depend on LNC because you can connect directly to your node on these platforms.
+			</FaqItem>
+			<FaqItem question="How can I run my own LNC Mailbox?">
+				Instructions on running your own relay proxy server can be found in the <Link
+					external
+					href="https://docs.lightning.engineering/lightning-network-tools/aperture/get-aperture"
+					title="Builder's Guide"
+				/>. If you are looking for a hosted solution you can check out <Link
+					external
+					href="https://render.com/"
+					title="Render"
+				/>. There are many good options available that make the process of deploying a server fairly
+				straight-forward.
+			</FaqItem>
+			<FaqItem question="Can I use Cipherchat with Core Lightning?">
+				Currently no. LNC is only implemented by LND at the moment.
+			</FaqItem>
+			<FaqItem question="Who operates the public instance?">
+				The <strong>cipherchat.app</strong> web app and <strong>cipherchatmailbox.net</strong> LNC
+				Mailbox are run by <Link external href="https://secondl1ght.site" title="secondl1ght" />.
+			</FaqItem>
+			<FaqItem question="Who develops Cipherchat?">
+				Cipherchat is developed by <strong>secondlght</strong> in his spare time.
+			</FaqItem>
+			<FaqItem question="Where can I follow updates?">
+				Updates about the software and project will come from the <Link
+					external
+					href={links.twitter}
+					title="Twitter"
+				/> and <Link external href={links.nostr} title="Nostr" /> accounts. You can subscribe to receive
+				notifications on the <Link external href={links.github} title="GitHub" /> repo about activity
+				such as new releases.
+			</FaqItem>
+			<FaqItem question="Where can I learn more?">
+				I wrote a blog post for the launch of Cipherchat that you can read <Link
+					external
+					href="https://secondl1ght.site/blog/cipherchat"
+					title="here"
+				/>. I will also release some tutorial videos in the future.
+			</FaqItem>
+			<FaqItem question="I'm stuck, can I get support?">
+				If you are having issues getting started using Cipherchat or just want to find other users
+				to connect with you can join our public <Link external href={links.matrix} title="Matrix" />
+				room.
+			</FaqItem>
+		</ul>
+
+		<p class="text-header">Thanks for taking the time to learn about Cipherchat!</p>
+	</div>
+</PublicLayout>
