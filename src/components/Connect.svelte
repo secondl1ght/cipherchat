@@ -62,7 +62,7 @@
 
 	<Button click={() => (start = true)} title="Get started" />
 {:else}
-	<form transition:blur={{ amount: 10 }} on:submit={(e) => e.preventDefault()}>
+	<form transition:blur={{ amount: 10 }} on:submit|preventDefault>
 		<label
 			for="pairing"
 			class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"

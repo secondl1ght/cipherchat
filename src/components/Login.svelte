@@ -47,7 +47,7 @@
 	};
 </script>
 
-<form on:submit={(e) => e.preventDefault()}>
+<form on:submit|preventDefault>
 	<label
 		for="password"
 		class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
