@@ -39,6 +39,7 @@
 	"type": "module",
 	"dependencies": {
 		"@lightninglabs/lnc-web": "^0.2.5-alpha",
+		"dexie": "^4.0.1-alpha.25",
 		"tippy.js": "^6.3.7"
 	}
 }

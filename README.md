@@ -10,6 +10,7 @@ Cipherchat has minimal dependencies with the main packages being as follows:
 - typescript
 - tailwindcss
 - lnc-web
+- dexie.js
 
 A large part of the app is the LNC WASM binary which comes bundled with the application.
 
