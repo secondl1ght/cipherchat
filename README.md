@@ -70,6 +70,8 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
 | `34349340`   | Sender's Alias   | Variable       | An optional human-readable name for chatting.                                                     |
 | `34349345`   | Content Type     | Variable       | Can be one of: TEXT, IMAGE, PAYMENT.                                                              |
 
+---
+
                                     7JJJJJJJJJJJ    7JJJJJJJ^:::
                                     ?5YYYYYYYYYY.  .?YYYJJJJ^^^^
                                     ?YYYYYYYYYYY????????^^^^^^^:
