@@ -40,6 +40,7 @@ export interface Conversation {
 	avatar: string;
 	messages?: Message[];
 	read: boolean;
+	blocked: boolean;
 }
 
 export class MySubClassedDexie extends Dexie {
