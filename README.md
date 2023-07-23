@@ -60,6 +60,7 @@ Cipherchat uses established standards from the [TLV Record Registry](https://git
 to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send-messages-with-keysend) payments.
 
 **Cipherchat Keysend Custom Record Scheme**
+
 | Key | Value || Length (bytes) | Additional Info |
 | ------------- | ------------- || ------------- | ------------- |
 | 5482373484 | Keysend Preimage || 32 | Preimage for the invoice. |
