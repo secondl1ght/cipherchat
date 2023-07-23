@@ -61,14 +61,14 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
 
 **Cipherchat Keysend Custom Record Scheme**
 
-| Key        | Value            | Length (bytes) | Additional Info                                                                                   |
-| ---------- | ---------------- | -------------- | ------------------------------------------------------------------------------------------------- |
-| 5482373484 | Keysend Preimage | 32             | Preimage for the invoice.                                                                         |
-| 34349334   | Message Content  | Variable       | The chat text, image in Base64, or a random UUID if PAYMENT type.                                 |
-| 34349337   | Signature        | ~71            | The output from signing the message using the private key counterpart of the public key attached. |
-| 34349339   | Sender's Pubkey  | 33             | This identifies the node associated with the message.                                             |
-| 34349340   | Sender's Alias   | Variable       | An optional human-readable name for chatting.                                                     |
-| 34349345   | Content Type     | Variable       | Can be one of: TEXT, IMAGE, PAYMENT.                                                              |
+| Key          | Value            | Length (bytes) | Additional Info                                                                                   |
+| ------------ | ---------------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| `5482373484` | Keysend Preimage | 32             | Preimage for the invoice.                                                                         |
+| `34349334`   | Message Content  | Variable       | The chat text, image in Base64, or a random UUID if PAYMENT type.                                 |
+| `34349337`   | Signature        | ~71            | The output from signing the message using the private key counterpart of the public key attached. |
+| `34349339`   | Sender's Pubkey  | 33             | This identifies the node associated with the message.                                             |
+| `34349340`   | Sender's Alias   | Variable       | An optional human-readable name for chatting.                                                     |
+| `34349345`   | Content Type     | Variable       | Can be one of: TEXT, IMAGE, PAYMENT.                                                              |
 
                                     7JJJJJJJJJJJ    7JJJJJJJ^:::
                                     ?5YYYYYYYYYY.  .?YYYJJJJ^^^^
