@@ -59,15 +59,16 @@ If there are other app stores you would like to see Cipherchat, please let me kn
 Cipherchat uses established standards from the [TLV Record Registry](https://github.com/satoshisstream/satoshis.stream/blob/main/TLV_registry.md). Users of Cipherchat could have conversations with other lightning apps if they follow the convention below for attaching **dest_custom_records**
 to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send-messages-with-keysend) payments.
 
-| Cipherchat Keysend Custom Record Scheme |
-| Key | Value | Length (bytes) | Additional Info |
+**Cipherchat Keysend Custom Record Scheme**
+
+| Key        | Value            | Length (bytes) | Additional Info                                                                                   |
 | ---------- | ---------------- | -------------- | ------------------------------------------------------------------------------------------------- |
-| 5482373484 | Keysend Preimage | 32 | Preimage for the invoice. |
-| 34349334 | Message Content | Variable | The chat text, image in Base64, or a random UUID if PAYMENT type. |
-| 34349337 | Signature | ~71 | The output from signing the message using the private key counterpart of the public key attached. |
-| 34349339 | Sender's Pubkey | 33 | This identifies the node associated with the message. |
-| 34349340 | Sender's Alias | Variable | An optional human-readable name for chatting. |
-| 34349345 | Content Type | Variable | Can be one of: TEXT, IMAGE, PAYMENT. |
+| 5482373484 | Keysend Preimage | 32             | Preimage for the invoice.                                                                         |
+| 34349334   | Message Content  | Variable       | The chat text, image in Base64, or a random UUID if PAYMENT type.                                 |
+| 34349337   | Signature        | ~71            | The output from signing the message using the private key counterpart of the public key attached. |
+| 34349339   | Sender's Pubkey  | 33             | This identifies the node associated with the message.                                             |
+| 34349340   | Sender's Alias   | Variable       | An optional human-readable name for chatting.                                                     |
+| 34349345   | Content Type     | Variable       | Can be one of: TEXT, IMAGE, PAYMENT.                                                              |
 
                                     7JJJJJJJJJJJ    7JJJJJJJ^:::
                                     ?5YYYYYYYYYY.  .?YYYJJJJ^^^^
