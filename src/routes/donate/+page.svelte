@@ -69,7 +69,7 @@
 
 		<p>
 			If you have found Cipherchat a useful tool, I would love to hear from you! You can send a
-			message to my pubkey <strong class="break-all"
+			message to my pubkey <strong class="break-all bg-borderIn"
 				>021ef14c694456a3aae3471a2e8830da21a8130ccbead6794e3530430e2e074d63</strong
 			>.
 		</p>

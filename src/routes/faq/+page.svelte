@@ -94,7 +94,7 @@
 					<li>
 						If you would like to use Cipherchat's LNC Mailbox instead of the default Lightning Labs
 						option you will need to click <strong>Advanced Options</strong> and enter
-						<strong>cipherchatmailbox.net:443</strong>.
+						<strong class="bg-borderIn">cipherchatmailbox.net:443</strong>.
 					</li>
 					<li>
 						Finally you can choose an <strong>expiry</strong> for this pairing phrase if you would like.
@@ -111,8 +111,8 @@
 					these sessions at any time. Only one concurrent connection can be established for each
 					pairing phrase. Treat this with the same care as other private node information such as a
 					macaroon or seed phrase. Always make sure you are at the correct URL of the Cipherchat app
-					which is <strong>https://cipherchat.app</strong> and nothing else. Install the app or bookmark
-					the page to be sure.
+					which is <strong class="bg-borderIn">https://cipherchat.app</strong> and nothing else. Install
+					the app or bookmark the page to be sure.
 				</p>
 			</FaqItem>
 			<FaqItem question="How can I install the web app?">
@@ -130,6 +130,13 @@
 					href="https://amboss.space"
 					title="amboss.space"
 				/> or <Link external href="https://mempool.space" title="mempool.space" /> to discover node identities.
+			</FaqItem>
+			<FaqItem question="Is there spam protection?">
+				Cipherchat has built-in spam protection due to the 'proof-of-work' required to setup a
+				lightning node and the cost of messages. It is also impossible to impersonate a nodes
+				identity because each message is signed using the private / public key pair and verifiable
+				by the receiver. If all of this is not enough, you have the ability to hide or 'block'
+				unwanted conversations within the app.
 			</FaqItem>
 			<FaqItem question="What's the best way to use my node with Cipherchat?">
 				For best performance, reliability, and to save on network fees it is recommended to open a
@@ -159,6 +166,12 @@
 				in order for the payment (message) to be successful. This requires being well connected to
 				the network.
 			</FaqItem>
+			<FaqItem question="Can my node receive keysend messages?">
+				Most node configs will already have this setup but if you can't receive messages and you
+				have inbound liquidity then you can check your <strong class="bg-borderIn">lnd.conf</strong>
+				file and make sure it contains <strong class="bg-borderIn">accept-keysend=true</strong>. You
+				will need to restart your node if enabling this for the first time.
+			</FaqItem>
 			<FaqItem question="How can I self-host Cipherchat?">
 				Check out the <Link
 					external
@@ -185,9 +198,84 @@
 			<FaqItem question="Can I use Cipherchat with Core Lightning?">
 				Currently no. LNC is only implemented by LND at the moment.
 			</FaqItem>
+			<FaqItem question="Is Cipherchat inter-operable with other lightning messaging apps?">
+				Yes, if they follow the same specification. Cipherchat uses established standards from the <Link
+					external
+					href="https://github.com/satoshisstream/satoshis.stream/blob/main/TLV_registry.md"
+					title="TLV Record Registry"
+				/>. Users of Cipherchat could have conversations with other lightning apps if they follow
+				the convention below for attaching <strong class="bg-borderIn">dest_custom_records</strong>
+				to <Link
+					external
+					href="https://docs.lightning.engineering/lightning-network-tools/lnd/send-messages-with-keysend"
+					title="keysend"
+				/> payments.
+
+				<table
+					class="my-4 block max-w-fit border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn"
+				>
+					<thead>
+						<tr>
+							<th colspan="4">Cipherchat Keysend Custom Record Scheme</th>
+						</tr>
+						<tr>
+							<th>Key</th>
+							<th>Value</th>
+							<th>Length (bytes)</th>
+							<th>Additional Info</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>5482373484</td>
+							<td>Keysend Preimage</td>
+							<td>32</td>
+							<td>Preimage for the invoice.</td>
+						</tr>
+						<tr>
+							<td>34349334</td>
+							<td>Message Content</td>
+							<td>Variable</td>
+							<td>The chat text, image in Base64, or a random UUID if PAYMENT type.</td>
+						</tr>
+						<tr>
+							<td>34349337</td>
+							<td>Signature</td>
+							<td>~71</td>
+							<td
+								>The output from signing the message using the private key counterpart of the public
+								key attached.</td
+							>
+						</tr>
+						<tr>
+							<td>34349339</td>
+							<td>Sender's Pubkey</td>
+							<td>33</td>
+							<td>This identifies the node associated with the message.</td>
+						</tr>
+						<tr>
+							<td>34349340</td>
+							<td>Sender's Alias</td>
+							<td>Variable</td>
+							<td>An optional human-readable name for chatting.</td>
+						</tr>
+						<tr>
+							<td>34349345</td>
+							<td>Content Type</td>
+							<td>Variable</td>
+							<td>Can be one of: TEXT, IMAGE, PAYMENT.</td>
+						</tr>
+					</tbody>
+				</table>
+			</FaqItem>
 			<FaqItem question="Who operates the public instance?">
-				The <strong>cipherchat.app</strong> web app and <strong>cipherchatmailbox.net</strong> LNC
-				Mailbox are run by <Link external href="https://secondl1ght.site" title="secondl1ght" />.
+				The <strong class="bg-borderIn">cipherchat.app</strong> web app and
+				<strong class="bg-borderIn">cipherchatmailbox.net</strong>
+				LNC Mailbox are run by <Link
+					external
+					href="https://secondl1ght.site"
+					title="secondl1ght"
+				/>.
 			</FaqItem>
 			<FaqItem question="Who develops Cipherchat?">
 				Cipherchat is developed by <strong>secondlght</strong> in his spare time.
@@ -218,3 +306,10 @@
 		<p class="text-header">Thanks for taking the time to learn about Cipherchat!</p>
 	</div>
 </PublicLayout>
+
+<style>
+	th,
+	td {
+		@apply border border-boxFill p-1;
+	}
+</style>
