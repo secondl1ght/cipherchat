@@ -1,6 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 
-export enum MessageTypes {
+export enum MessageType {
 	Text = 'TEXT',
 	Image = 'IMAGE',
 	Payment = 'PAYMENT'
@@ -26,7 +26,7 @@ export interface Message {
 	id: string;
 	message: string;
 	signature: string;
-	type: MessageTypes;
+	type: MessageType;
 	timestamp: string;
 	status: MessageStatus;
 	amount: number;
@@ -41,6 +41,7 @@ export interface Conversation {
 	messages?: Message[];
 	read: boolean;
 	blocked: boolean;
+	charLimit: number;
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -49,7 +50,7 @@ export class MySubClassedDexie extends Dexie {
 	constructor() {
 		super('CipherchatDB');
 		this.version(1).stores({
-			conversations: 'pubkey, alias, &avatar, messages' // Primary key and indexed props
+			conversations: '&pubkey blocked' // Primary key and indexed props
 		});
 	}
 }
