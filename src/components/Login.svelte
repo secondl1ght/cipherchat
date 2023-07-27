@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { lnc } from '$lib/lnc';
 	import { connected, paired } from '$lib/store';
+	import { db } from '$lib/db';
 	import { Button, Icon } from 'comp';
 	import { errorToast, successToast } from '$lib/utils';
 
@@ -35,6 +36,8 @@
 		try {
 			loading = true;
 
+			db.delete();
+			localStorage.clear();
 			lnc.credentials.clear();
 
 			$paired = false;
