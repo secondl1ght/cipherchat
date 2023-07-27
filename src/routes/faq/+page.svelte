@@ -166,6 +166,14 @@
 				in order for the payment (message) to be successful. This requires being well connected to
 				the network.
 			</FaqItem>
+			<FaqItem question="Why is there a character limit?">
+				A default character limit of <strong>300</strong> is set for all conversations. This is to give
+				your message the best chance of succeeding. The lightning network has technical constraints on
+				the size of message that can be transmitted. As the payment route gets longer (number of hops
+				to reach the destination), the contained message must be smaller. The character limit can be
+				adjusted per conversation such that if you are connected directly with your chatting peer it
+				can be raised.
+			</FaqItem>
 			<FaqItem question="Can my node receive keysend messages?">
 				Most node configs will already have this setup but if you can't receive messages and you
 				have inbound liquidity then you can check your <strong class="bg-borderIn">lnd.conf</strong>
@@ -212,8 +220,11 @@
 				/> payments.
 
 				<table
-					class="my-4 block max-w-fit border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn"
+					class="my-4 block max-w-fit caption-bottom border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn"
 				>
+					<caption class="text-left"
+						>* All values must be <strong class="bg-borderIn">hex</strong> encoded.
+					</caption>
 					<thead>
 						<tr>
 							<th colspan="4">Cipherchat Keysend Custom Record Scheme</th>
@@ -236,15 +247,21 @@
 							<td>34349334</td>
 							<td>Message Content</td>
 							<td>Variable</td>
-							<td>The chat text, image in Base64, or a random UUID if PAYMENT type.</td>
+							<td>The chat text, image, or a random UUID if 'PAYMENT' type.</td>
+						</tr>
+						<tr>
+							<td>34349343</td>
+							<td>Timestamp</td>
+							<td>8</td>
+							<td>When the message was created measured in nanoseconds since the unix epoch.</td>
 						</tr>
 						<tr>
 							<td>34349337</td>
 							<td>Signature</td>
 							<td>~71</td>
 							<td
-								>The output from signing the message using the private key counterpart of the public
-								key attached.</td
+								>The output from signing the: (receiver pubkey + timestamp + alias + message) after
+								hex encoding using the private key counterpart of the public key attached.</td
 							>
 						</tr>
 						<tr>
@@ -263,7 +280,7 @@
 							<td>34349345</td>
 							<td>Content Type</td>
 							<td>Variable</td>
-							<td>Can be one of: TEXT, IMAGE, PAYMENT.</td>
+							<td>Can be one of: 'TEXT', 'IMAGE', 'PAYMENT'.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -309,7 +326,8 @@
 
 <style>
 	th,
-	td {
+	td,
+	caption {
 		@apply border border-boxFill p-1;
 	}
 </style>
