@@ -37,6 +37,7 @@ export interface Message {
 export interface Conversation {
 	pubkey: string;
 	alias?: string;
+	color?: string;
 	avatar: string;
 	messages?: Message[];
 	read: boolean;
