@@ -99,19 +99,13 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
             <td>34349337</td>
             <td>Signature</td>
             <td>~71</td>
-            <td>The output from signing the: (receiver pubkey + timestamp + alias + message) after hex encoding using the private key counterpart of the public key attached.</td>
+            <td>The output from signing the: (receiver pubkey + timestamp + message) after hex encoding using the private key counterpart of the public key attached.</td>
         </tr>
         <tr>
             <td>34349339</td>
             <td>Sender's Pubkey</td>
             <td>33</td>
             <td>This identifies the node associated with the message.</td>
-        </tr>
-        <tr>
-            <td>34349340</td>
-            <td>Sender's Alias</td>
-            <td>Variable</td>
-            <td>An optional human-readable name for chatting.</td>
         </tr>
         <tr>
             <td>34349345</td>
