@@ -99,7 +99,7 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
             <td>34349337</td>
             <td>Signature</td>
             <td>~71</td>
-            <td>The output from signing the: (receiver pubkey + timestamp + message) after hex encoding using the private key counterpart of the public key attached.</td>
+            <td>The output from signing the: (receiver pubkey + timestamp + message) using the private key counterpart of the public key attached.</td>
         </tr>
         <tr>
             <td>34349339</td>

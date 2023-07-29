@@ -260,8 +260,8 @@
 							<td>Signature</td>
 							<td>~71</td>
 							<td
-								>The output from signing the: (receiver pubkey + timestamp + message) after hex
-								encoding using the private key counterpart of the public key attached.</td
+								>The output from signing the: (receiver pubkey + timestamp + message) using the
+								private key counterpart of the public key attached.</td
 							>
 						</tr>
 						<tr>
