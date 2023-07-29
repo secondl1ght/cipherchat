@@ -64,8 +64,8 @@
 			"purpose": "any maskable"
 		},
 		{
-			"src": "/icons/pwa/maskable/maskable_icon_x277.png",
-			"sizes": "277x277",
+			"src": "/icons/pwa/maskable/maskable_icon_x227.png",
+			"sizes": "227x227",
 			"type": "image/png",
 			"purpose": "any maskable"
 		},
@@ -747,25 +747,57 @@
 			"name": "FAQ",
 			"short_name": "FAQ",
 			"description": "Frequently asked questions.",
-			"url": "/faq"
+			"url": "/faq",
+			"icons": [
+				{
+					"src": "/icons/pwa/maskable/maskable_icon_x96.png",
+					"sizes": "96x96",
+					"type": "image/png",
+					"purpose": "any maskable"
+				}
+			]
 		},
 		{
 			"name": "Privacy",
 			"short_name": "Privacy",
 			"description": "Privacy information.",
-			"url": "/privacy"
+			"url": "/privacy",
+			"icons": [
+				{
+					"src": "/icons/pwa/maskable/maskable_icon_x96.png",
+					"sizes": "96x96",
+					"type": "image/png",
+					"purpose": "any maskable"
+				}
+			]
 		},
 		{
 			"name": "License",
 			"short_name": "License",
 			"description": "Open source license.",
-			"url": "/license"
+			"url": "/license",
+			"icons": [
+				{
+					"src": "/icons/pwa/maskable/maskable_icon_x96.png",
+					"sizes": "96x96",
+					"type": "image/png",
+					"purpose": "any maskable"
+				}
+			]
 		},
 		{
 			"name": "Donate",
 			"short_name": "Donate",
 			"description": "Support the project if you enjoy it!",
-			"url": "/donate"
+			"url": "/donate",
+			"icons": [
+				{
+					"src": "/icons/pwa/maskable/maskable_icon_x96.png",
+					"sizes": "96x96",
+					"type": "image/png",
+					"purpose": "any maskable"
+				}
+			]
 		}
 	],
 	"screenshots": [
