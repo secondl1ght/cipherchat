@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { lnc } from '$lib/lnc';
+	import { generateKey, resetKey } from '$lib/crypto';
 	import { connected, paired } from '$lib/store';
 	import { db } from '$lib/db';
 	import { Button, Icon } from 'comp';
@@ -16,6 +17,8 @@
 			lnc.credentials.password = password;
 
 			await lnc.connect();
+
+			await generateKey(password);
 
 			$connected = true;
 			successToast('Logged in.');
@@ -39,6 +42,7 @@
 			db.delete();
 			localStorage.clear();
 			lnc.credentials.clear();
+			resetKey();
 
 			$paired = false;
 			successToast('Node credentials cleared.');
