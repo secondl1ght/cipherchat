@@ -24,7 +24,8 @@ export enum FailureReason {
 
 export interface Message {
 	id: string;
-	message: string;
+	iv: Uint8Array;
+	message: ArrayBuffer;
 	signature: string;
 	type: MessageType;
 	timestamp: string;
