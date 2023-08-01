@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { lnc } from '$lib/lnc';
+	import { generateKey } from '$lib/crypto';
 	import { connected } from '$lib/store';
 	import { tick } from 'svelte';
 	import { Button, InfoTooltip, Icon } from 'comp';
@@ -37,6 +38,9 @@
 			await lnc.lnd.lightning.getInfo();
 
 			lnc.credentials.password = password;
+
+			await generateKey(password);
+
 			$connected = true;
 			successToast('Node connected successfully!');
 		} catch (error) {
