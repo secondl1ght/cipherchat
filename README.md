@@ -59,12 +59,7 @@ If there are other app stores you would like to see Cipherchat, please let me kn
 Cipherchat uses established standards from the [TLV Record Registry](https://github.com/satoshisstream/satoshis.stream/blob/main/TLV_registry.md). Users of Cipherchat could have conversations with other lightning apps if they follow the convention below for attaching `dest_custom_records`
 to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send-messages-with-keysend) payments.
 
-<table class="my-4 block max-w-fit caption-bottom border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn">
-    <caption class="text-left">
-        * All values must be
-        <strong class="bg-borderIn">hex</strong>
-        encoded.
-    </caption>
+<table class="my-4 block max-w-fit border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn">
     <thead>
         <tr>
             <th colspan="4">Cipherchat Keysend Custom Record Scheme</th>

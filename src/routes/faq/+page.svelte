@@ -220,11 +220,8 @@
 				/> payments.
 
 				<table
-					class="my-4 block max-w-fit caption-bottom border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn"
+					class="my-4 block max-w-fit border-separate overflow-x-auto whitespace-nowrap border border-boxFill bg-borderIn"
 				>
-					<caption class="text-left"
-						>* All values must be <strong class="bg-borderIn">hex</strong> encoded.
-					</caption>
 					<thead>
 						<tr>
 							<th colspan="4">Cipherchat Keysend Custom Record Scheme</th>
