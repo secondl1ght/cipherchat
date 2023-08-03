@@ -1,25 +1,10 @@
+import type { lnrpc } from '@lightninglabs/lnc-web';
 import Dexie, { type Table } from 'dexie';
 
 export enum MessageType {
 	Text = 'TEXT',
 	Image = 'IMAGE',
 	Payment = 'PAYMENT'
-}
-
-export enum MessageStatus {
-	Unknown = 'UNKNOWN',
-	InFlight = 'IN_FLIGHT',
-	Succeeded = 'SUCCEEDED',
-	Failed = 'FAILED'
-}
-
-export enum FailureReason {
-	None = 'FAILURE_REASON_NONE',
-	Timeout = 'FAILURE_REASON_TIMEOUT',
-	NoRoute = 'FAILURE_REASON_NO_ROUTE',
-	Error = 'FAILURE_REASON_ERROR',
-	IncorrectPaymentDetails = 'FAILURE_REASON_INCORRECT_PAYMENT_DETAILS',
-	InsufficientBalance = 'FAILURE_REASON_INSUFFICIENT_BALANCE'
 }
 
 export interface Message {
@@ -29,10 +14,11 @@ export interface Message {
 	signature: string;
 	type: MessageType;
 	timestamp: string;
-	status: MessageStatus;
+	status: lnrpc.Payment_PaymentStatus;
 	amount: number;
 	fee?: number;
-	failureReason: FailureReason;
+	failureReason: lnrpc.PaymentFailureReason;
+	self: boolean;
 }
 
 export interface Conversation {
