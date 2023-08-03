@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { lnc } from '$lib/lnc';
 	import { pubkey, alias, color } from '$lib/store';
-	import { initializeInvoices } from '$lib/chat';
+	import { initializeInvoices, initializePayments } from '$lib/chat';
 	import { error } from '@sveltejs/kit';
 
 	let loading = true;
@@ -17,8 +17,9 @@
 			let invoices;
 			let payments;
 
-			await Promise.all([initializeInvoices()]).then((values) => {
+			await Promise.all([initializeInvoices(), initializePayments()]).then((values) => {
 				invoices = values[0];
+				payments = values[1];
 			});
 
 			loading = false;
