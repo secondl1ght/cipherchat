@@ -317,8 +317,7 @@
 
 <style>
 	th,
-	td,
-	caption {
+	td {
 		@apply border border-boxFill p-1;
 	}
 </style>
