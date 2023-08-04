@@ -43,7 +43,8 @@ export const initializeInvoices = async () => {
 			!message ||
 			!signature ||
 			!pubkey ||
-			!type
+			!type ||
+			pubkey === userPubkey
 		) {
 			return false;
 		}
@@ -187,7 +188,7 @@ export const initializePayments = async () => {
 			const avatar = '';
 			const read = true;
 			const blocked = false;
-			const charLimit = 300;
+			const charLimit = lastRouteHop.pubKey === userPubkey ? 1000 : 300;
 
 			// message values
 			const preimage = lastRouteHop.customRecords[KEYSEND_PREIMAGE].toString();
