@@ -1,4 +1,4 @@
-import { cryptoKey, initialKey } from '$lib/store';
+import { cryptoKey } from '$lib/store';
 import { get } from 'svelte/store';
 
 const encoder = new TextEncoder();
@@ -36,22 +36,33 @@ export const generateKey = async (password: string) => {
 };
 
 export const resetKey = () => {
-	cryptoKey.set(get(initialKey));
+	cryptoKey.set(undefined);
 };
 
 export const encrypt = async (content: string) => {
+	const key = get(cryptoKey);
+	if (!key) return;
+
 	const encodedContent = encoder.encode(content);
 
 	const iv = randomBytes(12);
 
 	const encryptedContent = await crypto.subtle.encrypt(
 		{ name: 'AES-GCM', iv },
-		get(cryptoKey),
+		// @ts-expect-error cryptoKey will always be generated when lnc is connected
+		key,
 		encodedContent
 	);
 
 	return { content: encryptedContent, iv };
 };
 
-export const decrypt = async (iv: Uint8Array, ciphertext: ArrayBuffer) =>
-	decoder.decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, get(cryptoKey), ciphertext));
+export const decrypt = async (iv: Uint8Array, ciphertext: ArrayBuffer) => {
+	const key = get(cryptoKey);
+	if (!key) return;
+
+	return decoder.decode(
+		// @ts-expect-error cryptoKey will always be generated when lnc is connected
+		await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext)
+	);
+};

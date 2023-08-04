@@ -90,6 +90,7 @@ export const initializeInvoices = async () => {
 			const preimage = successfulHTLC.customRecords[KEYSEND_PREIMAGE].toString();
 			const message = bufferBase64ToUtf(successfulHTLC.customRecords[MESSAGE_CONTENT]);
 			const messageEncrypted = await encrypt(message);
+			if (!messageEncrypted) return;
 			const signature = bufferBase64ToUtf(successfulHTLC.customRecords[SIGNATURE]);
 			const type = messageType.find(
 				(type) => type === bufferBase64ToUtf(successfulHTLC.customRecords[CONTENT_TYPE])
@@ -192,6 +193,7 @@ export const initializePayments = async () => {
 			const preimage = lastRouteHop.customRecords[KEYSEND_PREIMAGE].toString();
 			const message = bufferBase64ToUtf(lastRouteHop.customRecords[MESSAGE_CONTENT]);
 			const messageEncrypted = await encrypt(message);
+			if (!messageEncrypted) return;
 			const signature = bufferBase64ToUtf(lastRouteHop.customRecords[SIGNATURE]);
 			const type = messageType.find(
 				(type) => type === bufferBase64ToUtf(lastRouteHop.customRecords[CONTENT_TYPE])
