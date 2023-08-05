@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PublicLayout, FaqItem, Link } from 'comp';
-	import { links } from '$lib/links';
+	import { links } from '$lib/store';
 </script>
 
 <svelte:head>
@@ -291,10 +291,10 @@
 			<FaqItem question="Where can I follow updates?">
 				Updates about the software and project will come from the <Link
 					external
-					href={links.twitter}
+					href={$links.twitter}
 					title="Twitter"
-				/> and <Link external href={links.nostr} title="Nostr" /> accounts. You can subscribe to receive
-				notifications on the <Link external href={links.github} title="GitHub" /> repo about activity
+				/> and <Link external href={$links.nostr} title="Nostr" /> accounts. You can subscribe to receive
+				notifications on the <Link external href={$links.github} title="GitHub" /> repo about activity
 				such as new releases.
 			</FaqItem>
 			<FaqItem question="Where can I learn more?">
@@ -306,7 +306,11 @@
 			</FaqItem>
 			<FaqItem question="I'm stuck, can I get support?">
 				If you are having issues getting started using Cipherchat or just want to find other users
-				to connect with you can join our public <Link external href={links.matrix} title="Matrix" />
+				to connect with you can join our public <Link
+					external
+					href={$links.matrix}
+					title="Matrix"
+				/>
 				room.
 			</FaqItem>
 		</ul>
