@@ -23,7 +23,7 @@
 				payments = values[1] || [];
 			});
 
-			const conversations = combineConversations(invoices, payments);
+			const conversations = await combineConversations(invoices, payments);
 
 			loading = false;
 		} catch (err) {

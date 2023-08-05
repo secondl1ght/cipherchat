@@ -257,13 +257,11 @@ export const initializePayments = async () => {
 	return paymentsGrouped;
 };
 
-export const combineConversations = (invoices: Conversation[], payments: Conversation[]) => {
+export const combineConversations = async (invoices: Conversation[], payments: Conversation[]) => {
 	const conversations = [...invoices];
 
 	payments.forEach((payment) => {
-		const index = conversations.findIndex(
-			(conversation) => conversation.pubkey === payment.pubkey
-		);
+		const index = conversations.findIndex((conversation) => conversation.pubkey === payment.pubkey);
 
 		if (index !== -1) {
 			if (payment.messages) {
@@ -276,9 +274,21 @@ export const combineConversations = (invoices: Conversation[], payments: Convers
 		}
 	});
 
-	conversations.forEach((conversation) => {
+	for await (const conversation of conversations) {
 		conversation.messages?.sort((a, b) => a.timestamp - b.timestamp);
-	});
+
+		try {
+			const nodeInfo = await lnc.lnd.lightning.getNodeInfo({
+				pubKey: conversation.pubkey,
+				includeChannels: false
+			});
+
+			conversation.alias = nodeInfo.node?.alias;
+			conversation.color = nodeInfo.node?.color;
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	return conversations;
 };
