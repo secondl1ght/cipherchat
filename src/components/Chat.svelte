@@ -3,7 +3,7 @@
 	import { lnc } from '$lib/lnc';
 	import { pubkey, alias, color } from '$lib/store';
 	import type { Conversation } from '$lib/db';
-	import { initializeInvoices, initializePayments, combineConversations } from '$lib/chat';
+	import { initializeInvoices, initializePayments, combineConversations } from '$lib/sync';
 	import { error } from '@sveltejs/kit';
 
 	let loading = true;
