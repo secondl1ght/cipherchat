@@ -13,7 +13,7 @@ export interface Message {
 	message: ArrayBuffer;
 	signature: string;
 	type: MessageType;
-	timestamp: string;
+	timestamp: number;
 	status: lnrpc.Payment_PaymentStatus;
 	amount: number;
 	fee?: number;
