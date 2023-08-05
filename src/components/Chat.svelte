@@ -2,7 +2,8 @@
 	import { onMount } from 'svelte';
 	import { lnc } from '$lib/lnc';
 	import { pubkey, alias, color } from '$lib/store';
-	import { initializeInvoices, initializePayments } from '$lib/chat';
+	import type { Conversation } from '$lib/db';
+	import { initializeInvoices, initializePayments, combineConversations } from '$lib/chat';
 	import { error } from '@sveltejs/kit';
 
 	let loading = true;
@@ -14,13 +15,15 @@
 			$alias = nodeInfo.alias;
 			$color = nodeInfo.color;
 
-			let invoices;
-			let payments;
+			let invoices: Conversation[] = [];
+			let payments: Conversation[] = [];
 
 			await Promise.all([initializeInvoices(), initializePayments()]).then((values) => {
-				invoices = values[0];
-				payments = values[1];
+				invoices = values[0] || [];
+				payments = values[1] || [];
 			});
+
+			const conversations = combineConversations(invoices, payments);
 
 			loading = false;
 		} catch (err) {

@@ -20,11 +20,11 @@ const messageType = Object.values(MessageType);
 export const initializeInvoices = async () => {
 	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
 
-	const invoices = await lnc.lnd.lightning.listInvoices({
+	const { invoices } = await lnc.lnd.lightning.listInvoices({
 		creationDateStart: lastUpdate
 	});
 
-	const invoicesFiltered = invoices.invoices.filter(async (invoice) => {
+	const validateInvoice = async (invoice: lnrpc.Invoice) => {
 		const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
 
 		if (!successfulHTLC) return false;
@@ -44,7 +44,7 @@ export const initializeInvoices = async () => {
 			!signature ||
 			!pubkey ||
 			!type ||
-			pubkey === userPubkey
+			bufferBase64ToUtf(pubkey) === userPubkey
 		) {
 			return false;
 		}
@@ -70,11 +70,21 @@ export const initializeInvoices = async () => {
 			console.log(error);
 			return false;
 		}
-	});
+	};
+
+	const invoicesFiltered: lnrpc.Invoice[] = [];
+
+	for await (const invoice of invoices) {
+		const validated = await validateInvoice(invoice);
+
+		if (validated) {
+			invoicesFiltered.push(invoice);
+		}
+	}
 
 	const invoicesGrouped: Conversation[] = [];
 
-	invoicesFiltered.forEach(async (invoice) => {
+	for await (const invoice of invoicesFiltered) {
 		const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
 
 		if (!successfulHTLC) return;
@@ -97,7 +107,7 @@ export const initializeInvoices = async () => {
 				(type) => type === bufferBase64ToUtf(successfulHTLC.customRecords[CONTENT_TYPE])
 			);
 			if (!type) return;
-			const timestamp = bufferBase64ToUtf(successfulHTLC.customRecords[TIMESTAMP]);
+			const timestamp = Number(bufferBase64ToUtf(successfulHTLC.customRecords[TIMESTAMP]));
 			const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
 			const amount = Number(invoice.amtPaidSat);
 			const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
@@ -136,7 +146,8 @@ export const initializeInvoices = async () => {
 			console.log(error);
 			return;
 		}
-	});
+	}
+
 	return invoicesGrouped;
 };
 
@@ -173,7 +184,7 @@ export const initializePayments = async () => {
 
 	const paymentsGrouped: Conversation[] = [];
 
-	paymentsFiltered.forEach(async (payment) => {
+	for await (const payment of paymentsFiltered) {
 		const successfulHTLC = payment.htlcs.find((htlc) => htlc.status === 'SUCCEEDED')?.route?.hops;
 
 		if (!successfulHTLC) return false;
@@ -200,7 +211,7 @@ export const initializePayments = async () => {
 				(type) => type === bufferBase64ToUtf(lastRouteHop.customRecords[CONTENT_TYPE])
 			);
 			if (!type) return;
-			const timestamp = bufferBase64ToUtf(lastRouteHop.customRecords[TIMESTAMP]);
+			const timestamp = Number(bufferBase64ToUtf(lastRouteHop.customRecords[TIMESTAMP]));
 			const status = payment.status;
 			const amount = Number(payment.valueSat);
 			const fee = Number(payment.feeSat);
@@ -241,6 +252,33 @@ export const initializePayments = async () => {
 			console.log(error);
 			return;
 		}
-	});
+	}
+
 	return paymentsGrouped;
+};
+
+export const combineConversations = (invoices: Conversation[], payments: Conversation[]) => {
+	const conversations = [...invoices];
+
+	payments.forEach((payment) => {
+		const index = conversations.findIndex(
+			(conversation) => conversation.pubkey === payment.pubkey
+		);
+
+		if (index !== -1) {
+			if (payment.messages) {
+				const messages = conversations[index].messages?.concat(payment.messages);
+
+				conversations[index].messages = messages || payment.messages;
+			}
+		} else {
+			conversations.push(payment);
+		}
+	});
+
+	conversations.forEach((conversation) => {
+		conversation.messages?.sort((a, b) => a.timestamp - b.timestamp);
+	});
+
+	return conversations;
 };
