@@ -1,4 +1,5 @@
 import { toast } from '@zerodevx/svelte-toast';
+import { error } from '$lib/store';
 
 export const successToast = (m: string) => {
 	toast.pop();
@@ -49,3 +50,5 @@ export const setLastUpdate = (time: string) => {
 export const setFirstSyncComplete = () => {
 	localStorage.setItem('firstSyncComplete', 'true');
 };
+
+export const setError = (status: string, message: string) => error.set({ status, message });

@@ -13,3 +13,4 @@ export { default as InfoTooltip } from './InfoTooltip.svelte';
 export { default as BoxWrapper } from './BoxWrapper.svelte';
 export { default as PublicLayout } from './PublicLayout.svelte';
 export { default as FaqItem } from './FaqItem.svelte';
+export { default as Error } from './Error.svelte';

@@ -6,8 +6,7 @@ import { type Conversation, type Message, MessageType } from '$lib/db';
 import { encrypt } from '$lib/crypto';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { db } from '$lib/db';
-import { getUpdateTime, setLastUpdate, setFirstSyncComplete } from '$lib/utils';
-import { error } from '@sveltejs/kit';
+import { getUpdateTime, setLastUpdate, setFirstSyncComplete, setError } from '$lib/utils';
 
 let updateTime: string;
 
@@ -341,7 +340,7 @@ export const saveToDB = async (conversations: Conversation[]) => {
 			console.log(err);
 
 			await db.conversations.clear();
-			throw error(503, 'Initial sync failed, please try again.');
+			setError('503', 'Initial sync failed, please try again.');
 		}
 	}
 };

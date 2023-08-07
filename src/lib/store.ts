@@ -22,3 +22,4 @@ export const links = readable({
 	matrix: '',
 	rumble: ''
 });
+export const error = writable({ status: '', message: '' });

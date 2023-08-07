@@ -11,8 +11,7 @@
 		finalizeConversations,
 		saveToDB
 	} from '$lib/sync';
-	import { getUpdateTime, setLastUpdate, setFirstSyncComplete } from '$lib/utils';
-	import { error } from '@sveltejs/kit';
+	import { getUpdateTime, setLastUpdate, setFirstSyncComplete, setError } from '$lib/utils';
 
 	let loading = true;
 
@@ -79,7 +78,7 @@
 			loading = false;
 		} catch (err) {
 			console.log(err);
-			throw error(503, 'Initial sync failed, please try again.');
+			setError('503', 'Initial sync failed, please try again.');
 		} finally {
 			// TODO
 		}
