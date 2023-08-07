@@ -39,3 +39,13 @@ export const errorToast = (m: string) => {
 export const copy = (text: string) => {
 	navigator.clipboard.writeText(text);
 };
+
+export const getUpdateTime = () => (Date.now() / 1000).toFixed(0).toString();
+
+export const setLastUpdate = (time: string) => {
+	localStorage.setItem('lastUpdate', time);
+};
+
+export const setFirstSyncComplete = () => {
+	localStorage.setItem('firstSyncComplete', 'true');
+};
