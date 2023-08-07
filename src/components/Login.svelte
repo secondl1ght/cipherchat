@@ -35,11 +35,11 @@
 		}
 	};
 
-	const clear = () => {
+	const clear = async () => {
 		try {
 			loading = true;
 
-			db.delete();
+			await db.delete();
 			localStorage.clear();
 			lnc.credentials.clear();
 			resetKey();
