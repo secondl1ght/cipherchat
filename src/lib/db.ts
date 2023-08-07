@@ -28,7 +28,7 @@ export interface Conversation {
 	avatar: string;
 	messages?: Message[];
 	read: boolean;
-	blocked: boolean;
+	blocked: string;
 	charLimit: number;
 }
 
@@ -38,7 +38,7 @@ export class MySubClassedDexie extends Dexie {
 	constructor() {
 		super('CipherchatDB');
 		this.version(1).stores({
-			conversations: '&pubkey blocked' // Primary key and indexed props
+			conversations: '&pubkey, blocked' // Primary key and indexed props
 		});
 	}
 }
