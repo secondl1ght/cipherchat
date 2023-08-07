@@ -26,6 +26,8 @@ export const initializeInvoices = async () => {
 		creationDateStart: lastUpdate
 	});
 
+	if (!invoices.length) return;
+
 	const validateInvoice = async (invoice: lnrpc.Invoice) => {
 		const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
 
@@ -156,12 +158,14 @@ export const initializeInvoices = async () => {
 export const initializePayments = async () => {
 	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
 
-	const payments = await lnc.lnd.lightning.listPayments({
+	const { payments } = await lnc.lnd.lightning.listPayments({
 		includeIncomplete: false,
 		creationDateStart: lastUpdate
 	});
 
-	const paymentsFiltered = payments.payments.filter((payment) => {
+	if (!payments.length) return;
+
+	const paymentsFiltered = payments.filter((payment) => {
 		const successfulHTLC = payment.htlcs.find((htlc) => htlc.status === 'SUCCEEDED')?.route?.hops;
 
 		if (!successfulHTLC) return false;
