@@ -5,6 +5,11 @@ import { bufferUtfToBase64, bufferBase64ToUtf } from '$lib/buffer';
 import { type Conversation, type Message, MessageType } from '$lib/db';
 import { encrypt } from '$lib/crypto';
 import { lnrpc } from '@lightninglabs/lnc-web';
+import { db } from '$lib/db';
+import { getUpdateTime, setLastUpdate, setFirstSyncComplete } from '$lib/utils';
+import { error } from '@sveltejs/kit';
+
+let updateTime: string;
 
 const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE, CONTENT_TYPE } =
 	get(TLV_RECORDS);
@@ -14,6 +19,8 @@ const messageType = Object.values(MessageType);
 
 export const initializeInvoices = async () => {
 	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
+
+	updateTime = getUpdateTime();
 
 	const { invoices } = await lnc.lnd.lightning.listInvoices({
 		creationDateStart: lastUpdate
@@ -89,7 +96,7 @@ export const initializeInvoices = async () => {
 			const pubkey = bufferBase64ToUtf(successfulHTLC.customRecords[SENDERS_PUBKEY]);
 			const avatar = '';
 			const read = false;
-			const blocked = false;
+			const blocked = 'false';
 			const charLimit = 300;
 
 			// message values
@@ -182,18 +189,18 @@ export const initializePayments = async () => {
 	for await (const payment of paymentsFiltered) {
 		const successfulHTLC = payment.htlcs.find((htlc) => htlc.status === 'SUCCEEDED')?.route?.hops;
 
-		if (!successfulHTLC) return false;
+		if (!successfulHTLC) return;
 
 		const lastRouteHop = successfulHTLC[successfulHTLC.length - 1];
 
-		if (!lastRouteHop) return false;
+		if (!lastRouteHop) return;
 
 		try {
 			// conversation values
 			const pubkey = lastRouteHop.pubKey;
 			const avatar = '';
 			const read = true;
-			const blocked = false;
+			const blocked = 'false';
 			const charLimit = lastRouteHop.pubKey === userPubkey ? 1000 : 300;
 
 			// message values
@@ -269,6 +276,10 @@ export const combineConversations = async (invoices: Conversation[], payments: C
 		}
 	});
 
+	return conversations;
+};
+
+export const finalizeConversations = async (conversations: Conversation[]) => {
 	for await (const conversation of conversations) {
 		conversation.messages?.sort((a, b) => a.timestamp - b.timestamp);
 
@@ -286,4 +297,47 @@ export const combineConversations = async (invoices: Conversation[], payments: C
 	}
 
 	return conversations;
+};
+
+export const saveToDB = async (conversations: Conversation[]) => {
+	const firstSyncComplete = localStorage.getItem('firstSyncComplete');
+
+	if (firstSyncComplete) {
+		const primaryKeys = conversations.map((conversation) => conversation.pubkey);
+
+		const recordsInDB = await db.conversations.bulkGet(primaryKeys);
+
+		for await (const conversation of conversations) {
+			const recordExists = recordsInDB.find((record) => record?.pubkey === conversation.pubkey);
+
+			if (recordExists) {
+				const currentMessages = recordExists.messages || [];
+				const newMessages = conversation.messages || [];
+				const updatedMessages = [...currentMessages, ...newMessages];
+
+				await db.conversations.update(conversation.pubkey, {
+					alias: conversation.alias,
+					color: conversation.color,
+					messages: updatedMessages,
+					read: conversation.read
+				});
+			} else {
+				await db.conversations.add(conversation);
+			}
+		}
+
+		setLastUpdate(updateTime);
+	} else {
+		try {
+			await db.conversations.bulkAdd(conversations, undefined, { allKeys: false });
+
+			setLastUpdate(updateTime);
+			setFirstSyncComplete();
+		} catch (err) {
+			console.log(err);
+
+			await db.conversations.clear();
+			throw error(503, 'Initial sync failed, please try again.');
+		}
+	}
 };
