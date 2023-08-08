@@ -15,6 +15,7 @@ export const TLV_RECORDS = readable({
 	SIGNATURE: 34349337,
 	CONTENT_TYPE: 34349345
 });
+export const clearMessage = writable('');
 export const links = readable({
 	github: 'https://github.com/secondl1ght/cipherchat',
 	twitter: '',

@@ -11,7 +11,7 @@ export interface Message {
 	id: string;
 	iv: Uint8Array;
 	message: ArrayBuffer;
-	signature: string;
+	signature?: string;
 	type: MessageType;
 	timestamp: number;
 	status: lnrpc.Payment_PaymentStatus;
