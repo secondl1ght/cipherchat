@@ -308,39 +308,38 @@ export const saveToDB = async (conversations: Conversation[]) => {
 	if (firstSyncComplete) {
 		const primaryKeys = conversations.map((conversation) => conversation.pubkey);
 
-		const recordsInDB = await db.conversations.bulkGet(primaryKeys);
+		await db.transaction('rw', db.conversations, async () => {
+			const recordsInDB = await db.conversations.bulkGet(primaryKeys);
 
-		for await (const conversation of conversations) {
-			const recordExists = recordsInDB.find((record) => record?.pubkey === conversation.pubkey);
+			for await (const conversation of conversations) {
+				const recordExists = recordsInDB.find((record) => record?.pubkey === conversation.pubkey);
 
-			if (recordExists) {
-				const currentMessages = recordExists.messages || [];
-				const newMessages = conversation.messages || [];
-				const updatedMessages = [...currentMessages, ...newMessages];
+				if (recordExists) {
+					recordExists.alias = conversation.alias;
+					recordExists.color = conversation.color;
+					recordExists.read = conversation.read;
 
-				await db.conversations.update(conversation.pubkey, {
-					alias: conversation.alias,
-					color: conversation.color,
-					messages: updatedMessages,
-					read: conversation.read
-				});
-			} else {
-				await db.conversations.add(conversation);
+					const currentMessages = recordExists.messages || [];
+					const newMessages = conversation.messages || [];
+					const updatedMessages = [...currentMessages, ...newMessages];
+					recordExists.messages = updatedMessages;
+
+					await db.conversations.put(recordExists);
+				} else {
+					await db.conversations.add(conversation);
+				}
 			}
-		}
+		});
 
 		setLastUpdate(updateTime);
 	} else {
-		try {
-			await db.conversations.bulkAdd(conversations, undefined, { allKeys: false });
+		await db.transaction(
+			'rw',
+			db.conversations,
+			async () => await db.conversations.bulkAdd(conversations, undefined, { allKeys: false })
+		);
 
-			setLastUpdate(updateTime);
-			setFirstSyncComplete();
-		} catch (err) {
-			console.log(err);
-
-			await db.conversations.clear();
-			setError('503', 'Initial sync failed, please try again.');
-		}
+		setLastUpdate(updateTime);
+		setFirstSyncComplete();
 	}
 };

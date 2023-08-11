@@ -45,53 +45,61 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	let signature: lnrpc.SignMessageResponse;
 
 	const updateMessage = async (type: string, msg?: lnrpc.Payment) => {
-		const conversation = await db.conversations.get(recipient);
-		if (!conversation) return;
-		const messages = conversation.messages || [];
-		const messageIndex = messages.findIndex((message) => message.id === id);
+		await db.transaction('rw', db.conversations, async () => {
+			const conversation = await db.conversations.get(recipient);
+			if (!conversation) return;
+			const messages = conversation.messages || [];
+			const messageIndex = messages.findIndex((message) => message.id === id);
 
-		if (type === 'SIGNATURE') {
-			messages[messageIndex].status = lnrpc.Payment_PaymentStatus.FAILED;
-			messages[messageIndex].failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR;
-		} else if (type === 'FAILED') {
-			if (!msg) return;
-			messages[messageIndex].status = msg.status;
-			messages[messageIndex].failureReason = msg.failureReason;
-			messages[messageIndex].signature = signature.signature;
-		} else if (type === 'SUCCESS') {
-			if (!msg) return;
-			messages[messageIndex].status = msg.status;
-			messages[messageIndex].fee = Number(msg.feeSat);
-			messages[messageIndex].signature = signature.signature;
-		} else if (type === 'ERROR') {
-			messages[messageIndex].status = lnrpc.Payment_PaymentStatus.FAILED;
-			messages[messageIndex].failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR;
-			messages[messageIndex].signature = signature.signature;
-		}
+			if (type === 'SIGNATURE') {
+				messages[messageIndex].status = lnrpc.Payment_PaymentStatus.FAILED;
+				messages[messageIndex].failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR;
+			} else if (type === 'FAILED') {
+				if (!msg) return;
+				messages[messageIndex].status = msg.status;
+				messages[messageIndex].failureReason = msg.failureReason;
+				messages[messageIndex].signature = signature.signature;
+			} else if (type === 'SUCCESS') {
+				if (!msg) return;
+				messages[messageIndex].status = msg.status;
+				messages[messageIndex].fee = Number(msg.feeSat);
+				messages[messageIndex].signature = signature.signature;
+			} else if (type === 'ERROR') {
+				messages[messageIndex].status = lnrpc.Payment_PaymentStatus.FAILED;
+				messages[messageIndex].failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR;
+				messages[messageIndex].signature = signature.signature;
+			}
 
-		db.conversations.update(recipient, { messages });
+			conversation.messages = messages;
+
+			db.conversations.put(conversation);
+		});
 	};
 
 	// add to db
 	try {
-		const conversation = await db.conversations.get(recipient);
-		if (!conversation) return;
-		const messages = conversation.messages || [];
+		await db.transaction('rw', db.conversations, async () => {
+			const conversation = await db.conversations.get(recipient);
+			if (!conversation) return;
+			const messages = conversation.messages || [];
 
-		const newMessage = {
-			id,
-			iv: messageEncrypted.iv,
-			message: messageEncrypted.content,
-			type,
-			timestamp,
-			status,
-			amount: finalAmount,
-			failureReason,
-			self
-		};
-		messages.push(newMessage);
+			const newMessage = {
+				id,
+				iv: messageEncrypted.iv,
+				message: messageEncrypted.content,
+				type,
+				timestamp,
+				status,
+				amount: finalAmount,
+				failureReason,
+				self
+			};
+			messages.push(newMessage);
 
-		await db.conversations.update(recipient, { messages });
+			conversation.messages = messages;
+
+			await db.conversations.put(conversation);
+		});
 
 		clearMessage.set(recipient);
 		await tick();
@@ -109,7 +117,12 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 		});
 	} catch (error) {
 		console.log(error);
-		updateMessage('SIGNATURE');
+		try {
+			updateMessage('SIGNATURE');
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not sign message.');
+		}
 		return;
 	}
 
@@ -141,19 +154,39 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			},
 			async (msg) => {
 				if (msg.status === lnrpc.Payment_PaymentStatus.FAILED) {
-					updateMessage('FAILED');
+					try {
+						updateMessage('FAILED');
+					} catch (error) {
+						console.log(error);
+						errorToast('Could not send message.');
+					}
 				} else if (msg.status === lnrpc.Payment_PaymentStatus.SUCCEEDED) {
-					updateMessage('SUCCESS');
+					try {
+						updateMessage('SUCCESS');
+					} catch (error) {
+						console.log(error);
+						errorToast('Message sent, but could not update status in the database.');
+					}
 				}
 			},
 			async (err) => {
 				if (err.message === 'EOF') return;
 				console.log(err);
-				updateMessage('ERROR');
+				try {
+					updateMessage('ERROR');
+				} catch (error) {
+					console.log(error);
+					errorToast('Could not send message.');
+				}
 			}
 		);
 	} catch (error) {
 		console.log(error);
-		updateMessage('ERROR');
+		try {
+			updateMessage('ERROR');
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not send message.');
+		}
 	}
 };
