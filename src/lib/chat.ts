@@ -1,10 +1,5 @@
 import { randomBytes, createHash, encrypt } from '$lib/crypto';
-import {
-	bufferToBase64,
-	bufferUtfToBase64,
-	bufferHexToBase64,
-	bufferBase64ToUtf
-} from '$lib/buffer';
+import { bufferToBase64, bufferUtfToBase64, bufferHexToBase64 } from '$lib/buffer';
 import { db, MessageType } from '$lib/db';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
@@ -33,7 +28,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	const type = amount ? MessageType.Payment : MessageType.Text;
 	const typeFormatted = bufferUtfToBase64(type);
 
-	const id = bufferBase64ToUtf(preimageFormatted);
+	const id = preimageFormatted;
 	const status = lnrpc.Payment_PaymentStatus.IN_FLIGHT;
 	const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
 	const self = true;
@@ -155,14 +150,14 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			async (msg) => {
 				if (msg.status === lnrpc.Payment_PaymentStatus.FAILED) {
 					try {
-						updateMessage('FAILED');
+						updateMessage('FAILED', msg);
 					} catch (error) {
 						console.log(error);
 						errorToast('Could not send message.');
 					}
 				} else if (msg.status === lnrpc.Payment_PaymentStatus.SUCCEEDED) {
 					try {
-						updateMessage('SUCCESS');
+						updateMessage('SUCCESS', msg);
 					} catch (error) {
 						console.log(error);
 						errorToast('Message sent, but could not update status in the database.');
