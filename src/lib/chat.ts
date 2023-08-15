@@ -3,7 +3,7 @@ import { bufferToBase64, bufferUtfToBase64, bufferHexToBase64 } from '$lib/buffe
 import { db, MessageType } from '$lib/db';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
-import { clearMessage, pubkey, TLV_RECORDS } from '$lib/store';
+import { lockMessage, clearMessage, pubkey, TLV_RECORDS } from '$lib/store';
 import { tick } from 'svelte';
 import { errorToast } from '$lib/utils';
 import { lnc } from '$lib/lnc';
@@ -12,6 +12,8 @@ const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE,
 	get(TLV_RECORDS);
 
 export const sendMessage = async (recipient: string, message: string, amount?: number) => {
+	lockMessage.set(recipient);
+
 	// setup data
 	const timestamp = Date.now() * 1000000;
 	const timestampFormmatted = bufferUtfToBase64(timestamp.toString());
@@ -37,7 +39,41 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	const sendersPubkey = bufferUtfToBase64(get(pubkey));
 	const recipientFormatted = bufferHexToBase64(recipient);
 
-	let signature: lnrpc.SignMessageResponse;
+	// add to db
+	try {
+		await db.transaction('rw', db.conversations, async () => {
+			const conversation = await db.conversations.get(recipient);
+			if (!conversation) return;
+			const messages = conversation.messages || [];
+
+			const newMessage = {
+				id,
+				iv: messageEncrypted.iv,
+				message: messageEncrypted.content,
+				type,
+				timestamp,
+				status,
+				amount: finalAmount,
+				failureReason,
+				self
+			};
+			messages.push(newMessage);
+
+			conversation.messages = messages;
+
+			await db.conversations.put(conversation);
+		});
+
+		clearMessage.set(recipient);
+		lockMessage.set('');
+		await tick();
+		clearMessage.set('');
+	} catch (error) {
+		console.log(error);
+		errorToast(`Could not attempt sending ${amount ? 'payment' : 'message'}, please try again.`);
+		lockMessage.set('');
+		return;
+	}
 
 	const updateMessage = async (type: string, msg?: lnrpc.Payment) => {
 		await db.transaction('rw', db.conversations, async () => {
@@ -71,41 +107,9 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 		});
 	};
 
-	// add to db
-	try {
-		await db.transaction('rw', db.conversations, async () => {
-			const conversation = await db.conversations.get(recipient);
-			if (!conversation) return;
-			const messages = conversation.messages || [];
-
-			const newMessage = {
-				id,
-				iv: messageEncrypted.iv,
-				message: messageEncrypted.content,
-				type,
-				timestamp,
-				status,
-				amount: finalAmount,
-				failureReason,
-				self
-			};
-			messages.push(newMessage);
-
-			conversation.messages = messages;
-
-			await db.conversations.put(conversation);
-		});
-
-		clearMessage.set(recipient);
-		await tick();
-		clearMessage.set('');
-	} catch (error) {
-		console.log(error);
-		errorToast(`Could not attempt sending ${amount ? 'payment' : 'message'}, please try again.`);
-		return;
-	}
-
 	// sign message
+	let signature: lnrpc.SignMessageResponse;
+
 	try {
 		signature = await lnc.lnd.lightning.signMessage({
 			msg: bufferUtfToBase64(recipient + timestamp.toString() + message)
