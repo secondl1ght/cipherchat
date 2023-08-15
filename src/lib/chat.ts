@@ -144,7 +144,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 				timeoutSeconds: 60,
 				feeLimitSat,
 				timePref,
-				allowSelfPayment: true,
+				allowSelfPayment: false,
 				noInflightUpdates: true
 			},
 			async (msg) => {

@@ -201,10 +201,11 @@ export const initializePayments = async () => {
 		try {
 			// conversation values
 			const pubkey = lastRouteHop.pubKey;
+			if (lastRouteHop.pubKey === userPubkey) return;
 			const avatar = '';
 			const read = true;
 			const blocked = 'false';
-			const charLimit = lastRouteHop.pubKey === userPubkey ? 1000 : 300;
+			const charLimit = 300;
 
 			// message values
 			const preimage = lastRouteHop.customRecords[KEYSEND_PREIMAGE].toString();
