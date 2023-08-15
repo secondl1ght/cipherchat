@@ -15,6 +15,8 @@ export const TLV_RECORDS = readable({
 	SIGNATURE: 34349337,
 	CONTENT_TYPE: 34349345
 });
+export const addConvo = writable('');
+export const activeConversation = writable('');
 export const lockMessage = writable('');
 export const clearMessage = writable('');
 export const links = readable({

@@ -1,15 +1,66 @@
+import { get } from 'svelte/store';
+import {
+	addConvo,
+	activeConversation,
+	lockMessage,
+	clearMessage,
+	pubkey,
+	TLV_RECORDS
+} from '$lib/store';
+import { warningToast, errorToast } from '$lib/utils';
+import { type Conversation, db, MessageType } from '$lib/db';
 import { randomBytes, createHash, encrypt } from '$lib/crypto';
 import { bufferToBase64, bufferUtfToBase64, bufferHexToBase64 } from '$lib/buffer';
-import { db, MessageType } from '$lib/db';
 import { lnrpc } from '@lightninglabs/lnc-web';
-import { get } from 'svelte/store';
-import { lockMessage, clearMessage, pubkey, TLV_RECORDS } from '$lib/store';
 import { tick } from 'svelte';
-import { errorToast } from '$lib/utils';
 import { lnc } from '$lib/lnc';
+
+const userPubkey = get(pubkey);
 
 const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE, CONTENT_TYPE } =
 	get(TLV_RECORDS);
+
+export const addConversation = async (pubkey: string) => {
+	if (pubkey === userPubkey) {
+		warningToast('Cannot start a conversation with yourself.');
+	} else {
+		try {
+			addConvo.set('LOADING');
+
+			const nodeInfo = await lnc.lnd.lightning.getNodeInfo({
+				pubKey: pubkey,
+				includeChannels: false
+			});
+
+			await db.transaction('rw', db.conversations, async () => {
+				const conversationExists = await db.conversations.get(pubkey);
+
+				if (conversationExists) {
+					warningToast('You already have a conversation with this node.');
+					addConvo.set('');
+				} else {
+					const conversation: Conversation = {
+						pubkey,
+						alias: nodeInfo.node?.alias,
+						color: nodeInfo.node?.color,
+						avatar: '',
+						read: true,
+						blocked: 'false',
+						charLimit: 300
+					};
+
+					await db.conversations.add(conversation);
+					activeConversation.set(pubkey);
+					addConvo.set('SUCCESS');
+				}
+			});
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not add new conversation, please try again.');
+			addConvo.set('');
+		}
+	}
+};
 
 export const sendMessage = async (recipient: string, message: string, amount?: number) => {
 	lockMessage.set(recipient);
