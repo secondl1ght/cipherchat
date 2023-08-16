@@ -1,8 +1,8 @@
 <script lang="ts">
 	export let text: string;
 
-	import tippy from 'tippy.js';
 	import { Icon } from 'comp';
+	import tippy from 'tippy.js';
 
 	let infoTooltip: HTMLSpanElement;
 

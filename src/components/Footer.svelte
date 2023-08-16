@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Link } from 'comp';
 	import { page } from '$app/stores';
-	import { PUBLIC_VERSION, PUBLIC_COMMIT } from '$env/static/public';
+	import { PUBLIC_COMMIT, PUBLIC_VERSION } from '$env/static/public';
+	import { Link } from 'comp';
 </script>
 
 <footer class="relative space-y-16 px-2 pb-8">

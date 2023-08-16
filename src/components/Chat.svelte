@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { liveQuery, type Observable } from 'dexie';
 	import { db, type Conversation } from '$lib/db';
-	import { onMount } from 'svelte';
 	import { lnc } from '$lib/lnc';
-	import { pubkey, alias, color } from '$lib/store';
+	import { alias, color, pubkey } from '$lib/store';
 	import {
-		initializeInvoices,
-		initializePayments,
 		combineConversations,
 		finalizeConversations,
+		initializeInvoices,
+		initializePayments,
 		saveToDB
 	} from '$lib/sync';
-	import { getUpdateTime, setLastUpdate, setFirstSyncComplete, setError } from '$lib/utils';
+	import { getUpdateTime, setError, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
+	import { liveQuery, type Observable } from 'dexie';
+	import { onMount } from 'svelte';
 
 	let loading = true;
 

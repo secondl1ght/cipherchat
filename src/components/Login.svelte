@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { lnc } from '$lib/lnc';
 	import { generateKey, resetKey } from '$lib/crypto';
-	import { connected, paired } from '$lib/store';
 	import { db } from '$lib/db';
-	import { Button, Icon } from 'comp';
+	import { lnc } from '$lib/lnc';
+	import { connected, paired } from '$lib/store';
 	import { errorToast, successToast } from '$lib/utils';
+	import { Button, Icon } from 'comp';
 
 	let loading = false;
 	let password = '';

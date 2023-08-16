@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PublicLayout, Link, Icon } from 'comp';
+	import { Icon, Link, PublicLayout } from 'comp';
 </script>
 
 <svelte:head>

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { lnc } from '$lib/lnc';
 	import { generateKey } from '$lib/crypto';
+	import { lnc } from '$lib/lnc';
 	import { connected } from '$lib/store';
-	import { tick } from 'svelte';
-	import { Button, InfoTooltip, Icon } from 'comp';
 	import { errorToast, successToast } from '$lib/utils';
+	import { Button, Icon, InfoTooltip } from 'comp';
+	import { tick } from 'svelte';
 	import { blur } from 'svelte/transition';
 
 	let start = false;

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { PublicLayout, Icon, Button } from 'comp';
 	import { copy } from '$lib/utils';
+	import { Button, Icon, PublicLayout } from 'comp';
 	import { blur } from 'svelte/transition';
 
 	const lightningAddress = 'secondl1ght@getalby.com';

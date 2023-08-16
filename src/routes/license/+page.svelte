@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PublicLayout, Link, Button } from 'comp';
+	import { Button, Link, PublicLayout } from 'comp';
 
 	const year = new Date().getFullYear();
 </script>

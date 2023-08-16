@@ -1,5 +1,5 @@
-import { writable, readable } from 'svelte/store';
 import { lnc } from '$lib/lnc';
+import { readable, writable } from 'svelte/store';
 
 export const paired = writable(lnc.credentials.isPaired);
 export const connected = writable(false);

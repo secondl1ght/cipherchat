@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { PublicLayout, Button, Icon } from 'comp';
 	import { error } from '$lib/store';
+	import { Button, Icon, PublicLayout } from 'comp';
 
 	let loading = false;
 </script>

@@ -1,5 +1,5 @@
-import LNC from '@lightninglabs/lnc-web';
 import { PUBLIC_WASM_VERSION } from '$env/static/public';
+import LNC from '@lightninglabs/lnc-web';
 
 export const lnc = new LNC({
 	serverHost: '',

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Link } from 'comp';
 	import { page } from '$app/stores';
+	import { Link } from 'comp';
 </script>
 
 <header class="px-2 py-8">

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { PublicLayout, FaqItem, Link } from 'comp';
 	import { links } from '$lib/store';
+	import { FaqItem, Link, PublicLayout } from 'comp';
 </script>
 
 <svelte:head>

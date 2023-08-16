@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let heroText = 'CIPHERCHAT';
 
-	import { Wrapper, Header, Hero, BoxWrapper, Footer } from 'comp';
+	import { BoxWrapper, Footer, Header, Hero, Wrapper } from 'comp';
 </script>
 
 <Wrapper>

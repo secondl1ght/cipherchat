@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	const options = {
 		pausable: true

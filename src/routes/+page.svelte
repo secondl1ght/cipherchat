@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { connected, paired, error } from '$lib/store';
-	import { Chat, PublicLayout, Login, Connect, Error } from 'comp';
+	import { connected, error, paired } from '$lib/store';
+	import { Chat, Connect, Error, Login, PublicLayout } from 'comp';
 </script>
 
 <svelte:head>
