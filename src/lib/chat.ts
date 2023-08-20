@@ -140,7 +140,7 @@ export const subscribeInvoices = () => {
 							await db.conversations.put(conversationExists);
 
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
-							
+
 							if (conversationExists.blocked === 'false') {
 								messageNotification();
 							}
