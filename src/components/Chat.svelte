@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { subscribeInvoices } from '$lib/chat';
 	import { db, type Conversation } from '$lib/db';
 	import { lnc } from '$lib/lnc';
-	import { alias, color, pubkey } from '$lib/store';
+	import { userAlias, userColor, userPubkey } from '$lib/store';
 	import {
 		combineConversations,
 		finalizeConversations,
@@ -24,9 +25,9 @@
 			const firstSyncComplete = localStorage.getItem('firstSyncComplete');
 
 			const nodeInfo = await lnc.lnd.lightning.getInfo();
-			$pubkey = nodeInfo.identityPubkey;
-			$alias = nodeInfo.alias;
-			$color = nodeInfo.color;
+			$userPubkey = nodeInfo.identityPubkey;
+			$userAlias = nodeInfo.alias;
+			$userColor = nodeInfo.color;
 
 			if (firstSyncComplete) {
 				const updateTime = getUpdateTime();
@@ -69,7 +70,11 @@
 					setLastUpdate(updateTime);
 					setFirstSyncComplete();
 				}
+
+				localStorage.setItem('playAudio', 'true');
 			}
+
+			subscribeInvoices();
 
 			conversations = liveQuery(
 				async () => await db.conversations.where('blocked').equals('false').toArray()

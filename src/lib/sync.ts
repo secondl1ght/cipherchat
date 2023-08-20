@@ -1,20 +1,66 @@
-import { pubkey, TLV_RECORDS } from '$lib/store';
-import { get } from 'svelte/store';
-import { lnc } from '$lib/lnc';
-import { bufferUtfToBase64, bufferBase64ToUtf } from '$lib/buffer';
-import { type Conversation, type Message, MessageType } from '$lib/db';
+import { bufferBase64ToUtf, bufferUtfToBase64 } from '$lib/buffer';
 import { encrypt } from '$lib/crypto';
+import { MessageType, db, type Conversation, type Message } from '$lib/db';
+import { lnc } from '$lib/lnc';
+import { userPubkey } from '$lib/store';
+import { TLV_RECORDS } from '$lib/tlv';
+import { getUpdateTime, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
-import { db } from '$lib/db';
-import { getUpdateTime, setLastUpdate, setFirstSyncComplete, setError } from '$lib/utils';
+import { get } from 'svelte/store';
 
 let updateTime: string;
 
 const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE, CONTENT_TYPE } =
-	get(TLV_RECORDS);
+	TLV_RECORDS;
 
-const userPubkey = get(pubkey);
 const messageType = Object.values(MessageType);
+
+export const validateInvoice = async (invoice: lnrpc.Invoice) => {
+	const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
+
+	if (!successfulHTLC) return false;
+
+	const preimage = successfulHTLC.customRecords[KEYSEND_PREIMAGE];
+	const timestamp = successfulHTLC.customRecords[TIMESTAMP];
+	const message = successfulHTLC.customRecords[MESSAGE_CONTENT];
+	const signature = successfulHTLC.customRecords[SIGNATURE];
+	const pubkey = successfulHTLC.customRecords[SENDERS_PUBKEY];
+	const type = successfulHTLC.customRecords[CONTENT_TYPE];
+
+	if (
+		!invoice.isKeysend ||
+		!preimage ||
+		!timestamp ||
+		!message ||
+		!signature ||
+		!pubkey ||
+		!type ||
+		bufferBase64ToUtf(pubkey) === get(userPubkey)
+	) {
+		return false;
+	}
+
+	try {
+		const messageFormatted = bufferUtfToBase64(
+			get(userPubkey) + bufferBase64ToUtf(timestamp) + bufferBase64ToUtf(message)
+		);
+		const pubkeyDecoded = bufferBase64ToUtf(pubkey);
+
+		const verifySignature = await lnc.lnd.lightning.verifyMessage({
+			msg: messageFormatted,
+			signature: signature.toString()
+		});
+
+		if (verifySignature.valid && verifySignature.pubkey === pubkeyDecoded) {
+			return true;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+};
 
 export const initializeInvoices = async () => {
 	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
@@ -26,54 +72,6 @@ export const initializeInvoices = async () => {
 	});
 
 	if (!invoices.length) return;
-
-	const validateInvoice = async (invoice: lnrpc.Invoice) => {
-		const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
-
-		if (!successfulHTLC) return false;
-
-		const preimage = successfulHTLC.customRecords[KEYSEND_PREIMAGE];
-		const timestamp = successfulHTLC.customRecords[TIMESTAMP];
-		const message = successfulHTLC.customRecords[MESSAGE_CONTENT];
-		const signature = successfulHTLC.customRecords[SIGNATURE];
-		const pubkey = successfulHTLC.customRecords[SENDERS_PUBKEY];
-		const type = successfulHTLC.customRecords[CONTENT_TYPE];
-
-		if (
-			!invoice.isKeysend ||
-			!preimage ||
-			!timestamp ||
-			!message ||
-			!signature ||
-			!pubkey ||
-			!type ||
-			bufferBase64ToUtf(pubkey) === userPubkey
-		) {
-			return false;
-		}
-
-		try {
-			const messageFormatted = bufferUtfToBase64(
-				userPubkey + bufferBase64ToUtf(timestamp) + bufferBase64ToUtf(message)
-			);
-			const signatureDecoded = bufferBase64ToUtf(signature);
-			const pubkeyDecoded = bufferBase64ToUtf(pubkey);
-
-			const verifySignature = await lnc.lnd.lightning.verifyMessage({
-				msg: messageFormatted,
-				signature: signatureDecoded
-			});
-
-			if (verifySignature.valid && verifySignature.pubkey === pubkeyDecoded) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (error) {
-			console.log(error);
-			return false;
-		}
-	};
 
 	const invoicesFiltered: lnrpc.Invoice[] = [];
 
@@ -105,7 +103,7 @@ export const initializeInvoices = async () => {
 			const message = bufferBase64ToUtf(successfulHTLC.customRecords[MESSAGE_CONTENT]);
 			const messageEncrypted = await encrypt(message);
 			if (!messageEncrypted) return;
-			const signature = bufferBase64ToUtf(successfulHTLC.customRecords[SIGNATURE]);
+			const signature = successfulHTLC.customRecords[SIGNATURE].toString();
 			const type = messageType.find(
 				(type) => type === bufferBase64ToUtf(successfulHTLC.customRecords[CONTENT_TYPE])
 			);
@@ -201,7 +199,7 @@ export const initializePayments = async () => {
 		try {
 			// conversation values
 			const pubkey = lastRouteHop.pubKey;
-			if (lastRouteHop.pubKey === userPubkey) return;
+			if (lastRouteHop.pubKey === get(userPubkey)) return;
 			const avatar = '';
 			const read = true;
 			const blocked = 'false';
@@ -212,7 +210,7 @@ export const initializePayments = async () => {
 			const message = bufferBase64ToUtf(lastRouteHop.customRecords[MESSAGE_CONTENT]);
 			const messageEncrypted = await encrypt(message);
 			if (!messageEncrypted) return;
-			const signature = bufferBase64ToUtf(lastRouteHop.customRecords[SIGNATURE]);
+			const signature = lastRouteHop.customRecords[SIGNATURE].toString();
 			const type = messageType.find(
 				(type) => type === bufferBase64ToUtf(lastRouteHop.customRecords[CONTENT_TYPE])
 			);
@@ -263,7 +261,7 @@ export const initializePayments = async () => {
 	return paymentsGrouped;
 };
 
-export const combineConversations = async (invoices: Conversation[], payments: Conversation[]) => {
+export const combineConversations = (invoices: Conversation[], payments: Conversation[]) => {
 	const conversations = [...invoices];
 
 	payments.forEach((payment) => {
