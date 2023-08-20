@@ -188,8 +188,7 @@
 				/> on the Cipherchat GitHub repository for instructions.
 			</FaqItem>
 			<FaqItem question="Can I install Cipherchat easily on myNode, Embassy, Umbrel etc.?">
-				I plan to release a version of Cipherchat for these plug-and-play app stores that does not
-				depend on LNC because you can connect directly to your node on these platforms.
+				I plan to release Cipherchat for these plug-and-play app stores.
 			</FaqItem>
 			<FaqItem question="How can I run my own LNC Mailbox?">
 				Instructions on running your own relay proxy server can be found in the <Link
