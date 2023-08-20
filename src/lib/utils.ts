@@ -52,3 +52,8 @@ export const setFirstSyncComplete = () => {
 };
 
 export const setError = (status: string, message: string) => error.set({ status, message });
+
+export const shortenPubkey = (pubkey: string) =>
+	pubkey.slice(0, 6) + '...' + pubkey.slice(pubkey.length - 6, pubkey.length);
+
+export const formatNumber = (number: number) => new Intl.NumberFormat().format(number);
