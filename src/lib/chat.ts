@@ -10,7 +10,14 @@ import { lnc } from '$lib/lnc';
 import { activeConversation, addConvo, clearMessage, lockMessage, userPubkey } from '$lib/store';
 import { validateInvoice } from '$lib/sync';
 import { TLV_RECORDS } from '$lib/tlv';
-import { errorToast, formatNumber, setLastUpdate, shortenPubkey, warningToast } from '$lib/utils';
+import {
+	errorToast,
+	formatNumber,
+	getTimestamp,
+	setLastUpdate,
+	shortenPubkey,
+	warningToast
+} from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { tick } from 'svelte';
 import { get } from 'svelte/store';
@@ -42,7 +49,6 @@ export const subscribeInvoices = () => {
 					});
 					const alias = nodeInfo.node?.alias;
 					const color = nodeInfo.node?.color;
-					const avatar = '';
 					const read = false;
 					const blocked = 'false';
 					const charLimit = 300;
@@ -58,6 +64,7 @@ export const subscribeInvoices = () => {
 					);
 					if (!type) return;
 					const timestamp = Number(bufferBase64ToUtf(successfulHTLC.customRecords[TIMESTAMP]));
+					const receivedTime = getTimestamp();
 					const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
 					const amount = Number(msg.amtPaidSat);
 					const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
@@ -65,11 +72,13 @@ export const subscribeInvoices = () => {
 
 					const messageObject: Message = {
 						id: preimage,
+						pubkey,
 						iv: messageEncrypted.iv,
 						message: messageEncrypted.content,
 						signature,
 						type,
 						timestamp,
+						receivedTime,
 						status,
 						amount,
 						failureReason,
@@ -125,19 +134,18 @@ export const subscribeInvoices = () => {
 						}
 					};
 
-					await db.transaction('rw', db.conversations, async () => {
+					await db.transaction('rw', db.conversations, db.messages, async () => {
 						const conversationExists = await db.conversations.get(pubkey);
 
 						if (conversationExists) {
 							conversationExists.alias = alias;
 							conversationExists.color = color;
 							conversationExists.read = read;
-
-							const currentMessages = conversationExists.messages || [];
-							currentMessages.push(messageObject);
-							conversationExists.messages = currentMessages;
+							conversationExists.latestMessage = messageObject.id;
+							conversationExists.lastUpdate = messageObject.receivedTime;
 
 							await db.conversations.put(conversationExists);
+							await db.messages.add(messageObject);
 
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
 
@@ -149,12 +157,13 @@ export const subscribeInvoices = () => {
 								pubkey,
 								alias,
 								color,
-								avatar,
-								messages: [messageObject],
 								read,
 								blocked,
-								charLimit
+								charLimit,
+								latestMessage: messageObject.id,
+								lastUpdate: messageObject.receivedTime
 							});
+							await db.messages.add(messageObject);
 
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
 							messageNotification();
@@ -198,7 +207,6 @@ export const addConversation = async (pubkey: string) => {
 						pubkey,
 						alias: nodeInfo.node?.alias,
 						color: nodeInfo.node?.color,
-						avatar: '',
 						read: true,
 						blocked: 'false',
 						charLimit: 300
@@ -221,7 +229,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	lockMessage.set(recipient);
 
 	// setup data
-	const timestamp = Date.now() * 1000000;
+	const timestamp = getTimestamp();
 	const timestampFormmatted = bufferUtfToBase64(timestamp.toString());
 
 	const preimage = randomBytes(32).buffer;
@@ -247,27 +255,29 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 
 	// add to db
 	try {
-		await db.transaction('rw', db.conversations, async () => {
+		await db.transaction('rw', db.conversations, db.messages, async () => {
 			const conversation = await db.conversations.get(recipient);
 			if (!conversation) return;
-			const messages = conversation.messages || [];
 
 			const newMessage = {
 				id,
+				pubkey: recipient,
 				iv: messageEncrypted.iv,
 				message: messageEncrypted.content,
 				type,
 				timestamp,
+				receivedTime: timestamp,
 				status,
 				amount: finalAmount,
 				failureReason,
 				self
 			};
-			messages.push(newMessage);
 
-			conversation.messages = messages;
+			conversation.latestMessage = newMessage.id;
+			conversation.lastUpdate = newMessage.receivedTime;
 
 			await db.conversations.put(conversation);
+			await db.messages.add(newMessage);
 		});
 
 		clearMessage.set(recipient);
@@ -282,34 +292,33 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	}
 
 	const updateMessage = (type: string, msg?: lnrpc.Payment) => {
-		db.transaction('rw', db.conversations, async () => {
-			const conversation = await db.conversations.get(recipient);
-			if (!conversation) return;
-			const messages = conversation.messages || [];
-			const messageIndex = messages.findIndex((message) => message.id === id);
-
+		db.transaction('rw', db.messages, () => {
 			if (type === 'SIGNATURE') {
-				messages[messageIndex].status = lnrpc.Payment_PaymentStatus.FAILED;
-				messages[messageIndex].failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR;
+				db.messages.update(id, {
+					status: lnrpc.Payment_PaymentStatus.FAILED,
+					failureReason: lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR
+				});
 			} else if (type === 'FAILED') {
 				if (!msg) return;
-				messages[messageIndex].status = msg.status;
-				messages[messageIndex].failureReason = msg.failureReason;
-				messages[messageIndex].signature = signature.signature;
+				db.messages.update(id, {
+					status: msg.status,
+					failureReason: msg.failureReason,
+					signature: signature.signature
+				});
 			} else if (type === 'SUCCESS') {
 				if (!msg) return;
-				messages[messageIndex].status = msg.status;
-				messages[messageIndex].fee = Number(msg.feeSat);
-				messages[messageIndex].signature = signature.signature;
+				db.messages.update(id, {
+					status: msg.status,
+					fee: Number(msg.feeSat),
+					signature: signature.signature
+				});
 			} else if (type === 'ERROR') {
-				messages[messageIndex].status = lnrpc.Payment_PaymentStatus.FAILED;
-				messages[messageIndex].failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR;
-				messages[messageIndex].signature = signature.signature;
+				db.messages.update(id, {
+					status: lnrpc.Payment_PaymentStatus.FAILED,
+					failureReason: lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR,
+					signature: signature.signature
+				});
 			}
-
-			conversation.messages = messages;
-
-			db.conversations.put(conversation);
 		});
 	};
 

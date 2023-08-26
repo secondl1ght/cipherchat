@@ -57,3 +57,5 @@ export const shortenPubkey = (pubkey: string) =>
 	pubkey.slice(0, 6) + '...' + pubkey.slice(pubkey.length - 6, pubkey.length);
 
 export const formatNumber = (number: number) => new Intl.NumberFormat().format(number);
+
+export const getTimestamp = () => Date.now() * 1000000;

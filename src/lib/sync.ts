@@ -62,6 +62,18 @@ export const validateInvoice = async (invoice: lnrpc.Invoice) => {
 	}
 };
 
+export interface ConversationConstruction {
+	pubkey: string;
+	messages: Message[];
+	read: boolean;
+	blocked: 'true' | 'false';
+	charLimit: number;
+	alias?: string;
+	color?: string;
+	latestMessage?: string;
+	lastUpdate?: number;
+}
+
 export const initializeInvoices = async () => {
 	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
 
@@ -83,7 +95,7 @@ export const initializeInvoices = async () => {
 		}
 	}
 
-	const invoicesGrouped: Conversation[] = [];
+	const invoicesGrouped: ConversationConstruction[] = [];
 
 	for await (const invoice of invoicesFiltered) {
 		const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
@@ -93,7 +105,6 @@ export const initializeInvoices = async () => {
 		try {
 			// conversation values
 			const pubkey = bufferBase64ToUtf(successfulHTLC.customRecords[SENDERS_PUBKEY]);
-			const avatar = '';
 			const read = false;
 			const blocked = 'false';
 			const charLimit = 300;
@@ -116,11 +127,13 @@ export const initializeInvoices = async () => {
 
 			const messageObject: Message = {
 				id: preimage,
+				pubkey,
 				iv: messageEncrypted.iv,
 				message: messageEncrypted.content,
 				signature,
 				type,
 				timestamp,
+				receivedTime: timestamp,
 				status,
 				amount,
 				failureReason,
@@ -128,15 +141,14 @@ export const initializeInvoices = async () => {
 			};
 
 			const index = invoicesGrouped.findIndex(
-				(conversation: Conversation) => conversation.pubkey === pubkey
+				(conversation: ConversationConstruction) => conversation.pubkey === pubkey
 			);
 
 			if (index !== -1) {
-				invoicesGrouped[index].messages?.push(messageObject);
+				invoicesGrouped[index].messages.push(messageObject);
 			} else {
 				invoicesGrouped.push({
 					pubkey,
-					avatar,
 					messages: [messageObject],
 					read,
 					blocked,
@@ -185,7 +197,7 @@ export const initializePayments = async () => {
 		}
 	});
 
-	const paymentsGrouped: Conversation[] = [];
+	const paymentsGrouped: ConversationConstruction[] = [];
 
 	for await (const payment of paymentsFiltered) {
 		const successfulHTLC = payment.htlcs.find((htlc) => htlc.status === 'SUCCEEDED')?.route?.hops;
@@ -200,7 +212,6 @@ export const initializePayments = async () => {
 			// conversation values
 			const pubkey = lastRouteHop.pubKey;
 			if (lastRouteHop.pubKey === get(userPubkey)) return;
-			const avatar = '';
 			const read = true;
 			const blocked = 'false';
 			const charLimit = 300;
@@ -224,11 +235,13 @@ export const initializePayments = async () => {
 
 			const messageObject: Message = {
 				id: preimage,
+				pubkey,
 				iv: messageEncrypted.iv,
 				message: messageEncrypted.content,
 				signature,
 				type,
 				timestamp,
+				receivedTime: timestamp,
 				status,
 				amount,
 				fee,
@@ -237,15 +250,14 @@ export const initializePayments = async () => {
 			};
 
 			const index = paymentsGrouped.findIndex(
-				(conversation: Conversation) => conversation.pubkey === pubkey
+				(conversation: ConversationConstruction) => conversation.pubkey === pubkey
 			);
 
 			if (index !== -1) {
-				paymentsGrouped[index].messages?.push(messageObject);
+				paymentsGrouped[index].messages.push(messageObject);
 			} else {
 				paymentsGrouped.push({
 					pubkey,
-					avatar,
 					messages: [messageObject],
 					read,
 					blocked,
@@ -261,18 +273,19 @@ export const initializePayments = async () => {
 	return paymentsGrouped;
 };
 
-export const combineConversations = (invoices: Conversation[], payments: Conversation[]) => {
+export const combineConversations = (
+	invoices: ConversationConstruction[],
+	payments: ConversationConstruction[]
+) => {
 	const conversations = [...invoices];
 
 	payments.forEach((payment) => {
 		const index = conversations.findIndex((conversation) => conversation.pubkey === payment.pubkey);
 
 		if (index !== -1) {
-			if (payment.messages) {
-				const messages = conversations[index].messages?.concat(payment.messages);
+			const messages = conversations[index].messages.concat(payment.messages);
 
-				conversations[index].messages = messages || payment.messages;
-			}
+			conversations[index].messages = messages;
 		} else {
 			conversations.push(payment);
 		}
@@ -281,9 +294,9 @@ export const combineConversations = (invoices: Conversation[], payments: Convers
 	return conversations;
 };
 
-export const finalizeConversations = async (conversations: Conversation[]) => {
+export const finalizeConversations = async (conversations: ConversationConstruction[]) => {
 	for await (const conversation of conversations) {
-		conversation.messages?.sort((a, b) => a.timestamp - b.timestamp);
+		conversation.messages.sort((a, b) => a.timestamp - b.timestamp);
 
 		try {
 			const nodeInfo = await lnc.lnd.lightning.getNodeInfo({
@@ -296,47 +309,66 @@ export const finalizeConversations = async (conversations: Conversation[]) => {
 		} catch (error) {
 			console.log(error);
 		}
+
+		const lastMessage = conversation.messages[conversation.messages.length - 1];
+
+		conversation.latestMessage = lastMessage.id;
+		conversation.lastUpdate = lastMessage.receivedTime;
 	}
 
 	return conversations;
 };
 
-export const saveToDB = async (conversations: Conversation[]) => {
+export const saveToDB = async (conversations: ConversationConstruction[]) => {
 	const firstSyncComplete = localStorage.getItem('firstSyncComplete');
 
-	if (firstSyncComplete) {
-		const primaryKeys = conversations.map((conversation) => conversation.pubkey);
+	const messages: Message[] = [];
+	conversations.forEach((conversation) =>
+		conversation.messages.forEach((message) => messages.push(message))
+	);
 
-		await db.transaction('rw', db.conversations, async () => {
+	const conversationsFormatted: Conversation[] = conversations.map((conversation) => ({
+		pubkey: conversation.pubkey,
+		alias: conversation.alias,
+		color: conversation.color,
+		read: conversation.read,
+		blocked: conversation.blocked,
+		charLimit: conversation.charLimit,
+		latestMessage: conversation.latestMessage,
+		lastUpdate: conversation.lastUpdate
+	}));
+
+	if (firstSyncComplete) {
+		const primaryKeys = conversationsFormatted.map((conversation) => conversation.pubkey);
+
+		await db.transaction('rw', db.conversations, db.messages, async () => {
 			const recordsInDB = await db.conversations.bulkGet(primaryKeys);
 
-			for await (const conversation of conversations) {
+			for await (const conversation of conversationsFormatted) {
 				const recordExists = recordsInDB.find((record) => record?.pubkey === conversation.pubkey);
 
 				if (recordExists) {
 					recordExists.alias = conversation.alias;
 					recordExists.color = conversation.color;
 					recordExists.read = conversation.read;
-
-					const currentMessages = recordExists.messages || [];
-					const newMessages = conversation.messages || [];
-					const updatedMessages = [...currentMessages, ...newMessages];
-					recordExists.messages = updatedMessages;
+					recordExists.latestMessage = conversation.latestMessage;
+					recordExists.lastUpdate = conversation.lastUpdate;
 
 					await db.conversations.put(recordExists);
 				} else {
 					await db.conversations.add(conversation);
 				}
 			}
+
+			await db.messages.bulkAdd(messages, undefined, { allKeys: false });
 		});
 
 		setLastUpdate(updateTime);
 	} else {
-		await db.transaction(
-			'rw',
-			db.conversations,
-			async () => await db.conversations.bulkAdd(conversations, undefined, { allKeys: false })
-		);
+		await db.transaction('rw', db.conversations, db.messages, async () => {
+			await db.conversations.bulkAdd(conversationsFormatted, undefined, { allKeys: false });
+			await db.messages.bulkAdd(messages, undefined, { allKeys: false });
+		});
 
 		setLastUpdate(updateTime);
 		setFirstSyncComplete();

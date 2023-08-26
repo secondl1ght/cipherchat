@@ -8,7 +8,8 @@
 		finalizeConversations,
 		initializeInvoices,
 		initializePayments,
-		saveToDB
+		saveToDB,
+		type ConversationConstruction
 	} from '$lib/sync';
 	import { getUpdateTime, setError, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
 	import { liveQuery, type Observable } from 'dexie';
@@ -42,8 +43,8 @@
 					setLastUpdate(updateTime);
 				}
 			} else {
-				let invoices: Conversation[] | undefined;
-				let payments: Conversation[] | undefined;
+				let invoices: ConversationConstruction[] | undefined;
+				let payments: ConversationConstruction[] | undefined;
 
 				const updateTime = getUpdateTime();
 
@@ -53,7 +54,7 @@
 				});
 
 				if (invoices && payments) {
-					const conversationsCombined = await combineConversations(invoices, payments);
+					const conversationsCombined = combineConversations(invoices, payments);
 
 					const conversationsFinalized = await finalizeConversations(conversationsCombined);
 
