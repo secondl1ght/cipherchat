@@ -2,7 +2,7 @@
 	import { subscribeInvoices } from '$lib/chat';
 	import { db, type Conversation } from '$lib/db';
 	import { lnc } from '$lib/lnc';
-	import { userAlias, userColor, userPubkey } from '$lib/store';
+	import { activeConversation, userAlias, userColor, userPubkey } from '$lib/store';
 	import {
 		combineConversations,
 		finalizeConversations,
@@ -77,9 +77,19 @@
 
 			subscribeInvoices();
 
-			conversations = liveQuery(
-				async () => await db.conversations.where('blocked').equals('false').toArray()
-			);
+			conversations = liveQuery(async () => {
+				const query = await db.conversations
+					.where('blocked')
+					.equals('false')
+					.reverse()
+					.sortBy('lastUpdate');
+
+				if (loading) {
+					activeConversation.set(query[0].pubkey);
+				}
+
+				return query;
+			});
 
 			loading = false;
 		} catch (err) {
