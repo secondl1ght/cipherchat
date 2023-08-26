@@ -12,6 +12,7 @@
 		type ConversationConstruction
 	} from '$lib/sync';
 	import { getUpdateTime, setError, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
+	import { ChatLoading } from 'comp';
 	import { liveQuery, type Observable } from 'dexie';
 	import { onMount } from 'svelte';
 
@@ -100,3 +101,7 @@
 		}
 	});
 </script>
+
+{#if loading}
+	<ChatLoading />
+{:else}{/if}
