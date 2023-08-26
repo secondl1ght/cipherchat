@@ -76,6 +76,7 @@
 			/>
 		</label>
 		<input
+			id="pairing"
 			name="pairing"
 			type="text"
 			required
@@ -101,6 +102,7 @@
 		</label>
 		{#if showPass}
 			<input
+				id="password"
 				name="password"
 				type="text"
 				required
@@ -112,6 +114,7 @@
 			/>
 		{:else}
 			<input
+				id="password"
 				name="password"
 				type="password"
 				required
@@ -168,6 +171,7 @@
 			</div>
 
 			<input
+				id="mailbox"
 				name="mailbox"
 				type="text"
 				required

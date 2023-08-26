@@ -70,6 +70,7 @@
 	</label>
 	{#if showPass}
 		<input
+			id="password"
 			name="password"
 			type="text"
 			required
@@ -81,6 +82,7 @@
 		/>
 	{:else}
 		<input
+			id="password"
 			name="password"
 			type="password"
 			required
