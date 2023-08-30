@@ -23,6 +23,7 @@
 			$connected = true;
 			successToast('Logged in.');
 		} catch (error) {
+			console.log(error);
 			errorToast('Login failed, please try again.');
 		} finally {
 			loading = false;
@@ -47,6 +48,7 @@
 			$paired = false;
 			successToast('Node credentials cleared.');
 		} catch (error) {
+			console.log(error);
 			errorToast('Clear connection failed, please try again.');
 		} finally {
 			loading = false;
