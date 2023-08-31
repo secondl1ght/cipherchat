@@ -14,6 +14,8 @@ import { getUpdateTime, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
 
+const firstUpdate = '1693441765';
+
 let updateTime: string;
 
 const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE, CONTENT_TYPE } =
@@ -69,7 +71,7 @@ export const validateInvoice = async (invoice: lnrpc.Invoice) => {
 };
 
 export const initializeInvoices = async () => {
-	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
+	const lastUpdate = localStorage.getItem('lastUpdate') || firstUpdate;
 
 	updateTime = getUpdateTime();
 
@@ -159,7 +161,7 @@ export const initializeInvoices = async () => {
 };
 
 export const initializePayments = async () => {
-	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
+	const lastUpdate = localStorage.getItem('lastUpdate') || firstUpdate;
 
 	const { payments } = await lnc.lnd.lightning.listPayments({
 		includeIncomplete: false,
