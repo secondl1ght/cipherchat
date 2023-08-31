@@ -16,7 +16,6 @@ export const appView = writable(AppViewState.Home);
 export const homeState: Writable<'HOME' | 'PROFILE' | 'ADD'> = writable('HOME');
 
 export const conversations: Writable<Conversation[]> = writable();
-export const addConvo: Writable<'' | 'LOADING' | 'SUCCESS'> = writable('');
 export const activeConversation = writable('');
 
 export const messages: Writable<MessageDecrypted[]> = writable();

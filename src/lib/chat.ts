@@ -7,16 +7,24 @@ import {
 import { createHash, encrypt, randomBytes } from '$lib/crypto';
 import { db } from '$lib/db';
 import { lnc } from '$lib/lnc';
-import { activeConversation, addConvo, clearMessage, lockMessage, userPubkey } from '$lib/store';
+import {
+	activeConversation,
+	appView,
+	clearMessage,
+	homeState,
+	lockMessage,
+	userPubkey
+} from '$lib/store';
 import { validateInvoice } from '$lib/sync';
 import { TLV_RECORDS } from '$lib/tlv';
-import { MessageType, type Conversation, type Message } from '$lib/types';
+import { AppViewState, MessageType, type Conversation, type Message } from '$lib/types';
 import {
 	errorToast,
 	formatNumber,
 	getTimestamp,
 	setLastUpdate,
 	shortenPubkey,
+	successToast,
 	warningToast
 } from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
@@ -190,8 +198,6 @@ export const addConversation = async (pubkey: string) => {
 		warningToast('Cannot start a conversation with yourself.');
 	} else {
 		try {
-			addConvo.set('LOADING');
-
 			const nodeInfo = await lnc.lnd.lightning.getNodeInfo({
 				pubKey: pubkey,
 				includeChannels: false
@@ -202,7 +208,6 @@ export const addConversation = async (pubkey: string) => {
 
 				if (conversationExists) {
 					warningToast('You already have a conversation with this node.');
-					addConvo.set('');
 				} else {
 					const conversation: Conversation = {
 						pubkey,
@@ -215,13 +220,14 @@ export const addConversation = async (pubkey: string) => {
 
 					await db.conversations.add(conversation);
 					activeConversation.set(pubkey);
-					addConvo.set('SUCCESS');
+					appView.set(AppViewState.Convo);
+					homeState.set('HOME');
+					successToast('Conversation started!');
 				}
 			});
 		} catch (error) {
 			console.log(error);
-			errorToast('Could not add new conversation, please try again.');
-			addConvo.set('');
+			errorToast('Could not start a new conversation, please try again.');
 		}
 	}
 };
