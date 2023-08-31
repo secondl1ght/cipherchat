@@ -2,11 +2,23 @@
 	import { appView, homeState, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
 	import { AppViewState } from '$lib/types';
 	import { Avatar, Icon } from 'comp';
+
+	const toggleHome = () => {
+		if ($homeState === 'HOME') {
+			$homeState = 'PROFILE';
+		} else {
+			$homeState = 'HOME';
+		}
+	};
 </script>
 
 <div class="flex w-full items-center justify-between border-b border-header pb-4">
-	<button on:click={() => ($homeState = 'PROFILE')}>
-		<Avatar pubkey={$userPubkey} alias={$userAlias} color={$userColor} avatar={$userAvatar} />
+	<button on:click={toggleHome}>
+		{#if $homeState === 'HOME'}
+			<Avatar pubkey={$userPubkey} alias={$userAlias} color={$userColor} avatar={$userAvatar} />
+		{:else}
+			<Icon icon="arrow-left-circle" style="text-header" width="48" height="48" />
+		{/if}
 	</button>
 
 	<div class="space-x-4">
