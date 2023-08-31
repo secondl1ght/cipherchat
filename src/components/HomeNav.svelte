@@ -12,7 +12,7 @@
 	};
 </script>
 
-<div class="flex w-full items-center justify-between border-b border-header pb-4">
+<nav class="flex w-full items-center justify-between border-b border-header pb-4">
 	<button on:click={toggleHome}>
 		{#if $homeState === 'HOME'}
 			<Avatar pubkey={$userPubkey} alias={$userAlias} color={$userColor} avatar={$userAvatar} />
@@ -33,4 +33,4 @@
 			<Icon icon="lock" style="text-header" />
 		</button>
 	</div>
-</div>
+</nav>
