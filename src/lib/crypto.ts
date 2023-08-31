@@ -1,3 +1,4 @@
+import { bufferBase64ToBuffer, bufferToBase64 } from '$lib/buffer';
 import { cryptoKey } from '$lib/store';
 import { get } from 'svelte/store';
 
@@ -17,7 +18,15 @@ export const generateKey = async (password: string) => {
 		['deriveBits', 'deriveKey']
 	);
 
-	const salt = randomBytes(16);
+	let salt;
+	const localSalt = localStorage.getItem('salt');
+
+	if (localSalt) {
+		salt = bufferBase64ToBuffer(localSalt);
+	} else {
+		salt = randomBytes(16);
+		localStorage.setItem('salt', bufferToBase64(salt));
+	}
 
 	const derivedKey = await crypto.subtle.deriveKey(
 		{
@@ -49,7 +58,6 @@ export const encrypt = async (content: string) => {
 
 	const encryptedContent = await crypto.subtle.encrypt(
 		{ name: 'AES-GCM', iv },
-		// @ts-expect-error cryptoKey will always be generated when lnc is connected
 		key,
 		encodedContent
 	);
@@ -61,8 +69,5 @@ export const decrypt = async (iv: Uint8Array, ciphertext: ArrayBuffer) => {
 	const key = get(cryptoKey);
 	if (!key) return;
 
-	return decoder.decode(
-		// @ts-expect-error cryptoKey will always be generated when lnc is connected
-		await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext)
-	);
+	return decoder.decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext));
 };
