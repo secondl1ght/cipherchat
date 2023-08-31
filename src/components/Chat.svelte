@@ -1,24 +1,102 @@
 <script lang="ts">
 	import { subscribeInvoices } from '$lib/chat';
-	import { db, type Conversation } from '$lib/db';
+	import { decrypt } from '$lib/crypto';
+	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
-	import { activeConversation, userAlias, userColor, userPubkey } from '$lib/store';
+	import {
+		activeConversation,
+		appView,
+		conversations,
+		messageHistory,
+		messages,
+		userAlias,
+		userColor,
+		userPubkey
+	} from '$lib/store';
 	import {
 		combineConversations,
 		finalizeConversations,
 		initializeInvoices,
 		initializePayments,
-		saveToDB,
-		type ConversationConstruction
+		saveToDB
 	} from '$lib/sync';
-	import { getUpdateTime, setError, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
-	import { ChatLoading } from 'comp';
-	import { liveQuery, type Observable } from 'dexie';
+	import { AppViewState, type ConversationConstruction } from '$lib/types';
+	import {
+		errorToast,
+		getUpdateTime,
+		setError,
+		setFirstSyncComplete,
+		setLastUpdate
+	} from '$lib/utils';
+	import { ChatLoading, ConvoView, HomeView, SettingsView } from 'comp';
+	import Dexie, { liveQuery } from 'dexie';
 	import { onMount } from 'svelte';
 
 	let loading = true;
 
-	let conversations: Observable<Conversation[]>;
+	let conversationsQuery = liveQuery(async () => {
+		try {
+			const convos = await db.conversations
+				.where('blocked')
+				.equals('false')
+				.reverse()
+				.sortBy('lastUpdate');
+
+			const msgs = await db.messages.bulkGet(convos.map((c) => c.latestMessage));
+
+			const convosFormatted = convos.map(async (c) => {
+				const latestMessage = msgs.find((m) => m?.id === c.latestMessage);
+
+				if (latestMessage) {
+					const decryptedMsg = await Dexie.waitFor(
+						decrypt(latestMessage.iv, latestMessage.message)
+					);
+
+					return { ...c, latestMessage: decryptedMsg };
+				} else {
+					return c;
+				}
+			});
+
+			const result = await Promise.all(convosFormatted);
+
+			conversations.set(result);
+
+			return 'Conversations query complete.';
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not query conversations.');
+		}
+	});
+
+	$: messagesQuery = liveQuery(async () => {
+		try {
+			const msgs = await db.messages
+				.where('pubkey')
+				.equals($activeConversation)
+				.limit($messageHistory)
+				.sortBy('receivedTime');
+
+			const msgsFormatted = msgs.map(async (m) => {
+				const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
+
+				return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
+			});
+
+			const result = await Promise.all(msgsFormatted);
+
+			messages.set(result);
+
+			return 'Messages query complete.';
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not query messages.');
+		}
+	});
+
+	$: console.log($conversationsQuery, $messagesQuery);
+
+	let innerWidth: number;
 
 	onMount(async () => {
 		try {
@@ -78,20 +156,6 @@
 
 			subscribeInvoices();
 
-			conversations = liveQuery(async () => {
-				const query = await db.conversations
-					.where('blocked')
-					.equals('false')
-					.reverse()
-					.sortBy('lastUpdate');
-
-				if (loading) {
-					activeConversation.set(query[0].pubkey);
-				}
-
-				return query;
-			});
-
 			loading = false;
 		} catch (err) {
 			console.log(err);
@@ -102,6 +166,19 @@
 	});
 </script>
 
+<svelte:window bind:innerWidth />
+
 {#if loading}
 	<ChatLoading />
-{:else}{/if}
+{:else if $appView === AppViewState.Settings}
+	<SettingsView />
+{:else}
+	<div class="h-[100dvh] w-full lg:flex">
+		{#if $appView === AppViewState.Home || innerWidth > 1024}
+			<HomeView />
+		{/if}
+		{#if $appView === AppViewState.Convo || innerWidth > 1024}
+			<ConvoView />
+		{/if}
+	</div>
+{/if}
