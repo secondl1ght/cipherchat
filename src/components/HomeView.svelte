@@ -4,7 +4,7 @@
 </script>
 
 <section
-	class="h-full w-full border-borderOut bg-boxFill p-4 lg:w-1/3 lg:min-w-[396px] lg:max-w-xl lg:border-r-[16px]"
+	class="relative h-full w-full border-borderOut bg-boxFill p-4 lg:w-1/3 lg:min-w-[396px] lg:max-w-xl lg:border-r-[16px]"
 >
 	<HomeNav />
 

@@ -1,5 +1,6 @@
 // @ts-nocheck
 export { default as AddConversation } from './AddConversation.svelte';
+export { default as AddConversationButton } from './AddConversationButton.svelte';
 export { default as Avatar } from './Avatar.svelte';
 export { default as BoxWrapper } from './BoxWrapper.svelte';
 export { default as Button } from './Button.svelte';
