@@ -5,11 +5,12 @@ import {
 	bufferUtfToBase64
 } from '$lib/buffer';
 import { createHash, encrypt, randomBytes } from '$lib/crypto';
-import { MessageType, db, type Conversation, type Message } from '$lib/db';
+import { db } from '$lib/db';
 import { lnc } from '$lib/lnc';
 import { activeConversation, addConvo, clearMessage, lockMessage, userPubkey } from '$lib/store';
 import { validateInvoice } from '$lib/sync';
 import { TLV_RECORDS } from '$lib/tlv';
+import { MessageType, type Conversation, type Message } from '$lib/types';
 import {
 	errorToast,
 	formatNumber,
@@ -226,7 +227,7 @@ export const addConversation = async (pubkey: string) => {
 };
 
 export const sendMessage = async (recipient: string, message: string, amount?: number) => {
-	lockMessage.set(recipient);
+	lockMessage.set(true);
 
 	// setup data
 	const timestamp = getTimestamp();
@@ -280,14 +281,14 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			await db.messages.add(newMessage);
 		});
 
-		clearMessage.set(recipient);
-		lockMessage.set('');
+		clearMessage.set(true);
+		lockMessage.set(false);
 		await tick();
-		clearMessage.set('');
+		clearMessage.set(false);
 	} catch (error) {
 		console.log(error);
 		errorToast(`Could not attempt sending ${amount ? 'payment' : 'message'}, please try again.`);
-		lockMessage.set('');
+		lockMessage.set(false);
 		return;
 	}
 
