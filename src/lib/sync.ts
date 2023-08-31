@@ -1,9 +1,15 @@
 import { bufferBase64ToUtf, bufferUtfToBase64 } from '$lib/buffer';
 import { encrypt } from '$lib/crypto';
-import { MessageType, db, type Conversation, type Message } from '$lib/db';
+import { db } from '$lib/db';
 import { lnc } from '$lib/lnc';
 import { userPubkey } from '$lib/store';
 import { TLV_RECORDS } from '$lib/tlv';
+import {
+	MessageType,
+	type Conversation,
+	type ConversationConstruction,
+	type Message
+} from '$lib/types';
 import { getUpdateTime, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
@@ -61,18 +67,6 @@ export const validateInvoice = async (invoice: lnrpc.Invoice) => {
 		return false;
 	}
 };
-
-export interface ConversationConstruction {
-	pubkey: string;
-	messages: Message[];
-	read: boolean;
-	blocked: 'true' | 'false';
-	charLimit: number;
-	alias?: string;
-	color?: string;
-	latestMessage?: string;
-	lastUpdate?: number;
-}
 
 export const initializeInvoices = async () => {
 	const lastUpdate = localStorage.getItem('lastUpdate') || undefined;
