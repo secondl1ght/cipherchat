@@ -6,3 +6,4 @@ export const bufferBase64ToUtf = (value: string | Uint8Array) =>
 	Buffer.from(value.toString(), 'base64').toString('utf8');
 export const bufferToBase64 = (value: ArrayBuffer | ArrayBufferLike) =>
 	Buffer.from(value).toString('base64');
+export const bufferBase64ToBuffer = (value: string) => Buffer.from(value, 'base64');
