@@ -14,6 +14,7 @@ export { default as FaqItem } from './FaqItem.svelte';
 export { default as Footer } from './Footer.svelte';
 export { default as Header } from './Header.svelte';
 export { default as Hero } from './Hero.svelte';
+export { default as HomeNav } from './HomeNav.svelte';
 export { default as HomeView } from './HomeView.svelte';
 export { default as Icon } from './Icon.svelte';
 export { default as InfoTooltip } from './InfoTooltip.svelte';
