@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { homeState, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
+	import { errorToast, successToast, warningToast } from '$lib/utils';
 	import { Avatar, Icon } from 'comp';
+	import tippy from 'tippy.js';
 
 	const toggleHome = () => {
 		if ($homeState === 'HOME') {
@@ -9,6 +11,31 @@
 			$homeState = 'HOME';
 		}
 	};
+
+	let notificationsEnabled = Notification.permission === 'granted' ? true : false;
+
+	const allowNotifications = () => {
+		if (!('Notification' in window)) {
+			warningToast('Your browser does not support notifications.');
+		} else {
+			Notification.requestPermission().then((permission) => {
+				if (permission === 'granted') {
+					notificationsEnabled = true;
+					successToast('Notifications enabled.');
+				} else {
+					errorToast('Permission denied.');
+				}
+			});
+		}
+	};
+
+	let tooltip: HTMLSpanElement;
+
+	$: tooltip &&
+		notificationsEnabled &&
+		tippy([tooltip], {
+			content: 'To disable notifications update your browser settings.'
+		});
 </script>
 
 <nav class="mb-4 flex w-full items-center justify-between border-b border-header pb-4">
@@ -21,6 +48,12 @@
 	</button>
 
 	<div class="space-x-4">
+		<span bind:this={tooltip}>
+			<button on:click={allowNotifications} disabled={notificationsEnabled}>
+				<Icon icon={notificationsEnabled ? 'bell' : 'bell-off'} style="text-header" />
+			</button>
+		</span>
+
 		<button on:click={() => ($homeState = 'SETTINGS')}>
 			<Icon
 				icon="settings"
@@ -33,3 +66,7 @@
 		</button>
 	</div>
 </nav>
+
+<style>
+	@import 'tippy.js/dist/tippy.css';
+</style>
