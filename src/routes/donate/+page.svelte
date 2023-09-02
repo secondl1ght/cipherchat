@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { copy } from '$lib/utils';
-	import { Button, Icon, PublicLayout } from 'comp';
+	import { Button, CopyButton, Icon, PublicLayout } from 'comp';
 	import { blur } from 'svelte/transition';
 
 	const lightningAddress = 'secondl1ght@getalby.com';
 
-	let copied = false;
 	let showQr = false;
 </script>
 
@@ -28,19 +26,7 @@
 			<h3 class="break-all text-center font-bold md:text-xl">{lightningAddress}</h3>
 
 			<div class="mt-3 flex items-center justify-center space-x-6 md:mt-0">
-				<button
-					on:click={() => {
-						copy(lightningAddress);
-						copied = true;
-						setTimeout(() => (copied = false), 2100);
-					}}
-					disabled={copied}
-				>
-					<Icon
-						icon={copied ? 'check' : 'clipboard'}
-						style="text-header hover:text-button transition-colors"
-					/>
-				</button>
+				<CopyButton text={lightningAddress} />
 
 				<button on:click={() => (showQr = !showQr)}>
 					<Icon
