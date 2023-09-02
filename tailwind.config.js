@@ -27,7 +27,10 @@ export default {
 				borderIn: '#0C0E16',
 				boxTop: '#2A2F48',
 				boxBottom: '#1D2134',
-				boxFill: '#23273C'
+				boxFill: '#23273C',
+				success: '#1B5E20',
+				warning: '#F57F17',
+				error: '#B71C1C'
 			}
 		}
 	},
