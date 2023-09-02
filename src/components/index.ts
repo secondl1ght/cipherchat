@@ -28,6 +28,6 @@ export { default as Node } from './Node.svelte';
 export { default as Profile } from './Profile.svelte';
 export { default as ProfileItem } from './ProfileItem.svelte';
 export { default as PublicLayout } from './PublicLayout.svelte';
-export { default as SettingsView } from './SettingsView.svelte';
+export { default as Settings } from './Settings.svelte';
 export { default as SyncPing } from './SyncPing.svelte';
 export { default as Wrapper } from './Wrapper.svelte';

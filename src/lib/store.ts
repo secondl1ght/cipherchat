@@ -13,7 +13,7 @@ export const userColor = writable('');
 export const userAvatar = writable(localStorage.getItem('userAvatar'));
 
 export const appView = writable(AppViewState.Home);
-export const homeState: Writable<'HOME' | 'PROFILE' | 'ADD'> = writable('HOME');
+export const homeState: Writable<'HOME' | 'PROFILE' | 'ADD' | 'SETTINGS'> = writable('HOME');
 
 export const conversations: Writable<Conversation[]> = writable();
 export const activeConversation = writable('');

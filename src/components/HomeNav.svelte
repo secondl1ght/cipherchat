@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { appView, homeState, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
-	import { AppViewState } from '$lib/types';
+	import { homeState, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
 	import { Avatar, Icon } from 'comp';
 
 	const toggleHome = () => {
@@ -22,7 +21,7 @@
 	</button>
 
 	<div class="space-x-4">
-		<button on:click={() => ($appView = AppViewState.Settings)}>
+		<button on:click={() => ($homeState = 'SETTINGS')}>
 			<Icon
 				icon="settings"
 				style="hover:rotate-180 transition-transform text-header duration-500"

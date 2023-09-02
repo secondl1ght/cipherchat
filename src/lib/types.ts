@@ -42,6 +42,5 @@ export type MessageDecrypted = Omit<Message, 'message'> & { message: string };
 
 export enum AppViewState {
 	Home = 'HOME',
-	Convo = 'CONVO',
-	Settings = 'SETTINGS'
+	Convo = 'CONVO'
 }

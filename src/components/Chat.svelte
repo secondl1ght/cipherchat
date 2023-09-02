@@ -28,7 +28,7 @@
 		setFirstSyncComplete,
 		setLastUpdate
 	} from '$lib/utils';
-	import { ChatLoading, ConvoView, HomeView, SettingsView } from 'comp';
+	import { ChatLoading, ConvoView, HomeView } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
 	import { onMount } from 'svelte';
 
@@ -170,8 +170,6 @@
 
 {#if loading}
 	<ChatLoading />
-{:else if $appView === AppViewState.Settings}
-	<SettingsView />
 {:else}
 	<div class="h-[100dvh] w-full lg:flex">
 		{#if $appView === AppViewState.Home || innerWidth > 1024}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { homeState } from '$lib/store';
-	import { AddConversation, Conversations, HomeNav, Profile } from 'comp';
+	import { AddConversation, Conversations, HomeNav, Profile, Settings } from 'comp';
 	import { blur } from 'svelte/transition';
 </script>
 
@@ -18,6 +18,10 @@
 	{:else if $homeState === 'ADD'}
 		<div transition:blur={{ amount: 10 }} class="w-full">
 			<AddConversation />
+		</div>
+	{:else if $homeState === 'SETTINGS'}
+		<div transition:blur={{ amount: 10 }} class="w-full">
+			<Settings />
 		</div>
 	{/if}
 </section>
