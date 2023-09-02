@@ -19,7 +19,7 @@
 >
 	<Icon
 		icon={copied ? 'check' : 'clipboard'}
-		style="text-header hover:text-button transition-colors"
+		style="text-header hover:text-button transition-colors cursor-copy"
 		{width}
 		{height}
 	/>
