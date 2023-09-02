@@ -12,7 +12,7 @@
 	{#if $homeState === 'HOME'}
 		<Conversations />
 	{:else if $homeState === 'PROFILE'}
-		<div transition:blur={{ amount: 10 }}>
+		<div transition:blur={{ amount: 10 }} class="w-full">
 			<Profile />
 		</div>
 	{:else if $homeState === 'ADD'}

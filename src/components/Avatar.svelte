@@ -5,24 +5,35 @@
 	export let avatar: string | null | undefined;
 	export let size = 'w-12 h-12';
 	export let style = '';
+	export let withButton = false;
 
 	import { getRandomColor } from '$lib/utils';
+	import { Icon } from 'comp';
 
 	const finalColor = color || getRandomColor();
 </script>
 
-{#if avatar}
-	<img
-		src="/images/avatars/{avatar}.png"
-		alt="avatar"
-		class="rounded-full object-cover {size} {style}"
-		style={`border: 3px solid ${finalColor};`}
-	/>
-{:else}
-	<div
-		class="flex items-center justify-center rounded-full bg-borderIn text-2xl font-bold uppercase text-header {size} {style}"
-		style={`border: 3px solid ${finalColor};`}
-	>
-		{alias ? alias.charAt(0) : pubkey.charAt(0)}
-	</div>
-{/if}
+<div class="relative">
+	{#if avatar}
+		<img
+			src="/images/avatars/{avatar}.png"
+			alt="avatar"
+			class="rounded-full object-cover {size} {style}"
+			style={`border: 3px solid ${finalColor};`}
+		/>
+	{:else}
+		<div
+			class="flex items-center justify-center rounded-full bg-borderIn text-2xl font-bold uppercase text-header {size} {style}"
+			style={`border: 3px solid ${finalColor};`}
+		>
+			{alias ? alias.charAt(0) : pubkey.charAt(0)}
+		</div>
+	{/if}
+	{#if withButton}
+		<button
+			class="absolute bottom-1 right-1 flex items-center justify-center rounded bg-header p-0.5 text-borderIn"
+		>
+			<Icon icon="image" width="16" height="16" />
+		</button>
+	{/if}
+</div>
