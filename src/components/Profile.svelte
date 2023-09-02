@@ -11,44 +11,40 @@
 
 	onMount(async () => {
 		nodeInfo = await lnc.lnd.lightning.getInfo();
-
-		$userAlias = nodeInfo.alias;
-		$userColor = nodeInfo.color;
-
 		version = nodeInfo.version.split('=')[1];
 	});
 </script>
 
-{#if nodeInfo}
-	<div class="space-y-4">
-		<div class="mx-auto w-fit">
-			<Avatar
-				pubkey={$userPubkey}
-				alias={$userAlias}
-				color={$userColor}
-				avatar={$userAvatar}
-				size="w-20 h-20"
-				style="cursor-default"
-				withButton
-			/>
-		</div>
+<div class="space-y-4">
+	<div class="mx-auto w-fit">
+		<Avatar
+			pubkey={$userPubkey}
+			alias={$userAlias}
+			color={$userColor}
+			avatar={$userAvatar}
+			size="w-20 h-20"
+			style="cursor-default"
+			withButton
+		/>
+	</div>
 
-		<h1 class="press-start break-all text-center text-header md:text-lg">
-			{$userAlias || shortenPubkey($userPubkey)}
-		</h1>
+	<h1 class="press-start break-all text-center text-header md:text-lg">
+		{$userAlias || shortenPubkey($userPubkey)}
+	</h1>
 
-		<ul class="space-y-4">
-			<ProfileItem title="Pubkey">
-				<p class="break-all">
-					{$userPubkey}
-					<CopyButton text={$userPubkey} width="16" height="16" />
-				</p>
-			</ProfileItem>
+	<ul class="space-y-4">
+		<ProfileItem title="Pubkey">
+			<p class="break-all">
+				{$userPubkey}
+				<CopyButton text={$userPubkey} width="16" height="16" />
+			</p>
+		</ProfileItem>
 
-			<ProfileItem title="Color">
-				<p style:color={$userColor}>{$userColor}</p>
-			</ProfileItem>
+		<ProfileItem title="Color">
+			<p style:color={$userColor}>{$userColor}</p>
+		</ProfileItem>
 
+		{#if nodeInfo}
 			<ProfileItem title="Channels">
 				<div class="flex items-center space-x-4">
 					<ChannelStatus color="bg-success" channels={nodeInfo.numActiveChannels} title="Active" />
@@ -93,8 +89,10 @@
 					style="break-all"
 				/>
 			</ProfileItem>
-		</ul>
-	</div>
-{:else}
-	<p class="press-start text-center text-header">Loading node info...</p>
-{/if}
+		{:else}
+			{#each Array(6) as _skeleton}
+				<li class="h-6 w-full animate-pulse bg-borderIn/75" />
+			{/each}
+		{/if}
+	</ul>
+</div>
