@@ -44,55 +44,49 @@
 			<p style:color={$userColor}>{$userColor}</p>
 		</ProfileItem>
 
-		{#if nodeInfo}
-			<ProfileItem title="Channels">
-				<div class="flex items-center space-x-4">
-					<ChannelStatus color="bg-success" channels={nodeInfo.numActiveChannels} title="Active" />
-					<ChannelStatus
-						color="bg-warning"
-						channels={nodeInfo.numPendingChannels}
-						title="Pending"
-					/>
-					<ChannelStatus
-						color="bg-error"
-						channels={nodeInfo.numInactiveChannels}
-						title="Inactive"
-					/>
-				</div>
-			</ProfileItem>
+		<ProfileItem title="Channels">
+			<div class="flex items-center space-x-4">
+				<ChannelStatus color="bg-success" channels={nodeInfo?.numActiveChannels} title="Active" />
+				<ChannelStatus color="bg-warning" channels={nodeInfo?.numPendingChannels} title="Pending" />
+				<ChannelStatus color="bg-error" channels={nodeInfo?.numInactiveChannels} title="Inactive" />
+			</div>
+		</ProfileItem>
 
-			<ProfileItem title="Peers">
-				<p>{nodeInfo.numPeers}</p>
-			</ProfileItem>
+		<ProfileItem title="Peers">
+			<p class={nodeInfo ? 'cursor-auto' : 'cursor-wait'}>{nodeInfo?.numPeers ?? '-'}</p>
+		</ProfileItem>
 
-			<ProfileItem title="Synced to Graph">
-				<SyncPing synced={nodeInfo.syncedToGraph} type="GRAPH" />
-			</ProfileItem>
+		<ProfileItem title="Synced to Graph">
+			<SyncPing synced={nodeInfo?.syncedToGraph} type="GRAPH" />
+		</ProfileItem>
 
-			<ProfileItem title="Synced to Chain">
-				<SyncPing synced={nodeInfo.syncedToChain} type="CHAIN" />
-			</ProfileItem>
+		<ProfileItem title="Synced to Chain">
+			<SyncPing synced={nodeInfo?.syncedToChain} type="CHAIN" />
+		</ProfileItem>
 
-			<ProfileItem title="Block Height">
+		<ProfileItem title="Block Height">
+			{#if nodeInfo}
 				<Link
 					external
 					href="https://mempool.space/block/{nodeInfo.blockHash}"
 					title={nodeInfo.blockHeight.toString()}
 				/>
-			</ProfileItem>
+			{:else}
+				<p class="cursor-wait">-</p>
+			{/if}
+		</ProfileItem>
 
-			<ProfileItem title="LND Version">
+		<ProfileItem title="LND Version">
+			{#if nodeInfo && version}
 				<Link
 					external
 					href="https://github.com/lightningnetwork/lnd/releases/tag/{version}"
 					title={version}
 					style="break-all"
 				/>
-			</ProfileItem>
-		{:else}
-			{#each Array(6) as _skeleton}
-				<li class="h-6 w-full animate-pulse bg-borderIn/75" />
-			{/each}
-		{/if}
+			{:else}
+				<p class="cursor-wait">-</p>
+			{/if}
+		</ProfileItem>
 	</ul>
 </div>

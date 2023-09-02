@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let color: string;
-	export let channels: number;
+	export let channels: number | undefined;
 	export let title: string;
 
 	import tippy from 'tippy.js';
@@ -13,9 +13,12 @@
 		});
 </script>
 
-<div bind:this={tooltip} class="flex cursor-default items-center space-x-2">
+<div
+	bind:this={tooltip}
+	class="flex items-center space-x-2 {channels === undefined ? 'cursor-wait' : 'cursor-default'}"
+>
 	<p class="h-2.5 w-2.5 rounded-full {color}" />
-	<p>{channels}</p>
+	<p>{channels ?? '-'}</p>
 </div>
 
 <style>
