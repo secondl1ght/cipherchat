@@ -170,9 +170,11 @@
 	</RowItem>
 </ul>
 
-<Button click={resetDefaults} style="mt-4 mb-8 !w-full !h-12" title="Reset Defaults" />
+<Button click={resetDefaults} style="my-4 !w-full !h-12" title="Reset Defaults" />
 
-<ul class="space-y-4">
+<hr />
+
+<ul class="mt-4 space-y-4">
 	<RowItem title="Resync Messages" flex={$innerWidth > 640 ? true : false}>
 		<div class="mt-2 flex items-center text-header md:mt-0">
 			<InfoTooltip
