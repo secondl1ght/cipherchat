@@ -38,7 +38,9 @@
 		});
 </script>
 
-<nav class="mb-4 flex w-full items-center justify-between border-b border-header pb-4">
+<nav
+	class="sticky left-0 top-0 z-10 flex w-full items-center justify-between border-b border-header bg-boxFill p-4"
+>
 	<button on:click={toggleHome}>
 		{#if $homeState === 'HOME'}
 			<Avatar pubkey={$userPubkey} alias={$userAlias} color={$userColor} avatar={$userAvatar} />
