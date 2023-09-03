@@ -102,7 +102,7 @@ export const subscribeInvoices = () => {
 							const playAudio = localStorage.getItem('playAudio') === 'true';
 							const sendersNode = alias || shortenPubkey(pubkey);
 							const notificationMessage =
-								type === 'PAYMENT' ? `Received ${formatNumber(amount)} sats.` : message;
+								type === MessageType.Payment ? `Received ${formatNumber(amount)} sats.` : message;
 
 							const notification = new Notification(sendersNode, {
 								badge: '/images/logo.png',
@@ -225,9 +225,16 @@ export const addConversation = async (pubkey: string) => {
 					successToast('Conversation started!');
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
-			errorToast('Could not start a new conversation, please try again.');
+			if (
+				error?.message &&
+				error.message === 'rpc error: code = NotFound desc = unable to find node'
+			) {
+				errorToast('Unable to find node in the graph.');
+			} else {
+				errorToast('Could not start a new conversation, please try again.');
+			}
 		}
 	}
 };
