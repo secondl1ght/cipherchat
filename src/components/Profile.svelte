@@ -1,17 +1,22 @@
 <script lang="ts">
 	import { lnc } from '$lib/lnc';
 	import { userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
-	import { shortenPubkey } from '$lib/utils';
+	import { errorToast, shortenPubkey } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
-	import { Avatar, ChannelStatus, CopyButton, Link, ProfileItem, SyncPing } from 'comp';
+	import { Avatar, ChannelStatus, CopyButton, Link, RowItem, SyncPing } from 'comp';
 	import { onMount } from 'svelte';
 
 	let nodeInfo: lnrpc.GetInfoResponse;
 	let version = '';
 
 	onMount(async () => {
-		nodeInfo = await lnc.lnd.lightning.getInfo();
-		version = nodeInfo.version.split('=')[1];
+		try {
+			nodeInfo = await lnc.lnd.lightning.getInfo();
+			version = nodeInfo.version.split('=')[1];
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not fetch node information, please try again.');
+		}
 	});
 </script>
 
@@ -33,38 +38,38 @@
 	</h1>
 
 	<ul class="space-y-4">
-		<ProfileItem title="Pubkey">
+		<RowItem title="Pubkey">
 			<p class="break-all">
 				{$userPubkey}
 				<CopyButton text={$userPubkey} width="16" height="16" />
 			</p>
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="Color">
+		<RowItem title="Color">
 			<p style:color={$userColor}>{$userColor}</p>
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="Channels">
+		<RowItem title="Channels">
 			<div class="flex items-center space-x-4">
 				<ChannelStatus color="bg-success" channels={nodeInfo?.numActiveChannels} title="Active" />
 				<ChannelStatus color="bg-warning" channels={nodeInfo?.numPendingChannels} title="Pending" />
 				<ChannelStatus color="bg-error" channels={nodeInfo?.numInactiveChannels} title="Inactive" />
 			</div>
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="Peers">
+		<RowItem title="Peers">
 			<p class={nodeInfo ? 'cursor-auto' : 'cursor-wait'}>{nodeInfo?.numPeers ?? '-'}</p>
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="Synced to Graph">
+		<RowItem title="Synced to Graph">
 			<SyncPing synced={nodeInfo?.syncedToGraph} type="GRAPH" />
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="Synced to Chain">
+		<RowItem title="Synced to Chain">
 			<SyncPing synced={nodeInfo?.syncedToChain} type="CHAIN" />
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="Block Height">
+		<RowItem title="Block Height">
 			{#if nodeInfo}
 				<Link
 					external
@@ -74,9 +79,9 @@
 			{:else}
 				<p class="cursor-wait">-</p>
 			{/if}
-		</ProfileItem>
+		</RowItem>
 
-		<ProfileItem title="LND Version">
+		<RowItem title="LND Version">
 			{#if nodeInfo && version}
 				<Link
 					external
@@ -87,6 +92,6 @@
 			{:else}
 				<p class="cursor-wait">-</p>
 			{/if}
-		</ProfileItem>
+		</RowItem>
 	</ul>
 </div>
