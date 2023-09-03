@@ -1,6 +1,7 @@
 import { error } from '$lib/store';
 import { toast } from '@zerodevx/svelte-toast';
 
+// TOASTS
 export const successToast = (m: string) => {
 	toast.pop();
 
@@ -37,10 +38,12 @@ export const errorToast = (m: string) => {
 	});
 };
 
+// COPY
 export const copy = (text: string) => {
 	navigator.clipboard.writeText(text);
 };
 
+// SYNC
 export const getUpdateTime = () => (Date.now() / 1000).toFixed(0).toString();
 
 export const setLastUpdate = (time: string) => {
@@ -51,8 +54,10 @@ export const setFirstSyncComplete = () => {
 	localStorage.setItem('firstSyncComplete', 'true');
 };
 
+// ERROR
 export const setError = (status: string, message: string) => error.set({ status, message });
 
+// FORMATTING
 export const shortenPubkey = (pubkey: string) =>
 	pubkey.slice(0, 6) + '...' + pubkey.slice(pubkey.length - 6, pubkey.length);
 
@@ -70,6 +75,7 @@ export const shortenLatestMessage = (message: string, limit: number) => {
 
 export const formatNumber = (number: number) => new Intl.NumberFormat().format(number);
 
+// TIME
 export const getTimestamp = () => Date.now() * 1000000;
 
 export const formatTimestamp = (timestamp: number) => {
@@ -82,6 +88,7 @@ export const formatTimestamp = (timestamp: number) => {
 	};
 };
 
+// COLOR
 export function getRandomColor() {
 	const letters = '0123456789ABCDEF';
 	let color = '#';
