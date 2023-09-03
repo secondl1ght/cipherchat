@@ -11,7 +11,8 @@
 		messages,
 		userAlias,
 		userColor,
-		userPubkey
+		userPubkey,
+		innerWidth
 	} from '$lib/store';
 	import {
 		combineConversations,
@@ -96,8 +97,6 @@
 
 	$: console.log($conversationsQuery, $messagesQuery);
 
-	let innerWidth: number;
-
 	onMount(async () => {
 		try {
 			db.open();
@@ -150,8 +149,6 @@
 					setLastUpdate(updateTime);
 					setFirstSyncComplete();
 				}
-
-				localStorage.setItem('playAudio', 'true');
 			}
 
 			subscribeInvoices();
@@ -166,16 +163,16 @@
 	});
 </script>
 
-<svelte:window bind:innerWidth />
+<svelte:window bind:innerWidth={$innerWidth} />
 
 {#if loading}
 	<ChatLoading />
 {:else}
 	<div class="h-[100dvh] w-full lg:flex">
-		{#if $appView === AppViewState.Home || innerWidth > 1024}
+		{#if $appView === AppViewState.Home || $innerWidth > 1024}
 			<HomeView />
 		{/if}
-		{#if $appView === AppViewState.Convo || innerWidth > 1024}
+		{#if $appView === AppViewState.Convo || $innerWidth > 1024}
 			<ConvoView />
 		{/if}
 	</div>
