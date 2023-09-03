@@ -12,15 +12,15 @@
 	{#if $homeState === 'HOME'}
 		<Conversations />
 	{:else if $homeState === 'PROFILE'}
-		<div transition:blur={{ amount: 10 }} class="w-full">
+		<div in:blur={{ amount: 10 }} class="w-full">
 			<Profile />
 		</div>
 	{:else if $homeState === 'ADD'}
-		<div transition:blur={{ amount: 10 }} class="w-full">
+		<div in:blur={{ amount: 10 }} class="w-full">
 			<AddConversation />
 		</div>
 	{:else if $homeState === 'SETTINGS'}
-		<div transition:blur={{ amount: 10 }} class="w-full">
+		<div in:blur={{ amount: 10 }} class="w-full">
 			<Settings />
 		</div>
 	{/if}
