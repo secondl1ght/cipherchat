@@ -7,7 +7,7 @@
 <Wrapper>
 	<div class="center-fixed w-full space-y-4 p-4">
 		<div class="loading-bars mx-auto h-32 w-32 bg-header" />
-		<h1 class="press-start text-center text-header">Syncing node...</h1>
+		<h1 class="press-start text-center text-header">Syncing messages...</h1>
 		{#if !firstSyncComplete}
 			<p class="text-center text-xs font-semibold text-body">
 				(This can take a few minutes during the initial sync.)
