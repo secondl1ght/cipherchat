@@ -21,9 +21,10 @@
 		initializePayments,
 		saveToDB
 	} from '$lib/sync';
-	import { AppViewState, type ConversationConstruction } from '$lib/types';
+	import { AppViewState, MessageType, type ConversationConstruction } from '$lib/types';
 	import {
 		errorToast,
+		formatNumber,
 		getUpdateTime,
 		setError,
 		setFirstSyncComplete,
@@ -49,6 +50,14 @@
 				const latestMessage = msgs.find((m) => m?.id === c.latestMessage);
 
 				if (latestMessage) {
+					if (latestMessage.type === MessageType.Payment) {
+						const paymentMsg = `${latestMessage.self ? 'Sent' : 'Received'} ${formatNumber(
+							latestMessage.amount
+						)} sats.`;
+
+						return { ...c, latestMessage: paymentMsg };
+					}
+
 					const decryptedMsg = await Dexie.waitFor(
 						decrypt(latestMessage.iv, latestMessage.message)
 					);
@@ -79,6 +88,12 @@
 				.sortBy('receivedTime');
 
 			const msgsFormatted = msgs.map(async (m) => {
+				if (m.type === MessageType.Payment) {
+					const paymentMsg = `${m.self ? 'Sent' : 'Received'} ${formatNumber(m.amount)} sats.`;
+
+					return { ...m, message: paymentMsg };
+				}
+
 				const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
 
 				return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
