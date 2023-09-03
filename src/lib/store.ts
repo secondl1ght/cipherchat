@@ -15,10 +15,10 @@ export const userAvatar = writable(localStorage.getItem('userAvatar'));
 export const appView = writable(AppViewState.Home);
 export const homeState: Writable<'HOME' | 'PROFILE' | 'ADD' | 'SETTINGS'> = writable('HOME');
 
-export const conversations: Writable<Conversation[]> = writable();
+export const conversations: Writable<Conversation[]> = writable([]);
 export const activeConversation = writable('');
 
-export const messages: Writable<MessageDecrypted[]> = writable();
+export const messages: Writable<MessageDecrypted[]> = writable([]);
 export const messageHistory = writable(25);
 export const lockMessage = writable(false);
 export const clearMessage = writable(false);
