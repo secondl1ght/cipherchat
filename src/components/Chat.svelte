@@ -7,12 +7,12 @@
 		activeConversation,
 		appView,
 		conversations,
+		innerWidth,
 		messageHistory,
 		messages,
 		userAlias,
 		userColor,
-		userPubkey,
-		innerWidth
+		userPubkey
 	} from '$lib/store';
 	import {
 		combineConversations,
