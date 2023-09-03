@@ -10,5 +10,6 @@
 	{:else}
 		<p class="whitespace-nowrap text-header">{title}:</p>
 	{/if}
+
 	<slot />
 </li>

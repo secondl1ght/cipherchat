@@ -22,6 +22,8 @@ export const messages: Writable<MessageDecrypted[]> = writable();
 export const messageHistory = writable(25);
 export const lockMessage = writable(false);
 export const clearMessage = writable(false);
+export const bubbleColor = writable(localStorage.getItem('bubbleColor'));
+export const textColor = writable(localStorage.getItem('textColor'));
 
 export const links = readable({
 	github: 'https://github.com/secondl1ght/cipherchat',
@@ -30,5 +32,7 @@ export const links = readable({
 	matrix: '',
 	rumble: ''
 });
+
+export const innerWidth: Writable<number> = writable();
 
 export const error = writable({ status: '', message: '' });
