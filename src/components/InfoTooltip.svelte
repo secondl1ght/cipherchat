@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let text: string;
+	export let style = 'ml-3';
 
 	import { Icon } from 'comp';
 	import tippy from 'tippy.js';
@@ -12,7 +13,7 @@
 		});
 </script>
 
-<span class="ml-3 cursor-help" bind:this={infoTooltip}>
+<span class="{style} cursor-help" bind:this={infoTooltip}>
 	<Icon icon="info" />
 </span>
 
