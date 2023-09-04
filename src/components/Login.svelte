@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { clearBadge } from '$lib/chat';
 	import { generateKey, resetKey } from '$lib/crypto';
 	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
@@ -42,6 +43,7 @@
 
 			await db.delete();
 			localStorage.clear();
+			await clearBadge();
 			lnc.credentials.clear();
 			resetKey();
 

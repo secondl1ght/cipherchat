@@ -8,7 +8,7 @@ export class MySubClassedDexie extends Dexie {
 	constructor() {
 		super('CipherchatDB');
 		this.version(1).stores({
-			conversations: '&pubkey, blocked', // Primary key and indexed props
+			conversations: '&pubkey, blocked, unread', // Primary key and indexed props
 			messages: '&id, pubkey' // Primary key and indexed props
 		});
 	}

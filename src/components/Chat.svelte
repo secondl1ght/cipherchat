@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { subscribeInvoices } from '$lib/chat';
+	import { clearBadge, setBadge, subscribeInvoices } from '$lib/chat';
 	import { decrypt } from '$lib/crypto';
 	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
 	import {
 		activeConversation,
 		appView,
+		conversation,
 		conversations,
 		innerWidth,
 		messageHistory,
@@ -79,6 +80,43 @@
 		}
 	});
 
+	$: conversationQuery = liveQuery(async () => {
+		try {
+			const convo = await db.conversations.get($activeConversation);
+
+			if (convo) {
+				conversation.set(convo);
+			}
+
+			return 'Conversation query complete.';
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not query conversation.');
+		}
+	});
+
+	$: unreadQuery = liveQuery(async () => {
+		try {
+			let unreadCount;
+
+			await db.conversations
+				.where('unread')
+				.above(0)
+				.keys((keysArray) => (unreadCount = keysArray.reduce((p, c) => Number(p) + Number(c), 0)));
+
+			if (unreadCount) {
+				await Dexie.waitFor(setBadge(unreadCount));
+			} else {
+				await Dexie.waitFor(clearBadge());
+			}
+
+			return 'Unread query complete.';
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not query unread messages count.');
+		}
+	});
+
 	$: messagesQuery = liveQuery(async () => {
 		try {
 			const msgs = await db.messages
@@ -110,7 +148,7 @@
 		}
 	});
 
-	$: console.log($conversationsQuery, $messagesQuery);
+	$: console.log($conversationsQuery, $conversationQuery, $unreadQuery, $messagesQuery);
 
 	onMount(async () => {
 		try {

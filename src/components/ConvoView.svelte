@@ -1,15 +1,14 @@
 <script lang="ts">
+	import { convoState } from '$lib/store';
 	import { ChatWindow, MessageInfo, Node } from 'comp';
-
-	let state: 'CHAT' | 'NODE' | 'MESSAGE' = 'CHAT';
 </script>
 
 <section class="h-full w-full border-borderIn p-4 lg:border-l-8">
-	{#if state === 'CHAT'}
+	{#if $convoState === 'CHAT'}
 		<ChatWindow />
-	{:else if state === 'NODE'}
+	{:else if $convoState === 'NODE'}
 		<Node />
-	{:else if state === 'MESSAGE'}
+	{:else if $convoState === 'MESSAGE'}
 		<MessageInfo />
 	{/if}
 </section>

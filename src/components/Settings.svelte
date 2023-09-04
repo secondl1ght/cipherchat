@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { clearBadge } from '$lib/chat';
 	import { db } from '$lib/db';
 	import { bubbleColor, innerWidth, textColor } from '$lib/store';
 	import { errorToast, shortenPubkey, successToast } from '$lib/utils';
@@ -42,6 +43,7 @@
 			await db.delete();
 			localStorage.removeItem('firstSyncComplete');
 			localStorage.removeItem('lastUpdate');
+			await clearBadge();
 			location.reload();
 		} catch (error) {
 			console.log(error);

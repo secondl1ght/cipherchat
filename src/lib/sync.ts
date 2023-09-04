@@ -101,7 +101,7 @@ export const initializeInvoices = async () => {
 		try {
 			// conversation values
 			const pubkey = bufferBase64ToUtf(successfulHTLC.customRecords[SENDERS_PUBKEY]);
-			const read = false;
+			const unread = 1;
 			const blocked = 'false';
 			const charLimit = 300;
 
@@ -142,11 +142,12 @@ export const initializeInvoices = async () => {
 
 			if (index !== -1) {
 				invoicesGrouped[index].messages.push(messageObject);
+				invoicesGrouped[index].unread++;
 			} else {
 				invoicesGrouped.push({
 					pubkey,
 					messages: [messageObject],
-					read,
+					unread,
 					blocked,
 					charLimit
 				});
@@ -208,7 +209,7 @@ export const initializePayments = async () => {
 			// conversation values
 			const pubkey = lastRouteHop.pubKey;
 			if (lastRouteHop.pubKey === get(userPubkey)) return;
-			const read = true;
+			const unread = 0;
 			const blocked = 'false';
 			const charLimit = 300;
 
@@ -255,7 +256,7 @@ export const initializePayments = async () => {
 				paymentsGrouped.push({
 					pubkey,
 					messages: [messageObject],
-					read,
+					unread,
 					blocked,
 					charLimit
 				});
@@ -327,7 +328,7 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 		pubkey: conversation.pubkey,
 		alias: conversation.alias,
 		color: conversation.color,
-		read: conversation.read,
+		unread: conversation.unread,
 		blocked: conversation.blocked,
 		charLimit: conversation.charLimit,
 		latestMessage: conversation.latestMessage,
@@ -346,7 +347,7 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 				if (recordExists) {
 					recordExists.alias = conversation.alias;
 					recordExists.color = conversation.color;
-					recordExists.read = conversation.read;
+					recordExists.unread = recordExists.unread + conversation.unread;
 					recordExists.latestMessage = conversation.latestMessage;
 					recordExists.lastUpdate = conversation.lastUpdate;
 

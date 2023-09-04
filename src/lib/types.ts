@@ -5,7 +5,7 @@ export interface Conversation {
 	alias?: string;
 	color?: string;
 	avatar?: string;
-	read: boolean;
+	unread: number;
 	blocked: 'true' | 'false';
 	charLimit: number;
 	latestMessage?: string;

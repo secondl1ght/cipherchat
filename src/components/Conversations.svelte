@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { activeConversation, appView, conversations, innerWidth } from '$lib/store';
+	import { clearUnread } from '$lib/chat';
+	import {
+		activeConversation,
+		appView,
+		conversations,
+		convoState,
+		innerWidth,
+		messageHistory
+	} from '$lib/store';
 	import { AppViewState } from '$lib/types';
 	import { formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
 	import { AddConversationButton, Avatar } from 'comp';
@@ -12,8 +20,11 @@
 			<button
 				animate:flip={{ duration: 400 }}
 				on:click={() => {
+					$messageHistory = 25;
 					$activeConversation = c.pubkey;
+					$convoState = 'CHAT';
 					$appView = AppViewState.Convo;
+					clearUnread();
 				}}
 				class="flex w-full items-center justify-between space-x-2.5 p-4 text-left {$activeConversation ===
 				c.pubkey
@@ -38,13 +49,20 @@
 					</div>
 				</div>
 
-				<div>
+				<div class="space-y-1">
 					{#if c.lastUpdate}
-						<h4 class="text-xs">
+						<h4 class="text-right text-xs">
 							{formatTimestamp(c.lastUpdate).date}
 							<br />
 							{formatTimestamp(c.lastUpdate).time}
 						</h4>
+					{/if}
+					{#if c.unread}
+						<div
+							class="ml-auto flex h-fit w-fit items-center justify-center rounded-sm bg-button px-1.5 py-px text-xs font-bold text-header"
+						>
+							{c.unread <= 9999 ? c.unread : '9999+'}
+						</div>
 					{/if}
 				</div>
 			</button>

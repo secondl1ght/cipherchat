@@ -11,8 +11,10 @@ import {
 	activeConversation,
 	appView,
 	clearMessage,
+	convoState,
 	homeState,
 	lockMessage,
+	messageHistory,
 	userPubkey
 } from '$lib/store';
 import { validateInvoice } from '$lib/sync';
@@ -38,6 +40,41 @@ const messageType = Object.values(MessageType);
 
 const notificationSound = new Audio('/audio/notification.mp3');
 
+export const setBadge = async (count: number) => {
+	try {
+		if ('setAppBadge' in navigator) {
+			await navigator.setAppBadge(count);
+		}
+	} catch (error) {
+		console.log(error);
+		errorToast('Could not set unread messages app badge count.');
+	}
+};
+
+export const clearBadge = async () => {
+	if ('clearAppBadge' in navigator) {
+		await navigator.clearAppBadge();
+	}
+};
+
+export const clearUnread = async () => {
+	try {
+		await db.transaction('rw', db.conversations, async () => {
+			const activeConvo = get(activeConversation);
+
+			const convo = await db.conversations.get(activeConvo);
+
+			if (convo && convo.unread) {
+				convo.unread = 0;
+				await db.conversations.put(convo);
+			}
+		});
+	} catch (error) {
+		console.log(error);
+		errorToast('Could not clear unread messages for active conversation.');
+	}
+};
+
 export const subscribeInvoices = () => {
 	lnc.lnd.lightning.subscribeInvoices(
 		undefined,
@@ -58,7 +95,7 @@ export const subscribeInvoices = () => {
 					});
 					const alias = nodeInfo.node?.alias;
 					const color = nodeInfo.node?.color;
-					const read = false;
+					const unread = 1;
 					const blocked = 'false';
 					const charLimit = 300;
 
@@ -118,7 +155,11 @@ export const subscribeInvoices = () => {
 							}
 
 							notification.addEventListener('click', () => {
+								messageHistory.set(25);
 								activeConversation.set(pubkey);
+								convoState.set('CHAT');
+								homeState.set('HOME');
+								appView.set(AppViewState.Convo);
 								window.focus();
 							});
 
@@ -149,7 +190,7 @@ export const subscribeInvoices = () => {
 						if (conversationExists) {
 							conversationExists.alias = alias;
 							conversationExists.color = color;
-							conversationExists.read = read;
+							conversationExists.unread++;
 							conversationExists.latestMessage = messageObject.id;
 							conversationExists.lastUpdate = messageObject.receivedTime;
 
@@ -166,7 +207,7 @@ export const subscribeInvoices = () => {
 								pubkey,
 								alias,
 								color,
-								read,
+								unread,
 								blocked,
 								charLimit,
 								latestMessage: messageObject.id,
@@ -213,15 +254,19 @@ export const addConversation = async (pubkey: string) => {
 						pubkey,
 						alias: nodeInfo.node?.alias,
 						color: nodeInfo.node?.color,
-						read: true,
+						unread: 0,
 						blocked: 'false',
 						charLimit: 300
 					};
 
 					await db.conversations.add(conversation);
+
+					messageHistory.set(25);
 					activeConversation.set(pubkey);
-					appView.set(AppViewState.Convo);
+					convoState.set('CHAT');
 					homeState.set('HOME');
+					appView.set(AppViewState.Convo);
+
 					successToast('Conversation started!');
 				}
 			});
