@@ -232,7 +232,10 @@
 					{/each}
 				</ol>
 			{:else}
-				<p class="mt-2">No nodes on your blocked list.</p>
+				<p class="mt-2 text-sm">
+					Nodes on this list will still be able to send you payments and messages, but they will be
+					hidden from view.
+				</p>
 			{/if}
 		{/if}
 	</RowItem>
