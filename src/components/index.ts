@@ -10,6 +10,7 @@ export { default as ChatLoading } from './ChatLoading.svelte';
 export { default as ChatWindow } from './ChatWindow.svelte';
 export { default as Connect } from './Connect.svelte';
 export { default as Conversations } from './Conversations.svelte';
+export { default as ConvoNav } from './ConvoNav.svelte';
 export { default as ConvoView } from './ConvoView.svelte';
 export { default as CopyButton } from './CopyButton.svelte';
 export { default as Error } from './Error.svelte';

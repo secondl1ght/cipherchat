@@ -61,10 +61,10 @@ export const setError = (status: string, message: string) => error.set({ status,
 export const shortenPubkey = (pubkey: string) =>
 	pubkey.slice(0, 6) + '...' + pubkey.slice(pubkey.length - 6, pubkey.length);
 
-export const shortenAlias = (alias: string | undefined) => {
-	if (!alias || alias.length <= 20) return alias;
+export const shortenAlias = (alias: string | undefined, limit: number) => {
+	if (!alias || alias.length <= limit) return alias;
 
-	return alias.slice(0, 20) + '...';
+	return alias.slice(0, limit) + '...';
 };
 
 export const shortenLatestMessage = (message: string, limit: number) => {

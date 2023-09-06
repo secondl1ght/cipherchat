@@ -1,14 +1,36 @@
 <script lang="ts">
-	import { convoState } from '$lib/store';
-	import { ChatWindow, MessageInfo, Node } from 'comp';
+	import { activeConversation, convoState } from '$lib/store';
+	import { ChatWindow, ConvoNav, MessageInfo, Node } from 'comp';
+	import { blur } from 'svelte/transition';
 </script>
 
-<section class="h-full w-full border-borderIn p-4 lg:border-l-8">
-	{#if $convoState === 'CHAT'}
-		<ChatWindow />
-	{:else if $convoState === 'NODE'}
-		<Node />
-	{:else if $convoState === 'MESSAGE'}
-		<MessageInfo />
+<section class="relative h-full w-full">
+	{#if $activeConversation}
+		<div class="hide-scroll h-full w-full overflow-y-auto">
+			<ConvoNav />
+
+			<div class="p-4">
+				{#if $convoState === 'CHAT'}
+					<div class="w-full">
+						<ChatWindow />
+					</div>
+				{:else if $convoState === 'NODE'}
+					<div in:blur={{ amount: 10 }} class="w-full">
+						<Node />
+					</div>
+				{:else if $convoState === 'MESSAGE'}
+					<div in:blur={{ amount: 10 }} class="w-full">
+						<MessageInfo />
+					</div>
+				{/if}
+			</div>
+		</div>
+	{:else}
+		<div class="flex h-full w-full items-center justify-center">
+			<div>
+				<img src="/images/logo.png" alt="logo" />
+				<h1 class="mt-8 text-center text-xl uppercase md:text-2xl lg:text-3xl">CIPHERCHAT</h1>
+			</div>
+		</div>
 	{/if}
 </section>

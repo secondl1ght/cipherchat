@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { homeState, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
+	import { homeState, innerWidth, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
 	import { errorToast, successToast, warningToast } from '$lib/utils';
 	import { Avatar, Icon } from 'comp';
 	import tippy from 'tippy.js';
@@ -39,13 +39,18 @@
 </script>
 
 <nav
-	class="sticky left-0 top-0 z-10 flex w-full items-center justify-between border-b border-header bg-boxFill p-4"
+	class="sticky left-0 top-0 z-10 flex w-full items-center justify-between border-b border-body bg-boxFill p-4"
 >
 	<button on:click={toggleHome}>
 		{#if $homeState === 'HOME'}
 			<Avatar pubkey={$userPubkey} alias={$userAlias} color={$userColor} avatar={$userAvatar} />
 		{:else}
-			<Icon icon="arrow-left-circle" style="text-header" width="48" height="48" />
+			<Icon
+				icon="arrow-left-circle"
+				style="text-header"
+				width={$innerWidth > 1024 ? '48' : '40'}
+				height={$innerWidth > 1024 ? '48' : '40'}
+			/>
 		{/if}
 	</button>
 

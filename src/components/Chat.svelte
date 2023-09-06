@@ -34,6 +34,7 @@
 	import { ChatLoading, ConvoView, HomeView } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
 	import { onMount } from 'svelte';
+	import { blur } from 'svelte/transition';
 
 	let loading = true;
 
@@ -223,10 +224,14 @@
 {:else}
 	<div class="h-[100dvh] w-full lg:flex">
 		{#if $appView === AppViewState.Home || $innerWidth > 1024}
-			<HomeView />
+			<div in:blur={{ amount: 10 }} class="h-full w-full lg:w-1/3 lg:min-w-[396px] lg:max-w-xl">
+				<HomeView />
+			</div>
 		{/if}
 		{#if $appView === AppViewState.Convo || $innerWidth > 1024}
-			<ConvoView />
+			<div in:blur={{ amount: 10 }} class="h-full w-full">
+				<ConvoView />
+			</div>
 		{/if}
 	</div>
 {/if}

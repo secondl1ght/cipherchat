@@ -3,7 +3,7 @@
 	export let alias: string | undefined;
 	export let color: string | undefined;
 	export let avatar: string | null | undefined;
-	export let size = 'w-12 h-12';
+	export let size = 'w-10 h-10 lg:w-12 lg:h-12';
 	export let style = '';
 	export let withButton = false;
 

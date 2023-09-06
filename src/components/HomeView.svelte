@@ -4,7 +4,7 @@
 	import { blur } from 'svelte/transition';
 </script>
 
-<section class="relative h-full w-full bg-boxFill lg:w-1/3 lg:min-w-[396px] lg:max-w-xl">
+<section class="relative h-full w-full bg-boxFill">
 	<div class="hide-scroll h-full w-full overflow-y-auto">
 		<HomeNav />
 
