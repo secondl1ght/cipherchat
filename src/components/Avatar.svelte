@@ -10,7 +10,7 @@
 	import { getRandomColor } from '$lib/utils';
 	import { Icon } from 'comp';
 
-	const finalColor = color || getRandomColor();
+	$: finalColor = color || getRandomColor();
 </script>
 
 <div class="relative">
