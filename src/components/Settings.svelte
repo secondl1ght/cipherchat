@@ -174,7 +174,7 @@
 
 <Button click={resetDefaults} style="my-4 !w-full !h-12" title="Reset Defaults" />
 
-<hr />
+<hr class="border-header" />
 
 <ul class="mt-4 space-y-4">
 	<RowItem title="Resync Messages" flex={$innerWidth > 640 ? true : false}>
