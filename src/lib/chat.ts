@@ -97,6 +97,7 @@ export const subscribeInvoices = () => {
 					const color = nodeInfo.node?.color;
 					const unread = 1;
 					const blocked = 'false';
+					const bookmarked = 'false';
 					const charLimit = 300;
 
 					// message values
@@ -161,6 +162,7 @@ export const subscribeInvoices = () => {
 								homeState.set('HOME');
 								appView.set(AppViewState.Convo);
 								window.focus();
+								clearUnread();
 							});
 
 							document.addEventListener(
@@ -192,6 +194,7 @@ export const subscribeInvoices = () => {
 							conversationExists.color = color;
 							conversationExists.unread++;
 							conversationExists.latestMessage = messageObject.id;
+							conversationExists.latestMessageStatus = messageObject.status;
 							conversationExists.lastUpdate = messageObject.receivedTime;
 
 							await db.conversations.put(conversationExists);
@@ -209,8 +212,10 @@ export const subscribeInvoices = () => {
 								color,
 								unread,
 								blocked,
+								bookmarked,
 								charLimit,
 								latestMessage: messageObject.id,
+								latestMessageStatus: messageObject.status,
 								lastUpdate: messageObject.receivedTime
 							});
 							await db.messages.add(messageObject);
@@ -256,6 +261,7 @@ export const addConversation = async (pubkey: string) => {
 						color: nodeInfo.node?.color,
 						unread: 0,
 						blocked: 'false',
+						bookmarked: 'false',
 						charLimit: 300
 					};
 
@@ -333,6 +339,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			};
 
 			conversation.latestMessage = newMessage.id;
+			conversation.latestMessageStatus = newMessage.status;
 			conversation.lastUpdate = newMessage.receivedTime;
 
 			await db.conversations.put(conversation);
@@ -351,11 +358,15 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	}
 
 	const updateMessage = (type: string, msg?: lnrpc.Payment) => {
-		db.transaction('rw', db.messages, () => {
+		db.transaction('rw', db.messages, db.conversations, () => {
 			if (type === 'SIGNATURE') {
 				db.messages.update(id, {
 					status: lnrpc.Payment_PaymentStatus.FAILED,
 					failureReason: lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR
+				});
+
+				db.conversations.update(recipient, {
+					latestMessageStatus: lnrpc.Payment_PaymentStatus.FAILED
 				});
 			} else if (type === 'FAILED') {
 				if (!msg) return;
@@ -364,6 +375,8 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 					failureReason: msg.failureReason,
 					signature: signature.signature
 				});
+
+				db.conversations.update(recipient, { latestMessageStatus: msg.status });
 			} else if (type === 'SUCCESS') {
 				if (!msg) return;
 				db.messages.update(id, {
@@ -371,11 +384,17 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 					fee: Number(msg.feeSat),
 					signature: signature.signature
 				});
+
+				db.conversations.update(recipient, { latestMessageStatus: msg.status });
 			} else if (type === 'ERROR') {
 				db.messages.update(id, {
 					status: lnrpc.Payment_PaymentStatus.FAILED,
 					failureReason: lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR,
 					signature: signature.signature
+				});
+
+				db.conversations.update(recipient, {
+					latestMessageStatus: lnrpc.Payment_PaymentStatus.FAILED
 				});
 			}
 		});
@@ -442,6 +461,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			},
 			(err) => {
 				if (err.message === 'EOF') return;
+
 				console.log(err);
 				try {
 					updateMessage('ERROR');

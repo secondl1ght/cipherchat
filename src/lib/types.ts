@@ -7,8 +7,10 @@ export interface Conversation {
 	avatar?: string;
 	unread: number;
 	blocked: 'true' | 'false';
+	bookmarked: 'true' | 'false';
 	charLimit: number;
 	latestMessage?: string;
+	latestMessageStatus?: lnrpc.Payment_PaymentStatus;
 	lastUpdate?: number;
 }
 

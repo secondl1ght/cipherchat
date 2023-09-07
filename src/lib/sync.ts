@@ -103,6 +103,7 @@ export const initializeInvoices = async () => {
 			const pubkey = bufferBase64ToUtf(successfulHTLC.customRecords[SENDERS_PUBKEY]);
 			const unread = 1;
 			const blocked = 'false';
+			const bookmarked = 'false';
 			const charLimit = 300;
 
 			// message values
@@ -149,6 +150,7 @@ export const initializeInvoices = async () => {
 					messages: [messageObject],
 					unread,
 					blocked,
+					bookmarked,
 					charLimit
 				});
 			}
@@ -211,6 +213,7 @@ export const initializePayments = async () => {
 			if (lastRouteHop.pubKey === get(userPubkey)) return;
 			const unread = 0;
 			const blocked = 'false';
+			const bookmarked = 'false';
 			const charLimit = 300;
 
 			// message values
@@ -258,6 +261,7 @@ export const initializePayments = async () => {
 					messages: [messageObject],
 					unread,
 					blocked,
+					bookmarked,
 					charLimit
 				});
 			}
@@ -310,6 +314,7 @@ export const finalizeConversations = async (conversations: ConversationConstruct
 		const lastMessage = conversation.messages[conversation.messages.length - 1];
 
 		conversation.latestMessage = lastMessage.id;
+		conversation.latestMessageStatus = lastMessage.status;
 		conversation.lastUpdate = lastMessage.receivedTime;
 	}
 
@@ -330,8 +335,10 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 		color: conversation.color,
 		unread: conversation.unread,
 		blocked: conversation.blocked,
+		bookmarked: conversation.bookmarked,
 		charLimit: conversation.charLimit,
 		latestMessage: conversation.latestMessage,
+		latestMessageStatus: conversation.latestMessageStatus,
 		lastUpdate: conversation.lastUpdate
 	}));
 
@@ -349,6 +356,7 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 					recordExists.color = conversation.color;
 					recordExists.unread = recordExists.unread + conversation.unread;
 					recordExists.latestMessage = conversation.latestMessage;
+					recordExists.latestMessageStatus = conversation.latestMessageStatus;
 					recordExists.lastUpdate = conversation.lastUpdate;
 
 					await db.conversations.put(recordExists);
