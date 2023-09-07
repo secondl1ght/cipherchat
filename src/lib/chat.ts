@@ -318,6 +318,8 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	const sendersPubkey = bufferUtfToBase64(get(userPubkey));
 	const recipientFormatted = bufferHexToBase64(recipient);
 
+	const errText = amount ? 'payment' : 'message';
+
 	// add to db
 	try {
 		await db.transaction('rw', db.conversations, db.messages, async () => {
@@ -352,7 +354,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 		clearMessage.set(false);
 	} catch (error) {
 		console.log(error);
-		errorToast(`Could not attempt sending ${amount ? 'payment' : 'message'}, please try again.`);
+		errorToast(`Could not attempt sending ${errText}, please try again.`);
 		lockMessage.set(false);
 		return;
 	}
@@ -448,14 +450,16 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 						updateMessage('FAILED', msg);
 					} catch (error) {
 						console.log(error);
-						errorToast('Could not send message.');
+						errorToast(`Could not send ${errText}.`);
 					}
 				} else if (msg.status === lnrpc.Payment_PaymentStatus.SUCCEEDED) {
 					try {
 						updateMessage('SUCCESS', msg);
 					} catch (error) {
 						console.log(error);
-						errorToast('Message sent, but could not update status in the database.');
+						errorToast(
+							`${amount ? 'Payment' : 'Message'} sent, but could not update status in the database.`
+						);
 					}
 				}
 			},
@@ -467,7 +471,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 					updateMessage('ERROR');
 				} catch (error) {
 					console.log(error);
-					errorToast('Could not send message.');
+					errorToast(`Could not send ${errText}.`);
 				}
 			}
 		);
@@ -477,7 +481,7 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			updateMessage('ERROR');
 		} catch (error) {
 			console.log(error);
-			errorToast('Could not send message.');
+			errorToast(`Could not send ${errText}.`);
 		}
 	}
 };
