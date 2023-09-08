@@ -76,7 +76,7 @@
 
 		<div class="w-1/2">
 			<p class="mb-2 text-center">Remote</p>
-			
+
 			<button
 				bind:this={remoteBtn}
 				on:mouseenter={() => (sideHover = 'REMOTE')}

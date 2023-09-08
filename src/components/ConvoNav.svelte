@@ -13,6 +13,7 @@
 	import { errorToast, shortenAlias, shortenPubkey, successToast } from '$lib/utils';
 	import { Avatar, Icon } from 'comp';
 	import { tick } from 'svelte';
+	import { blur } from 'svelte/transition';
 
 	let showPayment = false;
 	const paymentAmounts = [1000, 10000, 100000, 'Custom'];
@@ -178,6 +179,7 @@
 
 	{#if showPayment}
 		<div
+			in:blur={{ amount: 10 }}
 			class="flex w-full items-center justify-center gap-4 overflow-x-auto border-b border-body bg-borderOut p-2"
 		>
 			{#if selectedAmount === 'Custom'}
