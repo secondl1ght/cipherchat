@@ -181,14 +181,16 @@
 			class="flex w-full items-center justify-center gap-4 overflow-x-auto border-b border-body bg-borderOut p-2"
 		>
 			{#if selectedAmount === 'Custom'}
+				<label for="amount" class="text-header">Send</label>
 				<input
+					id="amount"
 					type="number"
 					min="1"
 					bind:value={finalAmount}
 					bind:this={customAmountInput}
 					on:keydown={handleEnter}
 					placeholder="satoshis"
-					class="h-7 w-44 rounded border border-header bg-boxFill px-1 text-xs text-header placeholder:text-xs md:text-base md:placeholder:text-base"
+					class="h-7 w-32 rounded border border-header bg-boxFill px-1 text-sm text-header placeholder:text-sm md:text-base md:placeholder:text-base"
 				/>
 			{:else}
 				{#each paymentAmounts as amount}
