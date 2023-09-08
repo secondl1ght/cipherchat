@@ -55,7 +55,7 @@
 
 	<div class="flex items-center space-x-2.5">
 		{#if c.latestMessageStatus}
-			<Icon icon={statusIcon()} style="text-header" width="20" height="20" />
+			<Icon icon={statusIcon()} style="text-header" width="18" height="18" />
 		{/if}
 
 		<div class="space-y-1">
