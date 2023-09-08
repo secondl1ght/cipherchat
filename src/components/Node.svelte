@@ -11,9 +11,8 @@
 		successToast
 	} from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
-	import { Avatar, CopyButton, InfoTooltip, RowItem } from 'comp';
+	import { Avatar, CopyButton, InfoTooltip, RowItem, SharedChannel } from 'comp';
 	import { onMount } from 'svelte';
-	import SharedChannel from './SharedChannel.svelte';
 
 	let nodeInfo: lnrpc.NodeInfo;
 	let channels: lnrpc.Channel[] = [];
@@ -24,26 +23,23 @@
 
 	onMount(async () => {
 		try {
-			nodeInfo = await lnc.lnd.lightning.getNodeInfo({
-				pubKey: $activeConversation,
-				includeChannels: false
+			await Promise.all([
+				lnc.lnd.lightning.getNodeInfo({
+					pubKey: $activeConversation,
+					includeChannels: false
+				}),
+				lnc.lnd.lightning.listChannels({
+					peer: bufferHexToBase64($activeConversation)
+				})
+			]).then((values) => {
+				nodeInfo = values[0];
+				channels = values[1].channels;
 			});
-		} catch (error) {
-			console.log(error);
-			errorToast('Could not fetch node information, please try again.');
-		}
-
-		try {
-			const response = await lnc.lnd.lightning.listChannels({
-				peer: bufferHexToBase64($activeConversation)
-			});
-
-			channels = response.channels;
 
 			loading = false;
 		} catch (error) {
 			console.log(error);
-			errorToast('Could not fetch channels, please try again.');
+			errorToast('Could not fetch node information, please try again.');
 		}
 	});
 </script>
@@ -170,7 +166,7 @@
 					{/each}
 				</div>
 			{:else if loading}
-				<p class="text-center">Loading...</p>
+				<p class="cursor-wait text-center">Loading...</p>
 			{:else}
 				<p class="text-center">You don't have any channels open with this node.</p>
 			{/if}

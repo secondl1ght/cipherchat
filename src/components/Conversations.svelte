@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { conversations } from '$lib/store';
-	import { AddConversationButton } from 'comp';
+	import { AddConversationButton, ConversationRow } from 'comp';
 	import { flip } from 'svelte/animate';
-	import ConversationRow from './ConversationRow.svelte';
 
 	$: bookmarks = $conversations.filter((c) => c.bookmarked === 'true');
 	$: regular = $conversations.filter((c) => c.bookmarked === 'false');
