@@ -4,7 +4,11 @@
 	export let flex = true;
 </script>
 
-<li class="{flex ? 'flex space-x-4 md:space-x-8' : 'block'} items-center justify-between">
+<li
+	class="{flex
+		? 'flex space-x-4 md:space-x-8'
+		: 'block'} hide-scroll items-center justify-between overflow-x-auto"
+>
 	{#if label}
 		<label for={label} class="whitespace-nowrap text-header">{title}:</label>
 	{:else}
