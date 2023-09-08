@@ -7,10 +7,9 @@
 	export let style = '';
 	export let withButton = false;
 
-	import { getRandomColor } from '$lib/utils';
 	import { Icon } from 'comp';
 
-	$: finalColor = color || getRandomColor();
+	$: finalColor = color || '#F7931A';
 </script>
 
 <div class="relative">
