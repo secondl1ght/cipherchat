@@ -32,7 +32,7 @@
 		bind:value={pubkey}
 		on:keydown={handleEnter}
 		placeholder="021ef14c694456a3aae34..."
-		class="mb-5 mt-2 block h-16 w-full border-[1px] border-body bg-borderIn px-2 text-xs text-header placeholder:text-xs md:text-base md:placeholder:text-base"
+		class="mb-5 mt-2 block h-16 w-full border-[1px] border-body bg-borderIn px-2 text-sm text-header placeholder:text-sm md:text-base md:placeholder:text-base"
 	/>
 
 	<Button
