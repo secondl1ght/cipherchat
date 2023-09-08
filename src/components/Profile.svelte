@@ -39,9 +39,11 @@
 
 	<ul class="space-y-4">
 		<RowItem title="Pubkey">
-			<p class="break-all">
-				{$userPubkey}
+			<p class="flex items-center space-x-2">
 				<CopyButton text={$userPubkey} width="16" height="16" />
+				<span class="inline-block">
+					{shortenPubkey($userPubkey)}
+				</span>
 			</p>
 		</RowItem>
 
@@ -87,7 +89,7 @@
 					external
 					href="https://github.com/lightningnetwork/lnd/releases/tag/{version}"
 					title={version}
-					style="break-all"
+					style="whitespace-nowrap"
 				/>
 			{:else}
 				<p class="cursor-wait">-</p>
