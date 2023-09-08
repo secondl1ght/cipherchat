@@ -41,6 +41,7 @@
 		"@lightninglabs/lnc-web": "^0.2.5-alpha",
 		"buffer": "^6.0.3",
 		"dexie": "^4.0.1-alpha.25",
+		"numbro": "^2.4.0",
 		"tippy.js": "^6.3.7"
 	}
 }
