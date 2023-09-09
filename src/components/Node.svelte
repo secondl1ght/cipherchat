@@ -3,13 +3,7 @@
 	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
 	import { activeConversation, conversation } from '$lib/store';
-	import {
-		errorToast,
-		formatNumber,
-		shortenAddress,
-		shortenPubkey,
-		successToast
-	} from '$lib/utils';
+	import { errorToast, formatNumber, shortenPubkey, successToast } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Avatar, CopyButton, InfoTooltip, RowItem, SharedChannel } from 'comp';
 	import { onMount } from 'svelte';
@@ -107,7 +101,7 @@
 							<li class="flex items-center space-x-2">
 								<CopyButton text={address.addr} width="16" height="16" />
 								<span class="inline-block">
-									{shortenAddress(address.addr)}
+									{address.addr}
 								</span>
 							</li>
 						{/each}
