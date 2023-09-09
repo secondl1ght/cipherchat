@@ -6,6 +6,7 @@ export { default as BoxWrapper } from './BoxWrapper.svelte';
 export { default as Button } from './Button.svelte';
 export { default as ChannelStatus } from './ChannelStatus.svelte';
 export { default as Chat } from './Chat.svelte';
+export { default as ChatInput } from './ChatInput.svelte';
 export { default as ChatLoading } from './ChatLoading.svelte';
 export { default as ChatWindow } from './ChatWindow.svelte';
 export { default as Connect } from './Connect.svelte';

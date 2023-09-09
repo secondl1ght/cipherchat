@@ -190,7 +190,7 @@
 					bind:this={customAmountInput}
 					on:keydown={handleEnter}
 					placeholder="satoshis"
-					class="h-7 w-32 rounded border border-header bg-boxFill px-1 text-sm text-header placeholder:text-sm md:text-base md:placeholder:text-base"
+					class="h-7 w-32 border border-header bg-boxFill px-1 text-sm text-header placeholder:text-sm md:text-base md:placeholder:text-base"
 				/>
 			{:else}
 				{#each paymentAmounts as amount}

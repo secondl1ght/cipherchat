@@ -24,6 +24,7 @@ export const messages: Writable<MessageDecrypted[]> = writable([]);
 export const messageHistory = writable(25);
 export const lockMessage = writable(false);
 export const clearMessage = writable(false);
+export const messageMemory: Writable<any> = writable({});
 export const bubbleColor = writable(localStorage.getItem('bubbleColor'));
 export const textColor = writable(localStorage.getItem('textColor'));
 

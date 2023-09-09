@@ -291,7 +291,9 @@ export const addConversation = async (pubkey: string) => {
 };
 
 export const sendMessage = async (recipient: string, message: string, amount?: number) => {
-	lockMessage.set(true);
+	if (!amount) {
+		lockMessage.set(true);
+	}
 
 	// setup data
 	const timestamp = getTimestamp();
@@ -303,7 +305,13 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	const preimageFormatted = bufferToBase64(preimage);
 
 	const messageEncrypted = await encrypt(message);
-	if (!messageEncrypted) return;
+	if (!messageEncrypted) {
+		if (!amount) {
+			lockMessage.set(false);
+		}
+		errorToast('Could not encrypt message, please try again.');
+		return;
+	}
 	const messageFormatted = bufferUtfToBase64(message);
 
 	const type = amount ? MessageType.Payment : MessageType.Text;
@@ -348,14 +356,18 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			await db.messages.add(newMessage);
 		});
 
-		clearMessage.set(true);
-		lockMessage.set(false);
-		await tick();
-		clearMessage.set(false);
+		if (!amount) {
+			clearMessage.set(true);
+			lockMessage.set(false);
+			await tick();
+			clearMessage.set(false);
+		}
 	} catch (error) {
 		console.log(error);
 		errorToast(`Could not attempt sending ${errText}, please try again.`);
-		lockMessage.set(false);
+		if (!amount) {
+			lockMessage.set(false);
+		}
 		return;
 	}
 
