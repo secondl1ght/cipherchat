@@ -61,7 +61,7 @@
 	$: charsRemaining = $conversation?.charLimit - message.length;
 
 	const handleEnter = (e: any) => {
-		if (e.key === 'Enter' && !e.shiftKey && message) {
+		if (e.key === 'Enter' && !e.shiftKey && message.trim().length) {
 			sendMessage($activeConversation, message);
 		}
 	};
@@ -133,13 +133,14 @@
 			/>
 
 			<button
-				class="flex h-[42px] min-w-[42px] items-center justify-center rounded bg-button {!message
+				class="flex h-[42px] min-w-[42px] items-center justify-center rounded bg-button {message.trim()
+					.length === 0
 					? 'cursor-not-allowed opacity-50'
 					: $lockMessage
 					? 'cursor-wait'
 					: ''}"
 				on:click={() => sendMessage($activeConversation, message)}
-				disabled={!message || $lockMessage}
+				disabled={message.trim().length === 0 || $lockMessage}
 			>
 				<Icon icon="message-square" style="text-header" />
 			</button>
