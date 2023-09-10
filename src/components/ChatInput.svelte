@@ -61,7 +61,7 @@
 	$: charsRemaining = $conversation?.charLimit - message.length;
 
 	const handleEnter = (e: any) => {
-		if (e.key === 'Enter' && message) {
+		if (e.key === 'Enter' && !e.shiftKey && message) {
 			sendMessage($activeConversation, message);
 		}
 	};
