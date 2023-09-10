@@ -12,8 +12,8 @@
 	let sounds = localStorage.getItem('playAudio') === 'true' ? true : false;
 	let feeLimit = localStorage.getItem('feeLimit') || '10';
 	let timePref = localStorage.getItem('timePref') || '0';
-	let bubbleColorSelected = localStorage.getItem('bubbleColor') || '#5A7FFF';
-	let textColorSelected = localStorage.getItem('textColor') || '#D9E7FA';
+	let bubbleColorSelected = $bubbleColor || '#F5F7FA';
+	let textColorSelected = $textColor || '#0C0E16';
 	let showAnon = localStorage.getItem('showAnon') === 'true' ? true : false;
 
 	const updateSetting = (setting: string, value: string) => {
@@ -28,9 +28,11 @@
 		localStorage.removeItem('timePref');
 		timePref = '0';
 		localStorage.removeItem('bubbleColor');
-		bubbleColorSelected = '#5A7FFF';
+		$bubbleColor = null;
+		bubbleColorSelected = '#F5F7FA';
 		localStorage.removeItem('textColor');
-		textColorSelected = '#D9E7FA';
+		$textColor = null;
+		textColorSelected = '#0C0E16';
 		localStorage.removeItem('showAnon');
 		showAnon = false;
 
@@ -124,11 +126,11 @@
 	<RowItem title="Bubble Color" label="bubble-color">
 		<input
 			bind:value={bubbleColorSelected}
-			on:input={() => {
+			on:input={() => ($bubbleColor = bubbleColorSelected)}
+			on:change={() => {
 				updateSetting('bubbleColor', bubbleColorSelected);
-				$bubbleColor = bubbleColorSelected;
+				successToast('Setting updated.');
 			}}
-			on:change={() => successToast('Setting updated.')}
 			type="color"
 			id="bubble-color"
 			name="bubble-color"
@@ -139,11 +141,11 @@
 	<RowItem title="Text Color" label="text-color">
 		<input
 			bind:value={textColorSelected}
-			on:input={() => {
+			on:input={() => ($textColor = textColorSelected)}
+			on:change={() => {
 				updateSetting('textColor', textColorSelected);
-				$textColor = textColorSelected;
+				successToast('Setting updated.');
 			}}
-			on:change={() => successToast('Setting updated.')}
 			type="color"
 			id="text-color"
 			name="text-color"

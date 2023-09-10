@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { statusIcon } from '$lib/chat';
-	import { activeConversation, chatInputHeight, messages, scrollDiv } from '$lib/store';
+	import {
+		activeConversation,
+		bubbleColor,
+		chatInputHeight,
+		messages,
+		scrollDiv,
+		textColor
+	} from '$lib/store';
 	import { formatTimestamp } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
@@ -55,7 +62,13 @@
 
 					<div class="flex {message.self ? 'justify-end' : ''}">
 						<button
-							class="max-w-[90%] break-all rounded bg-gradient-to-r from-gradientOne to-gradientTwo p-2 text-left text-borderIn md:max-w-[75%]"
+							style:background-color={$bubbleColor}
+							style:color={$textColor}
+							class="max-w-[90%] break-all rounded p-2 text-left md:max-w-[75%] {$bubbleColor
+								? ''
+								: 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor
+								? ''
+								: 'text-borderIn'}"
 							on:click={() => {}}
 						>
 							{message.message}
