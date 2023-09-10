@@ -10,6 +10,7 @@ import { lnc } from '$lib/lnc';
 import {
 	activeConversation,
 	appView,
+	chatInput,
 	clearMessage,
 	convoState,
 	homeState,
@@ -39,6 +40,22 @@ const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE,
 const messageType = Object.values(MessageType);
 
 const notificationSound = new Audio('/audio/notification.mp3');
+
+export const formatPaymentMsg = (self: boolean, amount: number) =>
+	`${self ? 'Sent' : 'Received'} ${formatNumber(amount)} sats.`;
+
+export const statusIcon = (status: lnrpc.Payment_PaymentStatus) => {
+	switch (status) {
+		case lnrpc.Payment_PaymentStatus.IN_FLIGHT:
+			return 'loader';
+		case lnrpc.Payment_PaymentStatus.SUCCEEDED:
+			return 'check-circle';
+		case lnrpc.Payment_PaymentStatus.FAILED:
+			return 'x-circle';
+		default:
+			return 'alert-circle';
+	}
+};
 
 export const setBadge = async (count: number) => {
 	try {
@@ -140,7 +157,7 @@ export const subscribeInvoices = () => {
 							const playAudio = localStorage.getItem('playAudio') === 'true';
 							const sendersNode = alias || shortenPubkey(pubkey);
 							const notificationMessage =
-								type === MessageType.Payment ? `Received ${formatNumber(amount)} sats.` : message;
+								type === MessageType.Payment ? formatPaymentMsg(false, amount) : message;
 
 							const notification = new Notification(sendersNode, {
 								badge: '/images/logo.png',
@@ -308,6 +325,8 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	if (!messageEncrypted) {
 		if (!amount) {
 			lockMessage.set(false);
+			await tick();
+			get(chatInput)?.focus();
 		}
 		errorToast('Could not encrypt message, please try again.');
 		return;
@@ -361,12 +380,15 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			lockMessage.set(false);
 			await tick();
 			clearMessage.set(false);
+			get(chatInput)?.focus();
 		}
 	} catch (error) {
 		console.log(error);
 		errorToast(`Could not attempt sending ${errText}, please try again.`);
 		if (!amount) {
 			lockMessage.set(false);
+			await tick();
+			get(chatInput)?.focus();
 		}
 		return;
 	}

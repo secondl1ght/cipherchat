@@ -2,6 +2,8 @@
 	import { sendMessage } from '$lib/chat';
 	import {
 		activeConversation,
+		chatInput,
+		chatInputHeight,
 		clearMessage,
 		conversation,
 		lockMessage,
@@ -51,10 +53,8 @@
 		theme: 'dark'
 	});
 
-	// @ts-expect-error
+	// @ts-expect-error - this package is not typed
 	$: emojiDiv && emojiDiv.appendChild(EmojiSelector);
-
-	let clientHeight: number;
 
 	let message = $messageMemory[$activeConversation] || '';
 
@@ -90,11 +90,14 @@
 </script>
 
 {#if $conversation}
-	<div bind:clientHeight class="absolute bottom-0 left-0 z-10 w-full bg-borderIn p-4">
+	<div
+		bind:clientHeight={$chatInputHeight}
+		class="absolute bottom-0 left-0 z-10 w-full bg-borderIn p-4"
+	>
 		<div class="relative flex w-full items-center space-x-2 md:space-x-4">
 			<div
 				bind:this={emojiDiv}
-				style:bottom={`${clientHeight - 24}px`}
+				style:bottom={`${$chatInputHeight - 24}px`}
 				class="absolute left-2 rounded-[10px] border border-header {showEmoji
 					? 'hidden md:block'
 					: 'hidden'}"
@@ -113,6 +116,7 @@
 			</button>
 
 			<textarea
+				bind:this={$chatInput}
 				autocomplete="on"
 				autocorrect="on"
 				minlength="0"

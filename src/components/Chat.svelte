@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clearBadge, setBadge, subscribeInvoices } from '$lib/chat';
+	import { clearBadge, formatPaymentMsg, setBadge, subscribeInvoices } from '$lib/chat';
 	import { decrypt } from '$lib/crypto';
 	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
@@ -25,7 +25,6 @@
 	import { AppViewState, MessageType, type ConversationConstruction } from '$lib/types';
 	import {
 		errorToast,
-		formatNumber,
 		getUpdateTime,
 		setError,
 		setFirstSyncComplete,
@@ -53,9 +52,7 @@
 
 				if (latestMessage) {
 					if (latestMessage.type === MessageType.Payment) {
-						const paymentMsg = `${latestMessage.self ? 'Sent' : 'Received'} ${formatNumber(
-							latestMessage.amount
-						)} sats.`;
+						const paymentMsg = formatPaymentMsg(latestMessage.self, latestMessage.amount);
 
 						return { ...c, latestMessage: paymentMsg };
 					}
@@ -123,20 +120,21 @@
 			const msgs = await db.messages
 				.where('pubkey')
 				.equals($activeConversation)
-				.limit($messageHistory)
 				.sortBy('receivedTime');
 
-			const msgsFormatted = msgs.map(async (m) => {
-				if (m.type === MessageType.Payment) {
-					const paymentMsg = `${m.self ? 'Sent' : 'Received'} ${formatNumber(m.amount)} sats.`;
+			const msgsFormatted = msgs
+				.slice(msgs.length - $messageHistory, msgs.length)
+				.map(async (m) => {
+					if (m.type === MessageType.Payment) {
+						const paymentMsg = formatPaymentMsg(m.self, m.amount);
 
-					return { ...m, message: paymentMsg };
-				}
+						return { ...m, message: paymentMsg };
+					}
 
-				const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
+					const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
 
-				return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
-			});
+					return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
+				});
 
 			const result = await Promise.all(msgsFormatted);
 

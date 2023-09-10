@@ -104,126 +104,128 @@
 </script>
 
 {#if $conversation}
-	<nav
-		class="sticky left-0 top-0 z-10 grid w-full grid-cols-1 items-center justify-between border-b border-body bg-borderIn p-4 lg:flex"
-	>
-		<div class="mt-4 flex items-center justify-between lg:mt-0 lg:justify-start lg:gap-x-2.5">
-			<button on:click={toggleConvo} class="order-last lg:order-first">
-				{#if $convoState === 'CHAT'}
-					<Avatar
-						pubkey={$conversation.pubkey}
-						alias={$conversation.alias}
-						color={$conversation.color}
-						avatar={$conversation.avatar}
+	<div class="sticky left-0 top-0 z-10 w-full">
+		<nav
+			class="grid w-full grid-cols-1 items-center justify-between border-b border-body bg-borderIn p-4 lg:flex"
+		>
+			<div class="mt-4 flex items-center justify-between lg:mt-0 lg:justify-start lg:gap-x-2.5">
+				<button on:click={toggleConvo} class="order-last lg:order-first">
+					{#if $convoState === 'CHAT'}
+						<Avatar
+							pubkey={$conversation.pubkey}
+							alias={$conversation.alias}
+							color={$conversation.color}
+							avatar={$conversation.avatar}
+						/>
+					{:else}
+						<Icon
+							icon="arrow-left-circle"
+							style="text-header"
+							width={$innerWidth > 1024 ? '48' : '40'}
+							height={$innerWidth > 1024 ? '48' : '40'}
+						/>
+					{/if}
+				</button>
+
+				<h1 class="break-all text-sm font-bold text-header lg:text-base">
+					{shortenAlias(
+						$conversation.alias,
+						$innerWidth > 1536
+							? 80
+							: $innerWidth > 1280
+							? 60
+							: $innerWidth > 1024
+							? 35
+							: $innerWidth > 768
+							? 70
+							: $innerWidth > 640
+							? 60
+							: $innerWidth > 475
+							? 40
+							: $innerWidth > 300
+							? 20
+							: 17
+					) || shortenPubkey($conversation.pubkey)}
+				</h1>
+			</div>
+
+			<div class="order-first flex justify-between lg:order-last lg:block">
+				<button
+					class="lg:hidden"
+					on:click={() => {
+						$messageHistory = 25;
+						$appView = AppViewState.Home;
+						clearUnread();
+					}}
+				>
+					<Icon icon="home" style="text-header" />
+				</button>
+
+				<div class="space-x-4">
+					<button on:click={togglePayment}>
+						<Icon icon="zap" style="text-header" />
+					</button>
+
+					<button on:click={toggleBookmark}>
+						<Icon icon="bookmark" style="text-header" />
+					</button>
+
+					<button on:click={blockNode}>
+						<Icon icon="slash" style="text-header" />
+					</button>
+				</div>
+			</div>
+		</nav>
+
+		{#if showPayment}
+			<div
+				class="flex w-full items-center justify-center gap-4 overflow-x-auto border-b border-body bg-borderOut p-2"
+			>
+				{#if selectedAmount === 'Custom'}
+					<label for="amount" class="text-header">Send</label>
+					<input
+						id="amount"
+						type="number"
+						min="1"
+						bind:value={finalAmount}
+						bind:this={customAmountInput}
+						on:keydown={handleEnter}
+						placeholder="satoshis"
+						class="h-7 w-32 border border-header bg-boxFill px-1 text-sm text-header placeholder:text-sm md:text-base md:placeholder:text-base"
 					/>
 				{:else}
-					<Icon
-						icon="arrow-left-circle"
-						style="text-header"
-						width={$innerWidth > 1024 ? '48' : '40'}
-						height={$innerWidth > 1024 ? '48' : '40'}
-					/>
+					{#each paymentAmounts as amount}
+						<button
+							class="text-header transition-all {selectedAmount === amount
+								? 'underline decoration-button decoration-4 underline-offset-8'
+								: 'hover:underline hover:decoration-button hover:decoration-4 hover:underline-offset-8'}"
+							on:click={async () => {
+								selectedAmount = amount;
+
+								if (amount === 'Custom') {
+									finalAmount = '';
+									await tick();
+									customAmountInput.focus();
+								} else {
+									finalAmount = amount;
+								}
+							}}
+						>
+							{amountText(amount, $innerWidth)}
+						</button>
+					{/each}
 				{/if}
-			</button>
 
-			<h1 class="break-all text-sm font-bold text-header lg:text-base">
-				{shortenAlias(
-					$conversation.alias,
-					$innerWidth > 1536
-						? 80
-						: $innerWidth > 1280
-						? 60
-						: $innerWidth > 1024
-						? 35
-						: $innerWidth > 768
-						? 70
-						: $innerWidth > 640
-						? 60
-						: $innerWidth > 475
-						? 40
-						: $innerWidth > 300
-						? 20
-						: 17
-				) || shortenPubkey($conversation.pubkey)}
-			</h1>
-		</div>
-
-		<div class="order-first flex justify-between lg:order-last lg:block">
-			<button
-				class="lg:hidden"
-				on:click={() => {
-					$messageHistory = 25;
-					$appView = AppViewState.Home;
-					clearUnread();
-				}}
-			>
-				<Icon icon="home" style="text-header" />
-			</button>
-
-			<div class="space-x-4">
-				<button on:click={togglePayment}>
-					<Icon icon="zap" style="text-header" />
-				</button>
-
-				<button on:click={toggleBookmark}>
-					<Icon icon="bookmark" style="text-header" />
-				</button>
-
-				<button on:click={blockNode}>
-					<Icon icon="slash" style="text-header" />
+				<button
+					class="flex items-center justify-center rounded bg-button p-1.5 {!finalAmount
+						? 'cursor-not-allowed opacity-50'
+						: ''}"
+					on:click={sendPayment}
+					disabled={!finalAmount}
+				>
+					<Icon icon="send" style="text-header" width="20" height="20" />
 				</button>
 			</div>
-		</div>
-	</nav>
-
-	{#if showPayment}
-		<div
-			class="flex w-full items-center justify-center gap-4 overflow-x-auto border-b border-body bg-borderOut p-2"
-		>
-			{#if selectedAmount === 'Custom'}
-				<label for="amount" class="text-header">Send</label>
-				<input
-					id="amount"
-					type="number"
-					min="1"
-					bind:value={finalAmount}
-					bind:this={customAmountInput}
-					on:keydown={handleEnter}
-					placeholder="satoshis"
-					class="h-7 w-32 border border-header bg-boxFill px-1 text-sm text-header placeholder:text-sm md:text-base md:placeholder:text-base"
-				/>
-			{:else}
-				{#each paymentAmounts as amount}
-					<button
-						class="text-header transition-all {selectedAmount === amount
-							? 'underline decoration-button decoration-4 underline-offset-8'
-							: 'hover:underline hover:decoration-button hover:decoration-4 hover:underline-offset-8'}"
-						on:click={async () => {
-							selectedAmount = amount;
-
-							if (amount === 'Custom') {
-								finalAmount = '';
-								await tick();
-								customAmountInput.focus();
-							} else {
-								finalAmount = amount;
-							}
-						}}
-					>
-						{amountText(amount, $innerWidth)}
-					</button>
-				{/each}
-			{/if}
-
-			<button
-				class="flex items-center justify-center rounded bg-button p-1.5 {!finalAmount
-					? 'cursor-not-allowed opacity-50'
-					: ''}"
-				on:click={sendPayment}
-				disabled={!finalAmount}
-			>
-				<Icon icon="send" style="text-header" width="20" height="20" />
-			</button>
-		</div>
-	{/if}
+		{/if}
+	</div>
 {/if}

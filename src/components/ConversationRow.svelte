@@ -1,25 +1,12 @@
 <script lang="ts">
 	export let c: Conversation;
 
-	import { clearUnread } from '$lib/chat';
+	import { clearUnread, statusIcon } from '$lib/chat';
 	import { activeConversation, appView, convoState, innerWidth, messageHistory } from '$lib/store';
 	import { AppViewState, type Conversation } from '$lib/types';
 	import { formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
-	import { Avatar, Icon } from 'comp';
-
-	const statusIcon = () => {
-		switch (c.latestMessageStatus) {
-			case lnrpc.Payment_PaymentStatus.IN_FLIGHT:
-				return 'loader';
-			case lnrpc.Payment_PaymentStatus.SUCCEEDED:
-				return 'check-circle';
-			case lnrpc.Payment_PaymentStatus.FAILED:
-				return 'x-circle';
-			default:
-				return 'alert-circle';
-		}
-	};
+	import { Avatar, Icon, LoadingPing } from 'comp';
 </script>
 
 <button
@@ -55,7 +42,11 @@
 
 	<div class="flex items-center space-x-2.5">
 		{#if c.latestMessageStatus}
-			<Icon icon={statusIcon()} style="text-header" width="18" height="18" />
+			{#if c.latestMessageStatus === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
+				<LoadingPing size="w-[18px] h-[18px]" />
+			{:else}
+				<Icon icon={statusIcon(c.latestMessageStatus)} style="text-header" width="18" height="18" />
+			{/if}
 		{/if}
 
 		<div class="space-y-1">

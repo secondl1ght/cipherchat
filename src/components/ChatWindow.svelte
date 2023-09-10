@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { clearUnread } from '$lib/chat';
-	import { ChatInput } from 'comp';
+	import { ChatInput, ChatMessages } from 'comp';
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -11,5 +11,6 @@
 	on:mouseleave={clearUnread}
 	class="h-full w-full"
 >
+	<ChatMessages />
 	<ChatInput />
 </div>

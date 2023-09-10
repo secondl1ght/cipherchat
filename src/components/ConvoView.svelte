@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { activeConversation, convoState } from '$lib/store';
+	import { activeConversation, convoState, scrollDiv } from '$lib/store';
 	import { ChatWindow, ConvoNav, MessageInfo, Node } from 'comp';
 	import { blur } from 'svelte/transition';
 </script>
 
 <section class="relative h-full w-full">
 	{#if $activeConversation}
-		<div class="hide-scroll h-full w-full overflow-y-auto">
+		<div bind:this={$scrollDiv} class="hide-scroll h-full w-full overflow-y-auto">
 			<ConvoNav />
 
 			<div class="p-4">

@@ -30,7 +30,9 @@ export default {
 				boxFill: '#23273C',
 				success: '#1B5E20',
 				warning: '#F57F17',
-				error: '#B71C1C'
+				error: '#B71C1C',
+				gradientOne: '#F5F7FA',
+				gradientTwo: '#C3CFE2'
 			}
 		}
 	},
