@@ -122,19 +122,19 @@
 				.equals($activeConversation)
 				.sortBy('receivedTime');
 
-			const msgsFormatted = msgs
-				.slice(msgs.length - $messageHistory, msgs.length)
-				.map(async (m) => {
-					if (m.type === MessageType.Payment) {
-						const paymentMsg = formatPaymentMsg(m.self, m.amount);
+			const sliceLength = msgs.length - $messageHistory < 0 ? 0 : msgs.length - $messageHistory;
 
-						return { ...m, message: paymentMsg };
-					}
+			const msgsFormatted = msgs.slice(sliceLength, msgs.length).map(async (m) => {
+				if (m.type === MessageType.Payment) {
+					const paymentMsg = formatPaymentMsg(m.self, m.amount);
 
-					const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
+					return { ...m, message: paymentMsg };
+				}
 
-					return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
-				});
+				const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
+
+				return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
+			});
 
 			const result = await Promise.all(msgsFormatted);
 

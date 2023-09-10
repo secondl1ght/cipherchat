@@ -11,7 +11,6 @@
 	import { formatTimestamp } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
-	import { afterUpdate } from 'svelte';
 	import type { Action } from 'svelte/action';
 
 	const setToBottom: Action<HTMLDivElement, string> = () => {
@@ -36,12 +35,6 @@
 				return 'Unknown';
 		}
 	};
-
-	afterUpdate(() => {
-		if ($scrollDiv) {
-			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-		}
-	});
 </script>
 
 {#if $scrollDiv}
