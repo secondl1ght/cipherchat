@@ -3,7 +3,7 @@
 	import { db } from '$lib/db';
 	import { bubbleColor, innerWidth, textColor } from '$lib/store';
 	import { errorToast, shortenPubkey, successToast } from '$lib/utils';
-	import { Button, InfoTooltip, RowItem } from 'comp';
+	import { Button, Icon, InfoTooltip, RowItem } from 'comp';
 	import { liveQuery } from 'dexie';
 
 	let resyncLoading = false;
@@ -74,17 +74,16 @@
 
 <ul class="space-y-4">
 	<RowItem title="Sounds" label="sounds">
-		<input
-			bind:checked={sounds}
-			on:change={() => {
+		<button
+			id="sounds"
+			on:click={() => {
+				sounds = !sounds;
 				updateSetting('playAudio', sounds.toString());
 				successToast('Setting updated.');
 			}}
-			type="checkbox"
-			id="sounds"
-			name="sounds"
-			class="h-5 w-5 cursor-pointer accent-button"
-		/>
+		>
+			<Icon icon={sounds ? 'volume-2' : 'volume-x'} style="text-header" />
+		</button>
 	</RowItem>
 
 	<RowItem title="Fee Limit" label="fee">

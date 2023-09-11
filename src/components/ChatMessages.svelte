@@ -58,9 +58,9 @@
 						<button
 							style:background-color={$bubbleColor}
 							style:color={$textColor}
-							class="max-w-[90%] break-all rounded p-2 text-left md:max-w-[75%] {message.type ===
+							class="max-w-[90%] rounded p-2 text-left md:max-w-[75%] {message.type ===
 							MessageType.Payment
-								? 'underline decoration-body decoration-4 underline-offset-4'
+								? 'flex items-center space-x-1'
 								: ''} {$bubbleColor
 								? ''
 								: 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor
@@ -68,16 +68,24 @@
 								: 'text-borderIn'}"
 							on:click={() => {}}
 						>
-							{message.message}
+							{#if message.type === MessageType.Payment && message.self}
+								<Icon icon="gift" width="16" height="16" />
+							{/if}
+
+							<span class="inline-block break-all">{message.message}</span>
+
+							{#if message.type === MessageType.Payment && !message.self}
+								<Icon icon="heart" width="16" height="16" />
+							{/if}
 						</button>
 					</div>
 
 					<p class="flex items-center space-x-1 text-xs {message.self ? 'justify-end' : ''}">
 						{#if message.self}
 							{#if message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
-								<LoadingPing color="bg-body" size="w-4 h-4" />
+								<LoadingPing color="bg-body" size="w-3.5 h-3.5" />
 							{:else}
-								<Icon icon={statusIcon(message.status)} width="16" height="16" />
+								<Icon icon={statusIcon(message.status)} width="14" height="14" />
 							{/if}
 						{/if}
 
@@ -85,9 +93,9 @@
 
 						{#if !message.self}
 							{#if message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
-								<LoadingPing color="bg-body" size="w-4 h-4" />
+								<LoadingPing color="bg-body" size="w-3.5 h-3.5" />
 							{:else}
-								<Icon icon={statusIcon(message.status)} width="16" height="16" />
+								<Icon icon={statusIcon(message.status)} width="14" height="14" />
 							{/if}
 						{/if}
 					</p>

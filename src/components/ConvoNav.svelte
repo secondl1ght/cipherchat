@@ -163,7 +163,7 @@
 
 				<div class="space-x-4">
 					<button on:click={togglePayment}>
-						<Icon icon="zap" style="text-header" />
+						<Icon icon="cloud-lightning" style="text-header" />
 					</button>
 
 					<button on:click={toggleBookmark}>

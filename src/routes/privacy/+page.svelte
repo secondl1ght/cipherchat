@@ -35,7 +35,7 @@
 			<div class="my-8 flex flex-wrap justify-around gap-8">
 				<div>
 					<p class="mb-2 flex items-center text-header">
-						Information Not Visible <Icon icon="lock" style="ml-3" />
+						Information Not Visible <Icon icon="shield" style="ml-3" />
 					</p>
 					<ul class="list-inside list-disc">
 						<li>Messages</li>
@@ -49,7 +49,7 @@
 
 				<div>
 					<p class="mb-2 flex items-center text-header">
-						Information Visible <Icon icon="unlock" style="ml-3" />
+						Information Visible <Icon icon="shield-off" style="ml-3" />
 					</p>
 					<ul class="list-inside list-disc">
 						<li>Your IP address</li>
