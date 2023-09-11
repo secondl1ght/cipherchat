@@ -7,12 +7,14 @@
 		clearMessage,
 		conversation,
 		lockMessage,
-		messageMemory
+		messageMemory,
+		scrollDiv
 	} from '$lib/store';
 	import { warningToast } from '$lib/utils';
 	import data from '@emoji-mart/data';
 	import { Icon } from 'comp';
 	import { Picker } from 'emoji-mart';
+	import { tick } from 'svelte';
 
 	let emojiDiv: HTMLDivElement;
 
@@ -60,9 +62,15 @@
 
 	$: charsRemaining = $conversation?.charLimit - message.length;
 
+	const handleMessage = async () => {
+		sendMessage($activeConversation, message);
+		await tick();
+		$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+	};
+
 	const handleEnter = (e: any) => {
 		if (e.key === 'Enter' && !e.shiftKey && message.trim().length) {
-			sendMessage($activeConversation, message);
+			handleMessage();
 		}
 	};
 
@@ -139,7 +147,7 @@
 					: $lockMessage
 					? 'cursor-wait'
 					: ''}"
-				on:click={() => sendMessage($activeConversation, message)}
+				on:click={handleMessage}
 				disabled={message.trim().length === 0 || $lockMessage}
 			>
 				<Icon icon="message-square" style="text-header" />
