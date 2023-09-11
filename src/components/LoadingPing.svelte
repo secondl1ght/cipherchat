@@ -1,8 +1,9 @@
 <script lang="ts">
 	export let size: string;
+	export let color: string;
 </script>
 
-<div class="loading-ping bg-header {size}" />
+<div class="loading-ping {color} {size}" />
 
 <style>
 	.loading-ping {

@@ -43,7 +43,7 @@
 	<div class="flex items-center space-x-2.5">
 		{#if c.latestMessageStatus}
 			{#if c.latestMessageStatus === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
-				<LoadingPing size="w-[18px] h-[18px]" />
+				<LoadingPing color="bg-header" size="w-[18px] h-[18px]" />
 			{:else}
 				<Icon icon={statusIcon(c.latestMessageStatus)} style="text-header" width="18" height="18" />
 			{/if}

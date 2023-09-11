@@ -8,6 +8,7 @@
 		scrollDiv,
 		textColor
 	} from '$lib/store';
+	import { MessageType } from '$lib/types';
 	import { formatTimestamp } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
@@ -57,7 +58,10 @@
 						<button
 							style:background-color={$bubbleColor}
 							style:color={$textColor}
-							class="max-w-[90%] break-all rounded p-2 text-left md:max-w-[75%] {$bubbleColor
+							class="max-w-[90%] break-all rounded p-2 text-left md:max-w-[75%] {message.type ===
+							MessageType.Payment
+								? 'underline decoration-body decoration-4 underline-offset-4'
+								: ''} {$bubbleColor
 								? ''
 								: 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor
 								? ''
@@ -71,9 +75,9 @@
 					<p class="flex items-center space-x-1 text-xs {message.self ? 'justify-end' : ''}">
 						{#if message.self}
 							{#if message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
-								<LoadingPing size="w-4 h-4" />
+								<LoadingPing color="bg-body" size="w-4 h-4" />
 							{:else}
-								<Icon icon={statusIcon(message.status)} style="text-body" width="16" height="16" />
+								<Icon icon={statusIcon(message.status)} width="16" height="16" />
 							{/if}
 						{/if}
 
@@ -81,9 +85,9 @@
 
 						{#if !message.self}
 							{#if message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
-								<LoadingPing size="w-4 h-4" />
+								<LoadingPing color="bg-body" size="w-4 h-4" />
 							{:else}
-								<Icon icon={statusIcon(message.status)} style="text-body" width="16" height="16" />
+								<Icon icon={statusIcon(message.status)} width="16" height="16" />
 							{/if}
 						{/if}
 					</p>
