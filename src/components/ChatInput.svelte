@@ -50,9 +50,9 @@
 		],
 		onEmojiSelect: addEmoji,
 		onClickOutside: hideEmoji,
-		icons: 'solid',
+		icons: 'outline',
 		previewPosition: 'none',
-		theme: 'dark'
+		theme: 'light'
 	});
 
 	// @ts-expect-error - this package is not typed
@@ -106,9 +106,7 @@
 			<div
 				bind:this={emojiDiv}
 				style:bottom={`${$chatInputHeight - 24}px`}
-				class="absolute left-2 rounded-[10px] border border-header {showEmoji
-					? 'hidden md:block'
-					: 'hidden'}"
+				class="absolute left-2 {showEmoji ? 'hidden md:block' : 'hidden'}"
 			/>
 
 			<button
