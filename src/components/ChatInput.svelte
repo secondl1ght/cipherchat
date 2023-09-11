@@ -24,6 +24,7 @@
 	const addEmoji = (e: any) => {
 		if (e.native.length + message.length <= $conversation.charLimit) {
 			message = message + e.native;
+			$chatInput.focus();
 		} else {
 			warningToast('Adding emoji will exceed character limit.');
 		}
@@ -71,6 +72,7 @@
 	const handleEnter = (e: any) => {
 		if (e.key === 'Enter' && !e.shiftKey && message.trim().length) {
 			handleMessage();
+			hideEmoji();
 		}
 	};
 
