@@ -1,12 +1,13 @@
 <script lang="ts">
+	import { innerWidth } from '$lib/store';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	import '../app.css';
 
 	const options = {
 		pausable: true,
-		reversed: true,
-		intro: { y: 192 }
+		reversed: $innerWidth < 640 ? true : false,
+		intro: $innerWidth < 640 ? { y: 192 } : undefined
 	};
 
 	onMount(() =>
@@ -24,10 +25,12 @@
 		font-family: Roboto, sans-serif;
 	}
 
-	#toast {
-		--toastContainerTop: auto;
-		--toastContainerRight: auto;
-		--toastContainerBottom: 8rem;
-		--toastContainerLeft: calc(50vw - 8rem);
+	@media (max-width: 640px) {
+		#toast {
+			--toastContainerTop: auto;
+			--toastContainerRight: auto;
+			--toastContainerBottom: 8rem;
+			--toastContainerLeft: calc(50vw - 8rem);
+		}
 	}
 </style>
