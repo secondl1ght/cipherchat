@@ -1,6 +1,7 @@
 import { lnc } from '$lib/lnc';
 import { AppViewState, type Conversation, type MessageDecrypted } from '$lib/types';
 import { readable, writable, type Writable } from 'svelte/store';
+import type { Instance } from 'tippy.js';
 
 export const paired = writable(lnc.credentials.isPaired);
 export const connected = writable(false);
@@ -25,6 +26,8 @@ export const messageHistory = writable(25);
 export const lockMessage = writable(false);
 export const clearMessage = writable(false);
 export const messageMemory: Writable<any> = writable({});
+export const activeMenu: Writable<Instance | undefined> = writable();
+export const activeMessage = writable('');
 export const bubbleColor = writable(localStorage.getItem('bubbleColor'));
 export const textColor = writable(localStorage.getItem('textColor'));
 

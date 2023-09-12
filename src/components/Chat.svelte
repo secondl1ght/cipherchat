@@ -51,6 +51,10 @@
 				const latestMessage = msgs.find((m) => m?.id === c.latestMessage);
 
 				if (latestMessage) {
+					if (latestMessage.hide) {
+						return { ...c, latestMessage: 'This message is hidden.' };
+					}
+
 					if (latestMessage.type === MessageType.Payment) {
 						const paymentMsg = formatPaymentMsg(latestMessage.self, latestMessage.amount);
 
@@ -125,6 +129,10 @@
 			const sliceLength = msgs.length - $messageHistory < 0 ? 0 : msgs.length - $messageHistory;
 
 			const msgsFormatted = msgs.slice(sliceLength, msgs.length).map(async (m) => {
+				if (m.hide) {
+					return { ...m, message: 'This message is hidden.' };
+				}
+
 				if (m.type === MessageType.Payment) {
 					const paymentMsg = formatPaymentMsg(m.self, m.amount);
 

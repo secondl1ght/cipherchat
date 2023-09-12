@@ -38,6 +38,7 @@ export type Message = {
 	fee?: number;
 	failureReason: lnrpc.PaymentFailureReason;
 	self: boolean;
+	hide?: boolean;
 };
 
 export type MessageDecrypted = Omit<Message, 'message'> & { message: string };

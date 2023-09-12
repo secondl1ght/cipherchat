@@ -1,11 +1,22 @@
 <script lang="ts">
-	import { activeConversation, convoState, messageHistory, messages, scrollDiv } from '$lib/store';
+	import {
+		activeConversation,
+		activeMenu,
+		convoState,
+		messageHistory,
+		messages,
+		scrollDiv
+	} from '$lib/store';
 	import { ChatWindow, ConvoNav, MessageInfo, Node } from 'comp';
 	import { blur } from 'svelte/transition';
 
-	const checkMoreMessages = () => {
+	const handleScroll = () => {
 		if ($scrollDiv.scrollTop === 0 && $messages.length === $messageHistory) {
 			$messageHistory = $messageHistory + 25;
+		}
+
+		if ($activeMenu) {
+			$activeMenu.hide();
 		}
 	};
 </script>
@@ -13,7 +24,7 @@
 <section class="relative h-full w-full">
 	{#if $activeConversation}
 		<div
-			on:scroll={checkMoreMessages}
+			on:scroll={handleScroll}
 			bind:this={$scrollDiv}
 			class="hide-scroll h-full w-full overflow-y-auto"
 		>
