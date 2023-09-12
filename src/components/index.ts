@@ -28,6 +28,7 @@ export { default as InfoTooltip } from './InfoTooltip.svelte';
 export { default as Link } from './Link.svelte';
 export { default as LoadingPing } from './LoadingPing.svelte';
 export { default as Login } from './Login.svelte';
+export { default as Message } from './Message.svelte';
 export { default as MessageInfo } from './MessageInfo.svelte';
 export { default as Node } from './Node.svelte';
 export { default as Profile } from './Profile.svelte';
