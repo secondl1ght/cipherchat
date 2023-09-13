@@ -118,15 +118,6 @@
 			</p>
 		</RowItem>
 
-		{#if !$message.self}
-			<RowItem title="Received Time">
-				<p class="whitespace-nowrap">
-					{formatTimestamp($message.receivedTime, true).time},
-					{formatTimestamp($message.receivedTime, true).date}
-				</p>
-			</RowItem>
-		{/if}
-
 		<RowItem title="Amount">
 			<p class="whitespace-nowrap">
 				{formatNumber($message.amount)} sats
