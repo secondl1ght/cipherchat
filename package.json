@@ -43,6 +43,8 @@
 		"buffer": "^6.0.3",
 		"dexie": "^4.0.1-alpha.25",
 		"emoji-mart": "^5.5.2",
+		"linkify-string": "^4.1.1",
+		"linkifyjs": "^4.1.1",
 		"numbro": "^2.4.0",
 		"tippy.js": "^6.3.7"
 	}

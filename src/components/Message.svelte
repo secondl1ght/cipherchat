@@ -9,9 +9,19 @@
 	import { copy, errorToast, formatTimestamp, successToast } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
+	import linkifyStr from 'linkify-string';
 	import { tick } from 'svelte';
 	import type { Action } from 'svelte/action';
 	import tippy from 'tippy.js';
+
+	const options = {
+		className: 'underline underline-offset-2',
+		defaultProtocol: 'https',
+		rel: 'noreferrer',
+		target: '_blank'
+	};
+
+	$: linkifiedMsg = linkifyStr(message.message, options);
 
 	let contextMenu: HTMLButtonElement;
 	let enableMenu = false;
@@ -40,8 +50,7 @@
 			offset: [0, 0],
 			placement: 'right-start',
 			showOnCreate: true,
-			trigger: 'manual',
-			zIndex: 5
+			trigger: 'manual'
 		});
 
 	const setToBottom: Action<HTMLDivElement, string> = () => {
@@ -193,7 +202,11 @@
 						<Icon icon="gift" width="16" height="16" />
 					{/if}
 
-					<span class="inline-block break-all">{message.message}</span>
+					<span
+						contenteditable="false"
+						bind:innerHTML={linkifiedMsg}
+						class="inline-block break-all"
+					/>
 
 					{#if message.type === MessageType.Payment && !message.self}
 						<Icon icon="heart" width="16" height="16" />
@@ -203,7 +216,7 @@
 						<Icon icon="eye-off" width="16" height="16" />
 					{/if}
 
-					<span class="inline-block">{message.message}</span>
+					<span contenteditable="false" bind:innerHTML={linkifiedMsg} class="inline-block" />
 
 					{#if !message.self}
 						<Icon icon="eye-off" width="16" height="16" />
