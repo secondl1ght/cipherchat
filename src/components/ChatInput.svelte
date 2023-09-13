@@ -67,6 +67,10 @@
 		sendMessage($activeConversation, message);
 		await tick();
 		$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+
+		if ($scrollDiv.scrollTop !== $scrollDiv.scrollHeight) {
+			setTimeout(() => ($scrollDiv.scrollTop = $scrollDiv.scrollHeight), 100);
+		}
 	};
 
 	const handleEnter = (e: any) => {
