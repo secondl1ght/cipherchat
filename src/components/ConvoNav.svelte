@@ -7,7 +7,9 @@
 		conversation,
 		convoState,
 		innerWidth,
-		messageHistory
+		messageHistory,
+		scrollDiv,
+		scrollDivPosition
 	} from '$lib/store';
 	import { AppViewState } from '$lib/types';
 	import { errorToast, shortenAlias, shortenPubkey, successToast } from '$lib/utils';
@@ -20,11 +22,14 @@
 	let finalAmount: number | string = 1000;
 	let customAmountInput: HTMLInputElement;
 
-	const toggleConvo = () => {
+	const toggleConvo = async () => {
 		if ($convoState === 'CHAT') {
+			$scrollDivPosition = $scrollDiv.scrollTop;
 			$convoState = 'NODE';
 		} else {
 			$convoState = 'CHAT';
+			await tick();
+			$scrollDiv.scrollTop = $scrollDivPosition;
 		}
 	};
 

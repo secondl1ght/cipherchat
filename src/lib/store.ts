@@ -43,5 +43,6 @@ export const innerWidth: Writable<number> = writable();
 export const chatInput: Writable<HTMLTextAreaElement> = writable();
 export const chatInputHeight: Writable<number> = writable();
 export const scrollDiv: Writable<HTMLDivElement> = writable();
+export const scrollDivPosition = writable(0);
 
 export const error = writable({ status: '', message: '' });

@@ -3,25 +3,25 @@
 
 	import { statusIcon } from '$lib/chat';
 	import { db } from '$lib/db';
-	import { activeConversation, activeMenu, bubbleColor, scrollDiv, textColor } from '$lib/store';
+	import {
+		activeConversation,
+		activeMenu,
+		activeMessage,
+		bubbleColor,
+		convoState,
+		messageHistory,
+		scrollDiv,
+		scrollDivPosition,
+		textColor
+	} from '$lib/store';
 	import type { MessageDecrypted } from '$lib/types';
 	import { MessageType } from '$lib/types';
 	import { copy, errorToast, formatTimestamp, successToast } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
-	import linkifyStr from 'linkify-string';
 	import { tick } from 'svelte';
 	import type { Action } from 'svelte/action';
 	import tippy from 'tippy.js';
-
-	const options = {
-		className: 'underline underline-offset-2',
-		defaultProtocol: 'https',
-		rel: 'noreferrer',
-		target: '_blank'
-	};
-
-	$: linkifiedMsg = linkifyStr(message.message, options);
 
 	let contextMenu: HTMLButtonElement;
 	let enableMenu = false;
@@ -54,7 +54,9 @@
 		});
 
 	const setToBottom: Action<HTMLDivElement, string> = () => {
-		$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+		if ($messageHistory === 25) {
+			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+		}
 
 		return {
 			update() {
@@ -77,66 +79,72 @@
 	};
 </script>
 
-<!-- menu component -->
-<div bind:this={menu} class={showMenu ? 'block' : 'hidden'}>
-	<button
-		class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
-		on:click={() => {
-			// @ts-expect-error - property is added when tippy is created
-			contextMenu._tippy.hide();
-			copy(message.message);
-			successToast('Copied!');
-		}}
-	>
-		<Icon icon="copy" width="20" height="20" /> <span class="inline-block">Copy</span>
-	</button>
-
-	{#if 'share' in navigator}
+{#if enableMenu}
+	<!-- menu component -->
+	<div bind:this={menu} class={showMenu ? 'block' : 'hidden'}>
 		<button
 			class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
 			on:click={() => {
+				// @ts-expect-error - property is added when tippy is created
+				contextMenu._tippy.hide();
+				copy(message.message);
+				successToast('Copied!');
+			}}
+		>
+			<Icon icon="copy" width="20" height="20" /> <span class="inline-block">Copy</span>
+		</button>
+
+		{#if 'share' in navigator}
+			<button
+				class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
+				on:click={() => {
+					try {
+						// @ts-expect-error - property is added when tippy is created
+						contextMenu._tippy.hide();
+						navigator.share({ text: message.message });
+					} catch (error) {
+						console.log(error);
+						errorToast('Could not share message.');
+					}
+				}}
+			>
+				<Icon icon="share-2" width="20" height="20" /> <span class="inline-block">Share</span>
+			</button>
+		{/if}
+
+		<button
+			class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
+			on:click={() => {
+				// @ts-expect-error - property is added when tippy is created
+				contextMenu._tippy.hide();
 				try {
-					// @ts-expect-error - property is added when tippy is created
-					contextMenu._tippy.hide();
-					navigator.share({ text: message.message });
+					db.transaction('rw', db.messages, () => {
+						db.messages.update(message.id, {
+							hide: message.hide ? false : true
+						});
+					});
 				} catch (error) {
 					console.log(error);
-					errorToast('Could not share message.');
+					errorToast('Could not toggle message visibility.');
 				}
 			}}
 		>
-			<Icon icon="share-2" width="20" height="20" /> <span class="inline-block">Share</span>
+			<Icon icon={message.hide ? 'toggle-right' : 'toggle-left'} width="20" height="20" />
+			<span class="inline-block">{message.hide ? 'Show' : 'Hide'}</span>
 		</button>
-	{/if}
 
-	<button
-		class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
-		on:click={() => {
-			// @ts-expect-error - property is added when tippy is created
-			contextMenu._tippy.hide();
-			try {
-				db.transaction('rw', db.messages, () => {
-					db.messages.update(message.id, {
-						hide: message.hide ? false : true
-					});
-				});
-			} catch (error) {
-				console.log(error);
-				errorToast('Could not toggle message visibility.');
-			}
-		}}
-	>
-		<Icon icon={message.hide ? 'toggle-right' : 'toggle-left'} width="20" height="20" />
-		<span class="inline-block">{message.hide ? 'Show' : 'Hide'}</span>
-	</button>
-
-	<button
-		class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
-		on:click={() => {}}
-	>
-		<Icon icon="book-open" width="20" height="20" /> <span class="inline-block">Details</span>
-	</button>
-</div>
+		<button
+			class="flex w-full items-center space-x-3 rounded p-2 text-header transition-colors hover:bg-header/25"
+			on:click={() => {
+				$scrollDivPosition = $scrollDiv.scrollTop;
+				$activeMessage = message.id;
+				$convoState = 'MESSAGE';
+			}}
+		>
+			<Icon icon="book-open" width="20" height="20" /> <span class="inline-block">Details</span>
+		</button>
+	</div>
+{/if}
 
 <!-- message component -->
 <div use:setToBottom={$activeConversation} class="flex w-full {message.self ? 'justify-end' : ''}">
@@ -202,11 +210,17 @@
 						<Icon icon="gift" width="16" height="16" />
 					{/if}
 
-					<span
-						contenteditable="false"
-						bind:innerHTML={linkifiedMsg}
-						class="inline-block break-all"
-					/>
+					{#if message.linkified}
+						<span
+							contenteditable="false"
+							bind:innerHTML={message.linkified}
+							class="inline-block break-all"
+						/>
+					{:else}
+						<span class="inline-block break-all">
+							{message.message}
+						</span>
+					{/if}
 
 					{#if message.type === MessageType.Payment && !message.self}
 						<Icon icon="heart" width="16" height="16" />
@@ -216,7 +230,9 @@
 						<Icon icon="eye-off" width="16" height="16" />
 					{/if}
 
-					<span contenteditable="false" bind:innerHTML={linkifiedMsg} class="inline-block" />
+					<span class="inline-block">
+						{message.message}
+					</span>
 
 					{#if !message.self}
 						<Icon icon="eye-off" width="16" height="16" />

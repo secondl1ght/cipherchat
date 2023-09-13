@@ -32,6 +32,7 @@
 	} from '$lib/utils';
 	import { ChatLoading, ConvoView, HomeView } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
+	import linkifyStr from 'linkify-string';
 	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
 
@@ -119,6 +120,13 @@
 		}
 	});
 
+	const options = {
+		className: 'underline underline-offset-2',
+		defaultProtocol: 'https',
+		rel: 'noreferrer',
+		target: '_blank'
+	};
+
 	$: messagesQuery = liveQuery(async () => {
 		try {
 			const msgs = await db.messages
@@ -141,7 +149,13 @@
 
 				const decryptedMsg = await Dexie.waitFor(decrypt(m.iv, m.message));
 
-				return { ...m, message: decryptedMsg || 'Could not decrypt message.' };
+				const linkifiedMsg = decryptedMsg ? linkifyStr(decryptedMsg, options) : undefined;
+
+				return {
+					...m,
+					message: decryptedMsg || 'Could not decrypt message.',
+					linkified: linkifiedMsg
+				};
 			});
 
 			const result = await Promise.all(msgsFormatted);

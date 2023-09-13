@@ -11,7 +11,11 @@
 	import { blur } from 'svelte/transition';
 
 	const handleScroll = () => {
-		if ($scrollDiv.scrollTop === 0 && $messages.length === $messageHistory) {
+		if (
+			$scrollDiv.scrollTop === 0 &&
+			$messages.length === $messageHistory &&
+			$convoState === 'CHAT'
+		) {
 			$messageHistory = $messageHistory + 25;
 		}
 

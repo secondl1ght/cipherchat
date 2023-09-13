@@ -4,7 +4,7 @@
 </script>
 
 {#if $scrollDiv}
-	<div style:padding-bottom={`${$chatInputHeight}px`} class="h-full w-full space-y-4 px-4">
+	<div style:padding-bottom={`${$chatInputHeight}px`} class="h-full w-full space-y-4 md:px-4">
 		{#each $messages as message}
 			<Message {message} />
 		{/each}

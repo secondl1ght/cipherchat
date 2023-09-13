@@ -78,13 +78,13 @@ export const formatNumber = (number: number) => new Intl.NumberFormat().format(n
 // TIME
 export const getTimestamp = () => Date.now() * 1000000;
 
-export const formatTimestamp = (timestamp: number) => {
+export const formatTimestamp = (timestamp: number, medium?: boolean) => {
 	const milliseconds = timestamp / 1000000;
 	const date = new Date(milliseconds);
 
 	return {
-		date: new Intl.DateTimeFormat('en-US', { dateStyle: 'short' }).format(date),
-		time: new Intl.DateTimeFormat('en-US', { timeStyle: 'short' }).format(date)
+		date: new Intl.DateTimeFormat('en-US', { dateStyle: medium ? 'medium' : 'short' }).format(date),
+		time: new Intl.DateTimeFormat('en-US', { timeStyle: medium ? 'medium' : 'short' }).format(date)
 	};
 };
 

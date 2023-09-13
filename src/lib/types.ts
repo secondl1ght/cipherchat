@@ -41,7 +41,7 @@ export type Message = {
 	hide?: boolean;
 };
 
-export type MessageDecrypted = Omit<Message, 'message'> & { message: string };
+export type MessageDecrypted = Omit<Message, 'message'> & { message: string; linkified?: string };
 
 export enum AppViewState {
 	Home = 'HOME',
