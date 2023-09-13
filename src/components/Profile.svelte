@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { lnc } from '$lib/lnc';
-	import { userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
+	import { homeScrollDiv, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
 	import { errorToast, shortenPubkey } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Avatar, ChannelStatus, CopyButton, Link, RowItem, SyncPing } from 'comp';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let nodeInfo: lnrpc.GetInfoResponse;
 	let version = '';
@@ -18,6 +18,8 @@
 			errorToast('Could not fetch node information, please try again.');
 		}
 	});
+
+	onDestroy(() => ($homeScrollDiv.scrollTop = 0));
 </script>
 
 <div class="space-y-4">

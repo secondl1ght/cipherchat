@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { clearBadge } from '$lib/chat';
 	import { db } from '$lib/db';
-	import { bubbleColor, innerWidth, textColor } from '$lib/store';
+	import { bubbleColor, homeScrollDiv, innerWidth, textColor } from '$lib/store';
 	import { errorToast, shortenPubkey, successToast } from '$lib/utils';
 	import { Button, Icon, InfoTooltip, RowItem } from 'comp';
 	import { liveQuery } from 'dexie';
+	import { onDestroy } from 'svelte';
 
 	let resyncLoading = false;
 	let blockedLoading = false;
@@ -68,6 +69,8 @@
 			errorToast('Could not load blocked list.');
 		}
 	});
+
+	onDestroy(() => ($homeScrollDiv.scrollTop = 0));
 </script>
 
 <h1 class="press-start mb-4 text-center text-lg text-header md:text-xl lg:text-2xl">Settings</h1>

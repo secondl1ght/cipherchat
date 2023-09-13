@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { conversations } from '$lib/store';
+	import { conversations, homeScrollDiv } from '$lib/store';
 	import { AddConversationButton, ConversationRow } from 'comp';
+	import { onDestroy } from 'svelte';
 	import { flip } from 'svelte/animate';
 
 	$: bookmarks = $conversations.filter((c) => c.bookmarked === 'true');
 	$: regular = $conversations.filter((c) => c.bookmarked === 'false');
+
+	onDestroy(() => ($homeScrollDiv.scrollTop = 0));
 </script>
 
 {#if $conversations.length}

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { homeState } from '$lib/store';
+	import { homeScrollDiv, homeState } from '$lib/store';
 	import { AddConversation, Conversations, HomeNav, Profile, Settings } from 'comp';
 	import { blur } from 'svelte/transition';
 </script>
 
 <section class="relative h-full w-full bg-boxFill">
-	<div class="hide-scroll h-full w-full overflow-y-auto">
+	<div bind:this={$homeScrollDiv} class="hide-scroll h-full w-full overflow-y-auto">
 		<HomeNav />
 
 		<div class="py-4">

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { addConversation } from '$lib/chat';
+	import { homeScrollDiv } from '$lib/store';
 	import { Button, Icon, Link } from 'comp';
+	import { onDestroy } from 'svelte';
 
 	let loading = false;
 	let pubkey = '';
@@ -17,6 +19,8 @@
 			add();
 		}
 	};
+
+	onDestroy(() => ($homeScrollDiv.scrollTop = 0));
 </script>
 
 <form class="w-full" on:submit|preventDefault>
