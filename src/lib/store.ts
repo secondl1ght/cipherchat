@@ -23,6 +23,8 @@ export const conversation: Writable<Conversation> = writable();
 
 export const messages: Writable<MessageDecrypted[]> = writable([]);
 export const messageHistory = writable(25);
+export const messagesLoading = writable(false);
+export const sendLoading = writable(false);
 export const lockMessage = writable(false);
 export const clearMessage = writable(false);
 export const messageMemory: Writable<any> = writable({});

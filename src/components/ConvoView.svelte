@@ -5,7 +5,9 @@
 		convoState,
 		messageHistory,
 		messages,
-		scrollDiv
+		messagesLoading,
+		scrollDiv,
+		scrollDivPosition
 	} from '$lib/store';
 	import { ChatWindow, ConvoNav, MessageInfo, Node } from 'comp';
 	import { blur } from 'svelte/transition';
@@ -16,6 +18,8 @@
 			$messages.length === $messageHistory &&
 			$convoState === 'CHAT'
 		) {
+			$scrollDivPosition = $scrollDiv.scrollHeight;
+			$messagesLoading = true;
 			$messageHistory = $messageHistory + 25;
 		}
 

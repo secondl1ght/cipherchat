@@ -11,6 +11,10 @@
 		innerWidth,
 		messageHistory,
 		messages,
+		messagesLoading,
+		scrollDiv,
+		scrollDivPosition,
+		sendLoading,
 		userAlias,
 		userColor,
 		userPubkey
@@ -33,7 +37,7 @@
 	import { ChatLoading, ConvoView, HomeView } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
 	import linkifyStr from 'linkify-string';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { blur } from 'svelte/transition';
 
 	let loading = true;
@@ -161,6 +165,22 @@
 			const result = await Promise.all(msgsFormatted);
 
 			messages.set(result);
+
+			try {
+				if ($messagesLoading) {
+					$messagesLoading = false;
+					await Dexie.waitFor(tick());
+					$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
+				}
+
+				if ($sendLoading) {
+					$sendLoading = false;
+					await Dexie.waitFor(tick());
+					$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+				}
+			} catch (error) {
+				console.log(error);
+			}
 
 			return 'Messages query complete.';
 		} catch (error) {

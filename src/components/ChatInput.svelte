@@ -8,13 +8,12 @@
 		conversation,
 		lockMessage,
 		messageMemory,
-		scrollDiv
+		sendLoading
 	} from '$lib/store';
 	import { warningToast } from '$lib/utils';
 	import data from '@emoji-mart/data';
 	import { Icon } from 'comp';
 	import { Picker } from 'emoji-mart';
-	import { tick } from 'svelte';
 
 	let emojiDiv: HTMLDivElement;
 
@@ -63,14 +62,9 @@
 
 	$: charsRemaining = $conversation?.charLimit - message.length;
 
-	const handleMessage = async () => {
+	const handleMessage = () => {
+		$sendLoading = true;
 		sendMessage($activeConversation, message);
-		await tick();
-		$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-
-		if ($scrollDiv.scrollTop !== $scrollDiv.scrollHeight) {
-			setTimeout(() => ($scrollDiv.scrollTop = $scrollDiv.scrollHeight), 100);
-		}
 	};
 
 	const handleEnter = (e: any) => {
