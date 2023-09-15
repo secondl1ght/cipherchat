@@ -7,8 +7,7 @@
 		clearMessage,
 		conversation,
 		lockMessage,
-		messageMemory,
-		sendLoading
+		messageMemory
 	} from '$lib/store';
 	import { warningToast } from '$lib/utils';
 	import data from '@emoji-mart/data';
@@ -63,7 +62,6 @@
 	$: charsRemaining = $conversation?.charLimit - message.length;
 
 	const handleMessage = () => {
-		$sendLoading = true;
 		sendMessage($activeConversation, message);
 	};
 

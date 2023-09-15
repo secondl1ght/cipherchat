@@ -2,15 +2,25 @@
 	export let c: Conversation;
 
 	import { clearUnread, statusIcon } from '$lib/chat';
-	import { activeConversation, appView, convoState, innerWidth, messageHistory } from '$lib/store';
+	import {
+		activeConversation,
+		appView,
+		conversationLoading,
+		convoState,
+		innerWidth,
+		messageHistory
+	} from '$lib/store';
 	import { AppViewState, type Conversation } from '$lib/types';
 	import { formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
 	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Avatar, Icon, LoadingPing } from 'comp';
+	import { tick } from 'svelte';
 </script>
 
 <button
-	on:click={() => {
+	on:click={async () => {
+		$conversationLoading = true;
+		await tick();
 		$messageHistory = 25;
 		$activeConversation = c.pubkey;
 		$convoState = 'CHAT';

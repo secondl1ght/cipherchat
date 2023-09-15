@@ -20,6 +20,7 @@ export const convoState: Writable<'CHAT' | 'NODE' | 'MESSAGE'> = writable('CHAT'
 export const conversations: Writable<Conversation[]> = writable([]);
 export const activeConversation = writable('');
 export const conversation: Writable<Conversation> = writable();
+export const conversationLoading = writable(false);
 
 export const messages: Writable<MessageDecrypted[]> = writable([]);
 export const messageHistory = writable(25);

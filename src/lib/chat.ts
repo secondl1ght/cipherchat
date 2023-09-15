@@ -16,6 +16,7 @@ import {
 	homeState,
 	lockMessage,
 	messageHistory,
+	sendLoading,
 	userPubkey
 } from '$lib/store';
 import { validateInvoice } from '$lib/sync';
@@ -308,6 +309,8 @@ export const addConversation = async (pubkey: string) => {
 };
 
 export const sendMessage = async (recipient: string, message: string, amount?: number) => {
+	sendLoading.set(true);
+
 	if (!amount) {
 		lockMessage.set(true);
 	}

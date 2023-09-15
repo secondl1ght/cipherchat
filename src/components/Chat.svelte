@@ -7,6 +7,7 @@
 		activeConversation,
 		appView,
 		conversation,
+		conversationLoading,
 		conversations,
 		innerWidth,
 		messageHistory,
@@ -124,6 +125,8 @@
 		}
 	});
 
+	let messagesQueryLoading = false;
+
 	const options = {
 		className: 'underline underline-offset-2',
 		defaultProtocol: 'https',
@@ -133,6 +136,8 @@
 
 	$: messagesQuery = liveQuery(async () => {
 		try {
+			messagesQueryLoading = true;
+
 			const msgs = await db.messages
 				.where('pubkey')
 				.equals($activeConversation)
@@ -166,28 +171,35 @@
 
 			messages.set(result);
 
-			try {
-				if ($messagesLoading) {
-					$messagesLoading = false;
-					await Dexie.waitFor(tick());
-					$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
-				}
-
-				if ($sendLoading) {
-					$sendLoading = false;
-					await Dexie.waitFor(tick());
-					$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-				}
-			} catch (error) {
-				console.log(error);
-			}
+			messagesQueryLoading = false;
 
 			return 'Messages query complete.';
 		} catch (error) {
 			console.log(error);
 			errorToast('Could not query messages.');
+			messagesQueryLoading = false;
 		}
 	});
+
+	const messagesUpdates = async () => {
+		await tick();
+
+		if ($conversationLoading) {
+			$conversationLoading = false;
+		}
+
+		if ($messagesLoading) {
+			$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
+			$messagesLoading = false;
+		}
+
+		if ($sendLoading) {
+			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+			$sendLoading = false;
+		}
+	};
+
+	$: !messagesQueryLoading && messagesUpdates();
 
 	$: console.log($conversationsQuery, $conversationQuery, $unreadQuery, $messagesQuery);
 
