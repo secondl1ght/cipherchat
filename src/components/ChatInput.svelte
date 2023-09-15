@@ -6,22 +6,45 @@
 		chatInputHeight,
 		clearMessage,
 		conversation,
+		innerWidth,
 		lockMessage,
-		messageMemory
+		messageMemory,
+		scrollDiv
 	} from '$lib/store';
 	import { warningToast } from '$lib/utils';
 	import data from '@emoji-mart/data';
 	import { Icon } from 'comp';
 	import { Picker } from 'emoji-mart';
+	import { tick } from 'svelte';
+	import type { Action } from 'svelte/action';
+
+	const focusInput: Action<HTMLTextAreaElement> = (node) => {
+		if ($innerWidth > 640) {
+			node.focus();
+		}
+	};
+
+	const textareaAutoSize = () => {
+		if (!$chatInput || !$scrollDiv) return;
+
+		$chatInput.style.height = '0';
+		$chatInput.style.height = $chatInput.scrollHeight.toString() + 'px';
+
+		if ($scrollDiv.scrollHeight - $scrollDiv.scrollTop - $scrollDiv.clientHeight <= 25) {
+			setTimeout(() => ($scrollDiv.scrollTop = $scrollDiv.scrollHeight), 0);
+		}
+	};
 
 	let emojiDiv: HTMLDivElement;
 
 	let showEmoji = false;
 	let lockEmoji = false;
 
-	const addEmoji = (e: any) => {
+	const addEmoji = async (e: any) => {
 		if (e.native.length + message.length <= $conversation.charLimit) {
 			message = message + e.native;
+			await tick();
+			textareaAutoSize();
 			$chatInput.focus();
 		} else {
 			warningToast('Adding emoji will exceed character limit.');
@@ -72,7 +95,11 @@
 		}
 	};
 
-	const clearText = () => (message = '');
+	const clearText = async () => {
+		message = '';
+		await tick();
+		textareaAutoSize();
+	};
 
 	$: $clearMessage === true && clearText();
 
@@ -82,13 +109,23 @@
 
 	$: (message || message === '') && addToMemory();
 
-	const recoverMessage = () => {
+	const recoverMessage = async () => {
 		const savedMessage = $messageMemory[$activeConversation];
 
 		if (savedMessage) {
 			message = savedMessage;
+			await tick();
+			textareaAutoSize();
+			if ($innerWidth > 640) {
+				$chatInput?.focus();
+			}
 		} else {
 			message = '';
+			await tick();
+			textareaAutoSize();
+			if ($innerWidth > 640) {
+				$chatInput?.focus();
+			}
 		}
 	};
 
@@ -120,6 +157,7 @@
 			</button>
 
 			<textarea
+				use:focusInput
 				bind:this={$chatInput}
 				autocomplete="on"
 				autocorrect="on"
@@ -131,7 +169,8 @@
 				disabled={$lockMessage}
 				bind:value={message}
 				on:keydown={handleEnter}
-				class="max-h-16 min-h-[42px] w-full border border-header bg-borderOut p-2 text-header md:max-h-36 {$lockMessage
+				on:input={textareaAutoSize}
+				class="hide-scroll max-h-16 min-h-[42px] w-full resize-none border border-header bg-borderOut p-2 text-header md:max-h-36 {$lockMessage
 					? 'cursor-wait'
 					: ''}"
 			/>
@@ -150,7 +189,7 @@
 			</button>
 
 			<span
-				class="cursor-default {charsRemaining <= 10
+				class="cursor-default text-sm md:text-base {charsRemaining <= 10
 					? 'text-error'
 					: charsRemaining <= 50
 					? 'text-warning'
