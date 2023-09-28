@@ -1,5 +1,7 @@
 import { error } from '$lib/store';
 import { toast } from '@zerodevx/svelte-toast';
+import format from 'date-fns/format';
+import subMonths from 'date-fns/subMonths';
 
 // TOASTS
 export const successToast = (m: string) => {
@@ -87,6 +89,8 @@ export const formatTimestamp = (timestamp: number, medium?: boolean) => {
 		time: new Intl.DateTimeFormat('en-US', { timeStyle: medium ? 'medium' : 'short' }).format(date)
 	};
 };
+
+export const monthAgo = () => format(subMonths(new Date(), 1), 'yyyy-MM-dd');
 
 // COLOR
 export function getRandomColor() {

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { generateKey } from '$lib/crypto';
 	import { lnc } from '$lib/lnc';
-	import { connected } from '$lib/store';
+	import { connected, firstUpdate } from '$lib/store';
 	import { errorToast, successToast } from '$lib/utils';
-	import { Button, Icon, InfoTooltip } from 'comp';
+	import { Button, Icon, InfoTooltip, MessageHistory } from 'comp';
 	import { tick } from 'svelte';
 	import { blur } from 'svelte/transition';
 
@@ -52,7 +52,7 @@
 	};
 
 	const handleEnter = (e: any) => {
-		if (e.key === 'Enter' && pairingPhrase && password && mailbox) {
+		if (e.key === 'Enter' && pairingPhrase && password && $firstUpdate && mailbox) {
 			connect();
 		}
 	};
@@ -139,6 +139,8 @@
 		</button>
 
 		{#if showAdvanced}
+			<MessageHistory {loading} />
+
 			<label
 				for="mailbox"
 				class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
@@ -190,7 +192,7 @@
 		<Button
 			click={connect}
 			title="Connect"
-			disabled={loading || !pairingPhrase || !password || !mailbox}
+			disabled={loading || !pairingPhrase || !password || !$firstUpdate || !mailbox}
 			{loading}
 			loadingText="Connecting..."
 		/>

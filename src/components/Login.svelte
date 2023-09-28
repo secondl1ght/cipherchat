@@ -3,9 +3,9 @@
 	import { generateKey, resetKey } from '$lib/crypto';
 	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
-	import { connected, paired } from '$lib/store';
-	import { errorToast, successToast } from '$lib/utils';
-	import { Button, Icon } from 'comp';
+	import { connected, firstUpdate, paired } from '$lib/store';
+	import { errorToast, monthAgo, successToast } from '$lib/utils';
+	import { Button, Icon, MessageHistory } from 'comp';
 
 	let loading = false;
 	let password = '';
@@ -32,7 +32,7 @@
 	};
 
 	const handleEnter = (e: any) => {
-		if (e.key === 'Enter' && password) {
+		if (e.key === 'Enter' && password && $firstUpdate) {
 			login();
 		}
 	};
@@ -46,6 +46,7 @@
 			await clearBadge();
 			lnc.credentials.clear();
 			resetKey();
+			$firstUpdate = monthAgo();
 
 			$paired = false;
 			successToast('Node credentials cleared.');
@@ -98,10 +99,14 @@
 		/>
 	{/if}
 
+	{#if !localStorage.getItem('lastUpdate')}
+		<MessageHistory {loading} />
+	{/if}
+
 	<Button
 		click={login}
 		title="Login"
-		disabled={loading || !password}
+		disabled={loading || !password || !$firstUpdate}
 		{loading}
 		loadingText="Logging in..."
 	/>

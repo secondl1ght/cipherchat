@@ -1,7 +1,10 @@
 import { lnc } from '$lib/lnc';
 import { AppViewState, type Conversation, type MessageDecrypted } from '$lib/types';
+import { monthAgo } from '$lib/utils';
 import { readable, writable, type Writable } from 'svelte/store';
 import type { Instance } from 'tippy.js';
+
+export const firstUpdate = writable(monthAgo());
 
 export const paired = writable(lnc.credentials.isPaired);
 export const connected = writable(false);

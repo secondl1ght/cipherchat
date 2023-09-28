@@ -2,7 +2,7 @@ import { bufferBase64ToUtf, bufferUtfToBase64 } from '$lib/buffer';
 import { encrypt } from '$lib/crypto';
 import { db } from '$lib/db';
 import { lnc } from '$lib/lnc';
-import { userPubkey } from '$lib/store';
+import { firstUpdate, userPubkey } from '$lib/store';
 import { TLV_RECORDS } from '$lib/tlv';
 import {
 	MessageType,
@@ -13,8 +13,6 @@ import {
 import { getUpdateTime, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
-
-const firstUpdate = '1693441765';
 
 let updateTime: string;
 
@@ -71,7 +69,8 @@ export const validateInvoice = async (invoice: lnrpc.Invoice) => {
 };
 
 export const initializeInvoices = async () => {
-	const lastUpdate = localStorage.getItem('lastUpdate') || firstUpdate;
+	const lastUpdate =
+		localStorage.getItem('lastUpdate') || (Date.parse(get(firstUpdate)) / 1000).toString();
 
 	updateTime = getUpdateTime();
 
@@ -164,7 +163,8 @@ export const initializeInvoices = async () => {
 };
 
 export const initializePayments = async () => {
-	const lastUpdate = localStorage.getItem('lastUpdate') || firstUpdate;
+	const lastUpdate =
+		localStorage.getItem('lastUpdate') || (Date.parse(get(firstUpdate)) / 1000).toString();
 
 	const { payments } = await lnc.lnd.lightning.listPayments({
 		includeIncomplete: false,
