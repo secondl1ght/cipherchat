@@ -17,7 +17,7 @@
 		<img
 			src="/images/avatars/{avatar}.png"
 			alt="avatar"
-			class="rounded-full object-cover {size} {style}"
+			class="rounded-full bg-borderIn object-cover {size} {style}"
 			style={`border: 3px solid ${finalColor};`}
 		/>
 	{:else}
