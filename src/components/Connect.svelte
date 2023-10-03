@@ -2,7 +2,7 @@
 	import { generateKey } from '$lib/crypto';
 	import { lnc } from '$lib/lnc';
 	import { connected, firstUpdate } from '$lib/store';
-	import { errorToast, successToast } from '$lib/utils';
+	import { errorToast } from '$lib/utils';
 	import { Button, Icon, InfoTooltip, MessageHistory } from 'comp';
 	import { tick } from 'svelte';
 	import { blur } from 'svelte/transition';
