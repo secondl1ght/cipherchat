@@ -28,7 +28,6 @@ import {
 	getTimestamp,
 	setLastUpdate,
 	shortenPubkey,
-	successToast,
 	warningToast
 } from '$lib/utils';
 import { lnrpc } from '@lightninglabs/lnc-web';
@@ -378,8 +377,6 @@ export const addConversation = async (pubkey: string) => {
 					convoState.set('CHAT');
 					homeState.set('HOME');
 					appView.set(AppViewState.Convo);
-
-					successToast('Conversation started!');
 				}
 			});
 		} catch (error: any) {
