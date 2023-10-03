@@ -42,7 +42,6 @@
 			await generateKey(password);
 
 			$connected = true;
-			successToast('Node connected successfully!');
 		} catch (error) {
 			console.log(error);
 			errorToast('Node connection failed, please try again.');

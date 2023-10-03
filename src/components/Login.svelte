@@ -22,7 +22,6 @@
 			await generateKey(password);
 
 			$connected = true;
-			successToast('Logged in.');
 		} catch (error) {
 			console.log(error);
 			errorToast('Login failed, please try again.');
