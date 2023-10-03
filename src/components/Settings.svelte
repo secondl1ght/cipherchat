@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { clearBadge } from '$lib/chat';
 	import { db } from '$lib/db';
-	import { bubbleColor, homeScrollDiv, innerWidth, textColor } from '$lib/store';
+	import {
+		activeConversation,
+		bubbleColor,
+		homeScrollDiv,
+		innerWidth,
+		textColor
+	} from '$lib/store';
 	import { errorToast, shortenPubkey, successToast } from '$lib/utils';
 	import { Button, Icon, InfoTooltip, RowItem } from 'comp';
 	import { liveQuery } from 'dexie';
@@ -159,12 +165,15 @@
 		<div class="flex items-center">
 			<InfoTooltip
 				style="mr-3 text-header"
-				text="Enabling this setting will show messages from nodes that have not identified themselves. You will not be able to respond to these messages."
+				text="Enabling this setting will show messages received from nodes that have not revealed their identity or could not be verified. You will not be able to respond to these messages."
 			/>
 			<input
 				bind:checked={showAnon}
 				on:change={() => {
 					updateSetting('showAnon', showAnon.toString());
+					if ($activeConversation === 'ANON') {
+						$activeConversation = '';
+					}
 					successToast('Setting updated.');
 				}}
 				type="checkbox"

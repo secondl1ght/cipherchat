@@ -25,7 +25,7 @@
 			class="flex items-center justify-center rounded-full bg-borderIn text-2xl font-bold uppercase text-header {size} {style}"
 			style={`border: 3px solid ${finalColor};`}
 		>
-			{alias ? alias.charAt(0) : pubkey.charAt(0)}
+			{pubkey === 'ANON' ? '?' : alias ? alias.charAt(0) : pubkey.charAt(0)}
 		</div>
 	{/if}
 	{#if withButton}

@@ -114,7 +114,12 @@
 			class="grid w-full grid-cols-1 items-center justify-between border-b border-body bg-borderIn p-4 lg:flex"
 		>
 			<div class="mt-4 flex items-center justify-between lg:mt-0 lg:justify-start lg:gap-x-2.5">
-				<button on:click={toggleConvo} class="order-last lg:order-first">
+				<button
+					on:click={toggleConvo}
+					class="order-last lg:order-first"
+					disabled={$activeConversation === 'ANON'}
+					class:cursor-not-allowed={$activeConversation === 'ANON'}
+				>
 					{#if $convoState === 'CHAT'}
 						<Avatar
 							pubkey={$conversation.pubkey}
@@ -167,7 +172,12 @@
 				</button>
 
 				<div class="space-x-4">
-					<button on:click={togglePayment}>
+					<button
+						on:click={togglePayment}
+						disabled={$activeConversation === 'ANON'}
+						class:cursor-not-allowed={$activeConversation === 'ANON'}
+						class:opacity-50={$activeConversation === 'ANON'}
+					>
 						<Icon icon="cloud-lightning" style="text-header" />
 					</button>
 
@@ -175,7 +185,12 @@
 						<Icon icon="bookmark" style="text-header" />
 					</button>
 
-					<button on:click={blockNode}>
+					<button
+						on:click={blockNode}
+						disabled={$activeConversation === 'ANON'}
+						class:cursor-not-allowed={$activeConversation === 'ANON'}
+						class:opacity-50={$activeConversation === 'ANON'}
+					>
 						<Icon icon="slash" style="text-header" />
 					</button>
 				</div>

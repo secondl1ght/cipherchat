@@ -151,7 +151,9 @@
 					showEmoji = !showEmoji;
 					setTimeout(() => (lockEmoji = false), 1000);
 				}}
-				disabled={$lockMessage}
+				disabled={$lockMessage || $activeConversation === 'ANON'}
+				class:cursor-not-allowed={$activeConversation === 'ANON'}
+				class:opacity-50={$activeConversation === 'ANON'}
 			>
 				<Icon icon="smile" style="text-header" />
 			</button>
@@ -166,7 +168,9 @@
 				spellcheck="true"
 				wrap="soft"
 				rows="1"
-				disabled={$lockMessage}
+				disabled={$lockMessage || $activeConversation === 'ANON'}
+				class:cursor-not-allowed={$activeConversation === 'ANON'}
+				class:opacity-50={$activeConversation === 'ANON'}
 				bind:value={message}
 				on:keydown={handleEnter}
 				on:input={textareaAutoSize}

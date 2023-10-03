@@ -33,17 +33,19 @@ export const validateInvoice = async (invoice: lnrpc.Invoice) => {
 	const pubkey = successfulHTLC.customRecords[SENDERS_PUBKEY];
 	const type = successfulHTLC.customRecords[CONTENT_TYPE];
 
+	if (!invoice.isKeysend || !message) {
+		return false;
+	}
+
 	if (
-		!invoice.isKeysend ||
 		!preimage ||
 		!timestamp ||
-		!message ||
 		!signature ||
 		!pubkey ||
 		!type ||
 		bufferBase64ToUtf(pubkey) === get(userPubkey)
 	) {
-		return false;
+		return 'ANON';
 	}
 
 	try {
@@ -60,13 +62,15 @@ export const validateInvoice = async (invoice: lnrpc.Invoice) => {
 		if (verifySignature.valid && verifySignature.pubkey === pubkeyDecoded) {
 			return true;
 		} else {
-			return false;
+			return 'ANON';
 		}
 	} catch (error) {
 		console.log(error);
-		return false;
+		return 'ANON';
 	}
 };
+
+const anonInvoicesFormatted: Message[] = [];
 
 export const initializeInvoices = async () => {
 	const lastUpdate =
@@ -75,18 +79,22 @@ export const initializeInvoices = async () => {
 	updateTime = getUpdateTime();
 
 	const { invoices } = await lnc.lnd.lightning.listInvoices({
-		creationDateStart: lastUpdate
+		creationDateStart: lastUpdate,
+		numMaxInvoices: '21000000'
 	});
 
 	if (!invoices.length) return;
 
 	const invoicesFiltered: lnrpc.Invoice[] = [];
+	const anonInvoices: lnrpc.Invoice[] = [];
 
 	for await (const invoice of invoices) {
 		const validated = await validateInvoice(invoice);
 
-		if (validated) {
+		if (validated === true) {
 			invoicesFiltered.push(invoice);
+		} else if (validated === 'ANON') {
+			anonInvoices.push(invoice);
 		}
 	}
 
@@ -159,6 +167,50 @@ export const initializeInvoices = async () => {
 		}
 	}
 
+	if (anonInvoices.length) {
+		for await (const invoice of anonInvoices) {
+			const successfulHTLC = invoice.htlcs.find((htlc) => htlc.state === 'SETTLED');
+
+			if (!successfulHTLC) return;
+
+			try {
+				// message values
+				const preimage = invoice.rPreimage.toString();
+				const pubkey = 'ANON';
+				const message = bufferBase64ToUtf(successfulHTLC.customRecords[MESSAGE_CONTENT]);
+				const messageEncrypted = await encrypt(message);
+				if (!messageEncrypted) return;
+				const type = MessageType.Text;
+				const timestamp = Number(invoice.creationDate) * 1000000000;
+				const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
+				const amount = Number(invoice.amtPaidSat);
+				const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+				const self = false;
+
+				const messageObject: Message = {
+					id: preimage,
+					pubkey,
+					iv: messageEncrypted.iv,
+					message: messageEncrypted.content,
+					type,
+					timestamp,
+					receivedTime: timestamp,
+					status,
+					amount,
+					failureReason,
+					self
+				};
+
+				anonInvoicesFormatted.push(messageObject);
+			} catch (error) {
+				console.log(error);
+				return;
+			}
+		}
+
+		anonInvoicesFormatted.sort((a, b) => a.timestamp - b.timestamp);
+	}
+
 	return invoicesGrouped;
 };
 
@@ -168,7 +220,8 @@ export const initializePayments = async () => {
 
 	const { payments } = await lnc.lnd.lightning.listPayments({
 		includeIncomplete: false,
-		creationDateStart: lastUpdate
+		creationDateStart: lastUpdate,
+		maxPayments: '21000000'
 	});
 
 	if (!payments.length) return;
@@ -342,6 +395,23 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 		lastUpdate: conversation.lastUpdate
 	}));
 
+	if (anonInvoicesFormatted.length) {
+		const lastMessage = anonInvoicesFormatted[anonInvoicesFormatted.length - 1];
+
+		conversationsFormatted.push({
+			pubkey: 'ANON',
+			alias: 'Anonymous',
+			color: '#5A7FFF',
+			unread: anonInvoicesFormatted.length,
+			blocked: 'false',
+			bookmarked: 'false',
+			charLimit: 300,
+			latestMessage: lastMessage.id,
+			latestMessageStatus: lastMessage.status,
+			lastUpdate: lastMessage.receivedTime
+		});
+	}
+
 	if (firstSyncComplete) {
 		const primaryKeys = conversationsFormatted.map((conversation) => conversation.pubkey);
 
@@ -366,6 +436,9 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 			}
 
 			await db.messages.bulkAdd(messages, undefined, { allKeys: false });
+			if (anonInvoicesFormatted.length) {
+				await db.messages.bulkAdd(anonInvoicesFormatted, undefined, { allKeys: false });
+			}
 		});
 
 		setLastUpdate(updateTime);
@@ -373,6 +446,9 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 		await db.transaction('rw', db.conversations, db.messages, async () => {
 			await db.conversations.bulkAdd(conversationsFormatted, undefined, { allKeys: false });
 			await db.messages.bulkAdd(messages, undefined, { allKeys: false });
+			if (anonInvoicesFormatted.length) {
+				await db.messages.bulkAdd(anonInvoicesFormatted, undefined, { allKeys: false });
+			}
 		});
 
 		setLastUpdate(updateTime);

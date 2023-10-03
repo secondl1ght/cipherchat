@@ -93,6 +93,66 @@ export const clearUnread = async () => {
 	}
 };
 
+const messageNotification = (
+	pubkey: string,
+	alias: string | undefined,
+	type: MessageType,
+	amount: number,
+	message: string
+) => {
+	if (
+		(Notification.permission === 'granted' && get(activeConversation) !== pubkey) ||
+		(Notification.permission === 'granted' && document.visibilityState === 'hidden')
+	) {
+		const playAudio = localStorage.getItem('playAudio') === 'true';
+		const sendersNode = alias || shortenPubkey(pubkey);
+		const notificationMessage =
+			type === MessageType.Payment ? formatPaymentMsg(false, amount) : message;
+
+		const notification = new Notification(sendersNode, {
+			badge: '/images/logo.png',
+			body: notificationMessage,
+			tag: pubkey,
+			icon: '/images/logo-bg.png',
+			vibrate: [210],
+			renotify: true
+		});
+
+		if (playAudio) {
+			notificationSound.play();
+		}
+
+		notification.addEventListener('click', () => {
+			messageHistory.set(25);
+			activeConversation.set(pubkey);
+			convoState.set('CHAT');
+			homeState.set('HOME');
+			appView.set(AppViewState.Convo);
+			window.focus();
+			clearUnread();
+		});
+
+		document.addEventListener(
+			'visibilitychange',
+			() => {
+				if (document.visibilityState === 'visible') {
+					notification.close();
+				}
+			},
+			{ once: true }
+		);
+
+		const body = document.querySelector('body');
+		body?.addEventListener(
+			'mouseover',
+			() => {
+				notification.close();
+			},
+			{ once: true }
+		);
+	}
+};
+
 export const subscribeInvoices = () => {
 	lnc.lnd.lightning.subscribeInvoices(
 		undefined,
@@ -100,7 +160,7 @@ export const subscribeInvoices = () => {
 			try {
 				const validated = await validateInvoice(msg);
 
-				if (validated) {
+				if (validated === true) {
 					const successfulHTLC = msg.htlcs.find((htlc) => htlc.state === 'SETTLED');
 
 					if (!successfulHTLC) return;
@@ -150,60 +210,6 @@ export const subscribeInvoices = () => {
 						self
 					};
 
-					const messageNotification = () => {
-						if (
-							(Notification.permission === 'granted' && get(activeConversation) !== pubkey) ||
-							(Notification.permission === 'granted' && document.visibilityState === 'hidden')
-						) {
-							const playAudio = localStorage.getItem('playAudio') === 'true';
-							const sendersNode = alias || shortenPubkey(pubkey);
-							const notificationMessage =
-								type === MessageType.Payment ? formatPaymentMsg(false, amount) : message;
-
-							const notification = new Notification(sendersNode, {
-								badge: '/images/logo.png',
-								body: notificationMessage,
-								tag: pubkey,
-								icon: '/images/logo-bg.png',
-								vibrate: [210],
-								renotify: true
-							});
-
-							if (playAudio) {
-								notificationSound.play();
-							}
-
-							notification.addEventListener('click', () => {
-								messageHistory.set(25);
-								activeConversation.set(pubkey);
-								convoState.set('CHAT');
-								homeState.set('HOME');
-								appView.set(AppViewState.Convo);
-								window.focus();
-								clearUnread();
-							});
-
-							document.addEventListener(
-								'visibilitychange',
-								() => {
-									if (document.visibilityState === 'visible') {
-										notification.close();
-									}
-								},
-								{ once: true }
-							);
-
-							const body = document.querySelector('body');
-							body?.addEventListener(
-								'mouseover',
-								() => {
-									notification.close();
-								},
-								{ once: true }
-							);
-						}
-					};
-
 					await db.transaction('rw', db.conversations, db.messages, async () => {
 						const conversationExists = await db.conversations.get(pubkey);
 
@@ -221,7 +227,7 @@ export const subscribeInvoices = () => {
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
 
 							if (conversationExists.blocked === 'false') {
-								messageNotification();
+								messageNotification(pubkey, alias, type, amount, message);
 							}
 						} else {
 							await db.conversations.add({
@@ -239,7 +245,89 @@ export const subscribeInvoices = () => {
 							await db.messages.add(messageObject);
 
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
-							messageNotification();
+							messageNotification(pubkey, alias, type, amount, message);
+						}
+					});
+				} else if (validated === 'ANON') {
+					const successfulHTLC = msg.htlcs.find((htlc) => htlc.state === 'SETTLED');
+
+					if (!successfulHTLC) return;
+
+					// conversation values
+					const pubkey = 'ANON';
+					const alias = 'Anonymous';
+					const color = '#5A7FFF';
+					const unread = 1;
+					const blocked = 'false';
+					const bookmarked = 'false';
+					const charLimit = 300;
+
+					// message values
+					const preimage = msg.rPreimage.toString();
+					const message = bufferBase64ToUtf(successfulHTLC.customRecords[MESSAGE_CONTENT]);
+					const messageEncrypted = await encrypt(message);
+					if (!messageEncrypted) return;
+					const type = MessageType.Text;
+					const timestamp = Number(msg.creationDate) * 1000000000;
+					const receivedTime = getTimestamp();
+					const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
+					const amount = Number(msg.amtPaidSat);
+					const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+					const self = false;
+
+					const messageObject: Message = {
+						id: preimage,
+						pubkey,
+						iv: messageEncrypted.iv,
+						message: messageEncrypted.content,
+						type,
+						timestamp,
+						receivedTime,
+						status,
+						amount,
+						failureReason,
+						self
+					};
+
+					const showAnon = localStorage.getItem('showAnon') === 'true' ? true : false;
+
+					await db.transaction('rw', db.conversations, db.messages, async () => {
+						const conversationExists = await db.conversations.get(pubkey);
+
+						if (conversationExists) {
+							conversationExists.unread++;
+							conversationExists.latestMessage = messageObject.id;
+							conversationExists.latestMessageStatus = messageObject.status;
+							conversationExists.lastUpdate = messageObject.receivedTime;
+
+							await db.conversations.put(conversationExists);
+							await db.messages.add(messageObject);
+
+							setLastUpdate((Number(msg.creationDate) + 1).toString());
+
+							if (showAnon) {
+								messageNotification(pubkey, alias, type, amount, message);
+							}
+						} else {
+							await db.conversations.add({
+								pubkey,
+								alias,
+								color,
+								unread,
+								blocked,
+								bookmarked,
+								charLimit,
+								latestMessage: messageObject.id,
+								latestMessageStatus: messageObject.status,
+								lastUpdate: messageObject.receivedTime
+							});
+							await db.messages.add(messageObject);
+
+							setLastUpdate((Number(msg.creationDate) + 1).toString());
+
+							if (showAnon) {
+								messageNotification(pubkey, alias, type, amount, message);
+							}
 						}
 					});
 				} else {

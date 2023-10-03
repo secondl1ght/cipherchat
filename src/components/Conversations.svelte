@@ -4,8 +4,29 @@
 	import { onDestroy } from 'svelte';
 	import { flip } from 'svelte/animate';
 
-	$: bookmarks = $conversations.filter((c) => c.bookmarked === 'true');
-	$: regular = $conversations.filter((c) => c.bookmarked === 'false');
+	$: bookmarks = $conversations.filter((c) => {
+		if (c.pubkey === 'ANON') {
+			if (localStorage.getItem('showAnon') === 'true') {
+				return c.bookmarked === 'true';
+			} else {
+				return false;
+			}
+		} else {
+			return c.bookmarked === 'true';
+		}
+	});
+
+	$: regular = $conversations.filter((c) => {
+		if (c.pubkey === 'ANON') {
+			if (localStorage.getItem('showAnon') === 'true') {
+				return c.bookmarked === 'false';
+			} else {
+				return false;
+			}
+		} else {
+			return c.bookmarked === 'false';
+		}
+	});
 
 	onDestroy(() => ($homeScrollDiv.scrollTop = 0));
 </script>
