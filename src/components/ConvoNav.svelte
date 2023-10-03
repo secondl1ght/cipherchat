@@ -254,7 +254,7 @@
 
 		{#if $activeConversation === '03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'}
 			<div
-				class="hide-scroll w-full cursor-default select-none overflow-x-auto whitespace-nowrap border-b border-body bg-button/50 p-2 text-center text-sm text-header"
+				class="hide-scroll w-full cursor-default select-none overflow-x-auto whitespace-nowrap border-b border-body bg-[#35488e] p-2 text-center text-sm text-header"
 			>
 				Messages sent to this node will be displayed publicly on the Amboss billboard.
 			</div>
