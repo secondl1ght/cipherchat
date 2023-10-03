@@ -7,12 +7,10 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	let nodeInfo: lnrpc.GetInfoResponse;
-	let version = '';
 
 	onMount(async () => {
 		try {
 			nodeInfo = await lnc.lnd.lightning.getInfo();
-			version = nodeInfo.version.split('=')[1];
 		} catch (error) {
 			console.log(error);
 			errorToast('Could not fetch node information, please try again.');
@@ -86,16 +84,9 @@
 		</RowItem>
 
 		<RowItem title="LND Version">
-			{#if nodeInfo && version}
-				<Link
-					external
-					href="https://github.com/lightningnetwork/lnd/releases/tag/{version}"
-					title={version}
-					style="whitespace-nowrap"
-				/>
-			{:else}
-				<p class="cursor-wait">-</p>
-			{/if}
+			<p class={nodeInfo ? 'cursor-auto whitespace-nowrap' : 'cursor-wait'}>
+				{nodeInfo?.version || '-'}
+			</p>
 		</RowItem>
 	</ul>
 </div>
