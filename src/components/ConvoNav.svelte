@@ -21,6 +21,10 @@
 	let selectedAmount: number | string = 1000;
 	let finalAmount: number | string = 1000;
 	let customAmountInput: HTMLInputElement;
+	const disabledPayment = [
+		'ANON',
+		'03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'
+	];
 
 	const toggleConvo = async () => {
 		if ($convoState === 'CHAT') {
@@ -174,9 +178,9 @@
 				<div class="space-x-4">
 					<button
 						on:click={togglePayment}
-						disabled={$activeConversation === 'ANON'}
-						class:cursor-not-allowed={$activeConversation === 'ANON'}
-						class:opacity-50={$activeConversation === 'ANON'}
+						disabled={disabledPayment.includes($activeConversation)}
+						class:cursor-not-allowed={disabledPayment.includes($activeConversation)}
+						class:opacity-50={disabledPayment.includes($activeConversation)}
 					>
 						<Icon icon="cloud-lightning" style="text-header" />
 					</button>
@@ -245,6 +249,14 @@
 				>
 					<Icon icon="send" style="text-header" width="20" height="20" />
 				</button>
+			</div>
+		{/if}
+
+		{#if $activeConversation === '03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'}
+			<div
+				class="hide-scroll w-full cursor-default select-none overflow-x-auto whitespace-nowrap border-b border-body bg-button/50 p-2 text-center text-sm text-header"
+			>
+				Messages sent to this node will be displayed publicly on the Amboss billboard.
 			</div>
 		{/if}
 	</div>
