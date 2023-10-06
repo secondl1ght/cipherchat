@@ -53,4 +53,6 @@ export const scrollDivPosition = writable(0);
 export const homeScrollDiv: Writable<HTMLDivElement> = writable();
 export const scanActive = writable(false);
 
+export const sharePubkey = writable('');
+
 export const error = writable({ status: '', message: '' });

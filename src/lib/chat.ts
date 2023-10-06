@@ -17,6 +17,7 @@ import {
 	lockMessage,
 	messageHistory,
 	sendLoading,
+	sharePubkey,
 	userPubkey
 } from '$lib/store';
 import { validateInvoice } from '$lib/sync';
@@ -358,7 +359,13 @@ export const addConversation = async (pubkey: string) => {
 				const conversationExists = await db.conversations.get(pubkey);
 
 				if (conversationExists) {
-					warningToast('You already have a conversation with this node.');
+					if (!get(sharePubkey)) {
+						warningToast('You already have a conversation with this node.');
+					} else {
+						activeConversation.set(pubkey);
+						appView.set(AppViewState.Convo);
+						clearUnread();
+					}
 				} else {
 					const conversation: Conversation = {
 						pubkey,

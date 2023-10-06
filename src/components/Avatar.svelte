@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { copy, successToast } from '$lib/utils';
+
 	export let pubkey: string;
 	export let alias: string | undefined;
 	export let color: string | undefined;
@@ -31,8 +33,12 @@
 	{#if withButton}
 		<button
 			class="absolute bottom-1 right-1 flex items-center justify-center rounded bg-header p-0.5 text-borderIn"
+			on:click={() => {
+				copy(`https://cipherchat.app?pubkey=${pubkey}`);
+				successToast('Share link copied!');
+			}}
 		>
-			<Icon icon="image" width="16" height="16" />
+			<Icon icon="share-2" width="16" height="16" />
 		</button>
 	{/if}
 </div>

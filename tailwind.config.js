@@ -32,7 +32,8 @@ export default {
 				warning: '#F57F17',
 				error: '#B71C1C',
 				gradientOne: '#F5F7FA',
-				gradientTwo: '#C3CFE2'
+				gradientTwo: '#C3CFE2',
+				banner: '#35488e'
 			}
 		}
 	},

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { connected, error, paired } from '$lib/store';
-	import { Chat, Connect, Error, Login, PublicLayout } from 'comp';
+	import { Chat, Connect, Error, Login, PublicLayout, ShareHandler } from 'comp';
 </script>
 
 <svelte:head>
@@ -15,11 +15,13 @@
 		<Chat />
 	{/if}
 {:else}
-	<PublicLayout>
-		{#if $paired}
-			<Login />
-		{:else}
-			<Connect />
-		{/if}
-	</PublicLayout>
+	<ShareHandler>
+		<PublicLayout>
+			{#if $paired}
+				<Login />
+			{:else}
+				<Connect />
+			{/if}
+		</PublicLayout>
+	</ShareHandler>
 {/if}

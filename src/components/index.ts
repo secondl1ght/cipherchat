@@ -36,6 +36,7 @@ export { default as Profile } from './Profile.svelte';
 export { default as PublicLayout } from './PublicLayout.svelte';
 export { default as RowItem } from './RowItem.svelte';
 export { default as Settings } from './Settings.svelte';
+export { default as ShareHandler } from './ShareHandler.svelte';
 export { default as SharedChannel } from './SharedChannel.svelte';
 export { default as SyncPing } from './SyncPing.svelte';
 export { default as Wrapper } from './Wrapper.svelte';

@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { clearBadge, formatPaymentMsg, setBadge, subscribeInvoices } from '$lib/chat';
+	import {
+		addConversation,
+		clearBadge,
+		formatPaymentMsg,
+		setBadge,
+		subscribeInvoices
+	} from '$lib/chat';
 	import { decrypt } from '$lib/crypto';
 	import { db } from '$lib/db';
 	import { lnc } from '$lib/lnc';
@@ -16,6 +22,7 @@
 		scrollDiv,
 		scrollDivPosition,
 		sendLoading,
+		sharePubkey,
 		userAlias,
 		userColor,
 		userPubkey
@@ -255,6 +262,12 @@
 					setLastUpdate(updateTime);
 					setFirstSyncComplete();
 				}
+			}
+
+			if ($sharePubkey) {
+				await addConversation($sharePubkey);
+				$sharePubkey = '';
+				history.replaceState(null, '', '/');
 			}
 
 			subscribeInvoices();

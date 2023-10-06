@@ -29,6 +29,7 @@
 			avatar={$userAvatar}
 			size="w-20 h-20"
 			style="cursor-default"
+			withButton
 		/>
 	</div>
 
