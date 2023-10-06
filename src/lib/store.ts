@@ -51,5 +51,6 @@ export const chatInputHeight: Writable<number> = writable();
 export const scrollDiv: Writable<HTMLDivElement> = writable();
 export const scrollDivPosition = writable(0);
 export const homeScrollDiv: Writable<HTMLDivElement> = writable();
+export const scanActive = writable(false);
 
 export const error = writable({ status: '', message: '' });

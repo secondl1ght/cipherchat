@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { generateKey } from '$lib/crypto';
 	import { lnc } from '$lib/lnc';
-	import { connected, firstUpdate } from '$lib/store';
-	import { errorToast } from '$lib/utils';
+	import { connected, firstUpdate, scanActive } from '$lib/store';
+	import { errorToast, warningToast } from '$lib/utils';
 	import { Button, Icon, InfoTooltip, MessageHistory } from 'comp';
+	import QrScanner from 'qr-scanner';
 	import { tick } from 'svelte';
+	import type { Action } from 'svelte/action';
 	import { blur } from 'svelte/transition';
 
 	let start = false;
@@ -55,6 +57,65 @@
 			connect();
 		}
 	};
+
+	let qrScanner: QrScanner;
+	const cameraPermission = 'camera' as PermissionName;
+
+	const requestScan = () => {
+		navigator.mediaDevices
+			.getUserMedia({ video: true })
+			.then((stream) => {
+				$scanActive = true;
+				stream.getTracks().forEach((track) => track.stop());
+			})
+			.catch((error) => {
+				console.log(error);
+				errorToast('Could not access camera to scan.');
+			});
+	};
+
+	const startScan = () => {
+		navigator.permissions
+			.query({ name: cameraPermission })
+			.then((result) => {
+				if (result.state === 'granted') {
+					$scanActive = true;
+				} else if (result.state === 'denied') {
+					warningToast('Camera permission is denied.');
+				} else {
+					requestScan();
+				}
+			})
+			.catch(() => {
+				requestScan();
+			});
+	};
+
+	const scanActions: Action<HTMLVideoElement> = (node) => {
+		qrScanner = new QrScanner(
+			node,
+			({ data }) => {
+				pairingPhrase = data;
+				$scanActive = false;
+			},
+			{
+				returnDetailedScanResult: true,
+				highlightScanRegion: true,
+				highlightCodeOutline: true
+			}
+		);
+
+		qrScanner.setInversionMode('both');
+		qrScanner.start();
+
+		return {
+			destroy() {
+				qrScanner.stop();
+				qrScanner.turnFlashOff();
+				qrScanner.destroy();
+			}
+		};
+	};
 </script>
 
 {#if !start}
@@ -69,11 +130,19 @@
 	<form transition:blur={{ amount: 10 }} on:submit|preventDefault>
 		<label
 			for="pairing"
-			class="flex items-center text-lg font-bold text-header md:text-xl lg:text-2xl"
+			class="flex flex-wrap items-center gap-3 text-lg font-bold text-header md:text-xl lg:text-2xl"
 		>
 			Pairing Phrase <InfoTooltip
+				style=""
 				text="To use Cipherchat you need a lightning node that is compatible with Lightning Node Connect (LNC). Currently this is only LND nodes and you can pair using Lightning Terminal."
 			/>
+			{#await QrScanner.hasCamera() then hasCamera}
+				{#if hasCamera}
+					<button type="button" on:click={startScan} disabled={loading}>
+						<Icon icon="camera" />
+					</button>
+				{/if}
+			{/await}
 		</label>
 		<input
 			id="pairing"
@@ -196,4 +265,41 @@
 			loadingText="Connecting..."
 		/>
 	</form>
+
+	{#if $scanActive}
+		<!-- svelte-ignore a11y-media-has-caption -->
+		<video use:scanActions class="absolute left-0 top-0 z-10 h-full w-full bg-background" />
+
+		{#if qrScanner}
+			{#await qrScanner.hasFlash() then hasFlash}
+				{#if hasFlash}
+					<button
+						type="button"
+						on:click={() => qrScanner.toggleFlash()}
+						class="absolute bottom-5 left-5 z-10 flex h-14 w-14 items-center justify-center rounded bg-button text-header shadow-lg"
+					>
+						<Icon icon="sunrise" />
+					</button>
+				{/if}
+			{/await}
+		{/if}
+
+		<button
+			type="button"
+			on:click={() => ($scanActive = false)}
+			class="absolute bottom-5 right-5 z-10 flex h-14 w-14 items-center justify-center rounded bg-button text-header shadow-lg"
+		>
+			<Icon icon="camera-off" />
+		</button>
+
+		<style>
+			.scan-region-highlight-svg,
+			.code-outline-highlight {
+				stroke: #d9e7fa !important;
+			}
+			.scan-region-highlight {
+				z-index: 20;
+			}
+		</style>
+	{/if}
 {/if}
