@@ -7,7 +7,6 @@
 		conversation,
 		convoState,
 		innerWidth,
-		messageHistory,
 		scrollDiv,
 		scrollDivPosition
 	} from '$lib/store';
@@ -168,7 +167,7 @@
 					class="lg:hidden"
 					on:click={async () => {
 						$appView = AppViewState.Home;
-						
+
 						await clearUnread();
 						$activeConversation = '';
 					}}

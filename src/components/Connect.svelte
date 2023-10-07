@@ -59,6 +59,7 @@
 	};
 
 	let qrScanner: QrScanner;
+	// eslint-disable-next-line no-undef
 	const cameraPermission = 'camera' as PermissionName;
 
 	const requestScan = () => {
