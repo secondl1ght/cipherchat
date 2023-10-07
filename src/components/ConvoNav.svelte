@@ -166,10 +166,11 @@
 			<div class="order-first flex justify-between lg:order-last lg:block">
 				<button
 					class="lg:hidden"
-					on:click={() => {
-						$messageHistory = 25;
+					on:click={async () => {
 						$appView = AppViewState.Home;
-						clearUnread();
+						
+						await clearUnread();
+						$activeConversation = '';
 					}}
 				>
 					<Icon icon="home" style="text-header" />

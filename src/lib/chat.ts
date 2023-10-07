@@ -41,6 +41,7 @@ const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE,
 const messageType = Object.values(MessageType);
 
 const notificationSound = new Audio('/audio/notification.mp3');
+const messageSound = new Audio('/audio/message.mp3');
 
 export const formatPaymentMsg = (self: boolean, amount: number) =>
 	`${self ? 'Sent' : 'Received'} ${formatNumber(amount)} sats.`;
@@ -100,11 +101,12 @@ const messageNotification = (
 	amount: number,
 	message: string
 ) => {
+	const playAudio = localStorage.getItem('playAudio') === 'true';
+
 	if (
 		(Notification.permission === 'granted' && get(activeConversation) !== pubkey) ||
 		(Notification.permission === 'granted' && document.visibilityState === 'hidden')
 	) {
-		const playAudio = localStorage.getItem('playAudio') === 'true';
 		const sendersNode = alias || shortenPubkey(pubkey);
 		const notificationMessage =
 			type === MessageType.Payment ? formatPaymentMsg(false, amount) : message;
@@ -150,6 +152,12 @@ const messageNotification = (
 			},
 			{ once: true }
 		);
+	} else if (
+		get(activeConversation) === pubkey &&
+		document.visibilityState === 'visible' &&
+		playAudio
+	) {
+		messageSound.play();
 	}
 };
 
@@ -476,6 +484,12 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			await tick();
 			clearMessage.set(false);
 			get(chatInput)?.focus();
+		}
+
+		const playAudio = localStorage.getItem('playAudio') === 'true';
+
+		if (playAudio) {
+			messageSound.play();
 		}
 	} catch (error) {
 		console.log(error);
