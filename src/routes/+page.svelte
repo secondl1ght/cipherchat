@@ -15,13 +15,12 @@
 		<Chat />
 	{/if}
 {:else}
-	<ShareHandler>
-		<PublicLayout>
-			{#if $paired}
-				<Login />
-			{:else}
-				<Connect />
-			{/if}
-		</PublicLayout>
-	</ShareHandler>
+	<ShareHandler />
+	<PublicLayout>
+		{#if $paired}
+			<Login />
+		{:else}
+			<Connect />
+		{/if}
+	</PublicLayout>
 {/if}
