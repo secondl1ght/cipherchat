@@ -106,7 +106,7 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
             <td>34349345</td>
             <td>Content Type</td>
             <td>Variable</td>
-            <td>Can be one of: 'TEXT', 'IMAGE', 'PAYMENT'.</td>
+            <td>Can be one of: 'TEXT', 'IMAGE', 'PAYMENT'. (Currently images are not yet implemented).</td>
         </tr>
     </tbody>
 </table>
