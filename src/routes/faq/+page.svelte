@@ -66,8 +66,11 @@
 					href="https://umbrel.com/"
 					title="Umbrel"
 				/>. These come with app stores that you can install the other required software - Lightning
-				Terminal. There are also options to host a node in the <em>'Cloud'</em> if you would prefer not
-				to deal with hardware.
+				Terminal. There are also options to host a node in the <em>'Cloud'</em> like <Link
+					external
+					href="https://voltage.cloud/"
+					title="Voltage"
+				/> if you would prefer not to deal with hardware.
 			</FaqItem>
 			<FaqItem question="How do I connect my node to the app?">
 				<!-- svelte-ignore a11y-media-has-caption -->
@@ -134,9 +137,9 @@
 			<FaqItem question="Is there spam protection?">
 				Cipherchat has built-in spam protection due to the 'proof-of-work' required to setup a
 				lightning node and the cost of messages. It is also impossible to impersonate a nodes
-				identity because each message is signed using the private / public key pair and verifiable
-				by the receiver. If all of this is not enough, you have the ability to hide or 'block'
-				unwanted conversations within the app.
+				identity because each message is signed using the private / public key pair of the sender
+				and verified by the receiver. If all of this is not enough, you have the ability to hide or
+				'block' unwanted conversations within the app.
 			</FaqItem>
 			<FaqItem question="What's the best way to use my node with Cipherchat?">
 				For best performance, reliability, and to save on network fees it is recommended to open a
@@ -270,7 +273,10 @@
 							<td>34349345</td>
 							<td>Content Type</td>
 							<td>Variable</td>
-							<td>Can be one of: 'TEXT', 'IMAGE', 'PAYMENT'.</td>
+							<td
+								>Can be one of: 'TEXT', 'IMAGE', 'PAYMENT'. (Currently images are not yet
+								implemented).</td
+							>
 						</tr>
 					</tbody>
 				</table>
@@ -299,7 +305,11 @@
 					external
 					href="https://secondl1ght.site/blog/cipherchat"
 					title="here"
-				/>. I will also release some tutorial videos in the future.
+				/>. I will also release some tutorial videos in the future on <Link
+					external
+					href={$links.rumble}
+					title="Rumble"
+				/>.
 			</FaqItem>
 			<FaqItem question="I'm stuck, can I get support?">
 				If you are having issues getting started using Cipherchat or just want to find other users
