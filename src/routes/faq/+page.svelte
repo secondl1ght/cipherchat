@@ -92,9 +92,9 @@
 						payments. You can select the preset <strong>Payments Manager</strong> option for this.
 					</li>
 					<li>
-						If you would like to use Cipherchat's LNC Mailbox instead of the default Lightning Labs
-						option you will need to click <strong>Advanced Options</strong> and enter
-						<strong class="bg-borderIn">cipherchatmailbox.net:443</strong>.
+						If you would like to use your own LNC Mailbox instead of the default Lightning Labs
+						option you will need to click <strong>Advanced Options</strong> and enter the domain and
+						port. For example: <strong class="bg-borderIn">cipherchatmailbox.net:443</strong>.
 					</li>
 					<li>
 						Finally you can choose an <strong>expiry</strong> for this pairing phrase if you would like.
@@ -276,9 +276,7 @@
 				</table>
 			</FaqItem>
 			<FaqItem question="Who operates the public instance?">
-				The <strong class="bg-borderIn">cipherchat.app</strong> web app and
-				<strong class="bg-borderIn">cipherchatmailbox.net</strong>
-				LNC Mailbox are run by <Link
+				The <strong class="bg-borderIn">cipherchat.app</strong> web app is run by <Link
 					external
 					href="https://secondl1ght.site"
 					title="secondl1ght"

@@ -22,7 +22,7 @@
 
 	const mailboxOptions = [
 		{ name: 'Lightning Labs', host: defaultMailbox },
-		{ name: 'Cipherchat', host: 'mailbox.cipherchat.app:443' },
+		// { name: 'Cipherchat', host: 'cipherchatmailbox.net:443' },
 		{ name: 'Custom', host: '' }
 	];
 

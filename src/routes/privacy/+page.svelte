@@ -74,8 +74,9 @@
 					external
 					href="https://lightning.engineering/"
 					title="Lightning Labs"
-				/> runs the most popular Mailbox, but Cipherchat has also setup it's own. All third parties can
-				be eliminated by self-hosting the software. This is possible because the entire tech stack is
+				/> runs the most popular Mailbox, but Cipherchat plans to also setup it's own. All third parties
+				can be eliminated by self-hosting the software. This is possible because the entire tech stack
+				is
 				<strong>free and open-souce</strong>. To run a fully sovereign instance of Cipherchat you
 				will need to setup the following:
 			</p>
