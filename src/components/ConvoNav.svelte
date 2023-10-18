@@ -254,7 +254,7 @@
 
 		{#if $activeConversation === '03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'}
 			<Banner
-				text="Messages sent to this node will be displayed publicly on the Amboss billboard."
+				text="Messages sent to this node will be displayed publicly on the Amboss billboard. 👾"
 			/>
 		{/if}
 	</div>

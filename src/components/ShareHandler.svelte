@@ -10,5 +10,5 @@
 </script>
 
 {#if $sharePubkey}
-	<Banner text={`Connect your node and login to chat with ${shortenPubkey($sharePubkey)}.`} />
+	<Banner text={`Connect your node and login to chat with ${shortenPubkey($sharePubkey)}. 💬`} />
 {/if}
