@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { sharePubkey } from '$lib/store';
 	import { shortenPubkey } from '$lib/utils';
+	import { Banner } from 'comp';
 
 	const shareParam = $page.url.searchParams.get('pubkey');
 
@@ -9,9 +10,5 @@
 </script>
 
 {#if $sharePubkey}
-	<div
-		class="hide-scroll w-full cursor-default select-none overflow-x-auto whitespace-nowrap bg-banner p-2 text-center text-sm text-header md:text-base"
-	>
-		Connect your node and login to chat with {shortenPubkey($sharePubkey)}.
-	</div>
+	<Banner text={`Connect your node and login to chat with ${shortenPubkey($sharePubkey)}.`} />
 {/if}
