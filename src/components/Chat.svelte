@@ -58,7 +58,7 @@
 				.reverse()
 				.sortBy('lastUpdate');
 
-			const msgs = await db.messages.bulkGet(convos.map((c) => c.latestMessage));
+			const msgs = await db.messages.bulkGet(convos.map((c) => c.latestMessage || ''));
 
 			const convosFormatted = convos.map(async (c) => {
 				const latestMessage = msgs.find((m) => m?.id === c.latestMessage);
@@ -276,8 +276,6 @@
 		} catch (err) {
 			console.log(err);
 			setError('503', 'Initial sync failed, please try again.');
-		} finally {
-			// TODO
 		}
 	});
 </script>
