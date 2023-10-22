@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { PUBLIC_COMMIT, PUBLIC_VERSION } from '$env/static/public';
-	import { Link } from 'comp';
+	import { Link, Version } from 'comp';
 </script>
 
 <footer class="relative space-y-16 px-2 pb-8">
@@ -29,13 +28,7 @@
 		/>
 	</nav>
 
-	<p class="text-center text-xs md:text-sm">
-		cipherchat.app (v{PUBLIC_VERSION}) [<Link
-			href="https://github.com/secondl1ght/cipherchat/commit/{PUBLIC_COMMIT}"
-			title={PUBLIC_COMMIT}
-			external
-		/>]
-	</p>
+	<Version style="text-center text-xs md:text-sm" />
 
 	<img
 		src="/images/bricks/3.svg"

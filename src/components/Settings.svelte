@@ -9,7 +9,7 @@
 		textColor
 	} from '$lib/store';
 	import { errorToast, shortenPubkey, successToast } from '$lib/utils';
-	import { Button, Icon, InfoTooltip, RowItem } from 'comp';
+	import { Button, Icon, InfoTooltip, RowItem, Version } from 'comp';
 	import { liveQuery } from 'dexie';
 	import { onDestroy } from 'svelte';
 
@@ -189,7 +189,7 @@
 
 <hr class="border-header" />
 
-<ul class="mt-4 space-y-4">
+<ul class="my-4 space-y-4">
 	<RowItem title="Resync Messages" flex={$innerWidth > 640 ? true : false}>
 		<div class="mt-2 flex items-center text-header md:mt-0">
 			<InfoTooltip
@@ -251,5 +251,13 @@
 				</p>
 			{/if}
 		{/if}
+	</RowItem>
+</ul>
+
+<hr class="border-header" />
+
+<ul class="mt-4">
+	<RowItem title="App Version">
+		<Version style="whitespace-nowrap text-sm" />
 	</RowItem>
 </ul>
