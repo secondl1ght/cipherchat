@@ -124,6 +124,18 @@
 				<strong>Install</strong>. This will add Cipherchat to your home screen and give you access
 				to features like badge notifications just like a native app.
 			</FaqItem>
+			<FaqItem question="How can I update the web app?">
+				Cipherchat can be updated by simply refreshing the page which will download and install any
+				new releases. After refreshing you will need to close any running instances of the app and
+				relaunch in order for the installation to complete. You can view all historical versions
+				<Link external href="https://github.com/secondl1ght/cipherchat/releases" title="here" /> to review
+				changelogs and any release notes. The latest version can be found <Link
+					external
+					href="https://github.com/secondl1ght/cipherchat/releases/latest"
+					title="here"
+				/> which you can compare to your current app version (found in the footer), to ensure that you
+				are running the latest software. You can also check for updates in the Settings view.
+			</FaqItem>
 			<FaqItem question="How do I start a conversation?">
 				The only information needed to start a conversation is another node's pubkey.
 			</FaqItem>
