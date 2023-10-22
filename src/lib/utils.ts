@@ -5,8 +5,6 @@ import subMonths from 'date-fns/subMonths';
 
 // TOASTS
 export const successToast = (m: string) => {
-	toast.pop();
-
 	toast.push(m, {
 		theme: {
 			'--toastColor': '#D9E7FA',
@@ -17,8 +15,6 @@ export const successToast = (m: string) => {
 };
 
 export const warningToast = (m: string) => {
-	toast.pop();
-
 	toast.push(m, {
 		theme: {
 			'--toastColor': '#D9E7FA',
@@ -29,13 +25,21 @@ export const warningToast = (m: string) => {
 };
 
 export const errorToast = (m: string) => {
-	toast.pop();
-
 	toast.push(m, {
 		theme: {
 			'--toastColor': '#D9E7FA',
 			'--toastBackground': '#23273C',
 			'--toastBarBackground': '#B71C1C'
+		}
+	});
+};
+
+export const infoToast = (m: string) => {
+	toast.push(m, {
+		theme: {
+			'--toastColor': '#D9E7FA',
+			'--toastBackground': '#23273C',
+			'--toastBarBackground': '#5A7FFF'
 		}
 	});
 };
