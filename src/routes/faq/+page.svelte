@@ -134,7 +134,8 @@
 					href="https://github.com/secondl1ght/cipherchat/releases/latest"
 					title="here"
 				/> which you can compare to your current app version (found in the footer), to ensure that you
-				are running the latest software. You can also check for updates in the Settings view.
+				are running the latest software. You can also check for updates in the
+				<strong>Settings</strong> view.
 			</FaqItem>
 			<FaqItem question="How do I start a conversation?">
 				The only information needed to start a conversation is another node's pubkey.

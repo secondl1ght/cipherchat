@@ -4,6 +4,8 @@ import { monthAgo } from '$lib/utils';
 import { readable, writable, type Writable } from 'svelte/store';
 import type { Instance } from 'tippy.js';
 
+export const updatesAvailable = writable(false);
+
 export const firstUpdate = writable(monthAgo());
 
 export const paired = writable(lnc.credentials.isPaired);

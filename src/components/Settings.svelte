@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_VERSION } from '$env/static/public';
 	import { clearBadge } from '$lib/chat';
 	import { db } from '$lib/db';
 	import {
@@ -6,10 +7,11 @@
 		bubbleColor,
 		homeScrollDiv,
 		innerWidth,
-		textColor
+		textColor,
+		updatesAvailable
 	} from '$lib/store';
-	import { errorToast, shortenPubkey, successToast } from '$lib/utils';
-	import { Button, Icon, InfoTooltip, RowItem, Version } from 'comp';
+	import { errorToast, infoToast, shortenPubkey, successToast } from '$lib/utils';
+	import { Button, Icon, InfoTooltip, Link, RowItem, Version } from 'comp';
 	import { liveQuery } from 'dexie';
 	import { onDestroy } from 'svelte';
 
@@ -75,6 +77,53 @@
 			errorToast('Could not load blocked list.');
 		}
 	});
+
+	let updatesLoading = false;
+
+	const checkForUpdates = async () => {
+		updatesLoading = true;
+
+		let refreshLoading = false;
+
+		if ($updatesAvailable) {
+			refreshLoading = true;
+			location.reload();
+			return;
+		}
+
+		try {
+			const response = await fetch(
+				'https://api.github.com/repos/secondl1ght/cipherchat/releases/latest',
+				{
+					headers: { Accept: 'application/vnd.github+json' },
+					mode: 'cors',
+					credentials: 'omit',
+					referrer: '',
+					referrerPolicy: 'no-referrer'
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error('Network response was not OK');
+			}
+
+			const release = await response.json();
+			const { tag_name } = release;
+
+			if (tag_name !== PUBLIC_VERSION) {
+				$updatesAvailable = true;
+			} else {
+				infoToast('Application is up-to-date.');
+			}
+		} catch (error) {
+			console.log(error);
+			errorToast('Could not check for updates.');
+		} finally {
+			if (!refreshLoading) {
+				updatesLoading = false;
+			}
+		}
+	};
 
 	onDestroy(() => ($homeScrollDiv.scrollTop = 0));
 </script>
@@ -256,8 +305,34 @@
 
 <hr class="border-header" />
 
-<ul class="mt-4">
+<ul class="mb-2 mt-4">
 	<RowItem title="App Version">
 		<Version style="whitespace-nowrap text-sm" />
 	</RowItem>
 </ul>
+
+{#if $updatesAvailable}
+	<p class="mb-2 text-sm">
+		<span class="relative inline-flex h-3 w-3">
+			<span
+				class="absolute inline-flex h-full w-full animate-ping rounded-full bg-button opacity-75"
+			/>
+			<span class="relative inline-flex h-3 w-3 rounded-full bg-button" />
+		</span>
+		A new version of Cipherchat has been <Link
+			external
+			href="https://github.com/secondl1ght/cipherchat/releases/latest"
+			title="released"
+		/>! Refresh the page to download and install the updates. Then close all running instances of
+		the app and relaunch to complete the update. 🚀
+	</p>
+{/if}
+
+<Button
+	click={checkForUpdates}
+	style="!w-full !h-12"
+	title={$updatesAvailable ? 'Refresh' : 'Check for Updates'}
+	disabled={updatesLoading}
+	loading={updatesLoading}
+	loadingText={$updatesAvailable ? 'Refreshing...' : 'Checking...'}
+/>

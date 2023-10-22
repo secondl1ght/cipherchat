@@ -6,7 +6,7 @@
 </script>
 
 <p class={style}>
-	cipherchat.app (v{PUBLIC_VERSION}) [<Link
+	cipherchat.app ({PUBLIC_VERSION}) [<Link
 		href="https://github.com/secondl1ght/cipherchat/commit/{PUBLIC_COMMIT}"
 		title={PUBLIC_COMMIT}
 		external
