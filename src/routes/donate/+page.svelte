@@ -48,15 +48,14 @@
 
 		<p>
 			You can support the development of Cipherchat, it's continued maintenance, and infrastructure
-			costs by sending bitcoin over the lightning network to the lightning address above. Or via
-			keysend to the pubkey below. If you would prefer to send an on-chain donation, please reach
-			out and I can provide an address.
+			costs by sending bitcoin over the lightning network to the lightning address above. If you
+			would prefer to send an on-chain donation, please reach out and I can provide an address.
 		</p>
 
 		<p>
 			If you have found Cipherchat a useful tool, I would love to hear from you! You can send a
 			message to my pubkey <strong class="break-all bg-borderIn"
-				>021ef14c694456a3aae3471a2e8830da21a8130ccbead6794e3530430e2e074d63</strong
+				>02b47ea13d4ecec4ff4ce608dce4a0833289509f6966ca6bd0c3af07b414b317e4</strong
 			>.
 		</p>
 
