@@ -7,7 +7,7 @@
 	"theme_color": "#10121C",
 	"background_color": "#10121C",
 	"display": "standalone",
-	"display_override": ["fullscreen", "minimal-ui", "browser", "window-controls-overlay"],
+	"display_override": ["standalone", "minimal-ui", "window-controls-overlay", "browser"],
 	"orientation": "any",
 	"dir": "ltr",
 	"lang": "en",
