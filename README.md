@@ -2,6 +2,8 @@
 
 **Encrypted messaging over the bitcoin lightning network.**
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7de7da8a-f171-47c1-8d30-1a4d328bd24a/deploy-status)](https://app.netlify.com/sites/cipherchat/deploys)
+
 ## Tech Stack
 
 Cipherchat has minimal dependencies with the main packages being as follows:
