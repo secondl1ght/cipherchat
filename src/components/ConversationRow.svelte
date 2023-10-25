@@ -31,6 +31,7 @@
 	c.pubkey
 		? 'bg-borderIn'
 		: 'bg-borderOut hover:bg-borderIn'}"
+	disabled={$activeConversation === c.pubkey}
 >
 	<div class="flex items-center space-x-2.5">
 		<Avatar pubkey={c.pubkey} alias={c.alias} color={c.color} avatar={c.avatar} />
