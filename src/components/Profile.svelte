@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { lnc } from '$lib/lnc';
-	import { homeScrollDiv, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
+	import { homeScrollDiv, lnc, userAlias, userAvatar, userColor, userPubkey } from '$lib/store';
 	import { errorToast, shortenPubkey } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Avatar, ChannelStatus, CopyButton, Link, RowItem, SyncPing } from 'comp';
@@ -10,7 +9,7 @@
 
 	onMount(async () => {
 		try {
-			nodeInfo = await lnc.lnd.lightning.getInfo();
+			nodeInfo = await $lnc.lnd.lightning.getInfo();
 		} catch (error) {
 			console.log(error);
 			errorToast('Could not fetch node information, please try again.');

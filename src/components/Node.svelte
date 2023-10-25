@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { bufferHexToBase64 } from '$lib/buffer';
 	import { db } from '$lib/db';
-	import { lnc } from '$lib/lnc';
-	import { activeConversation, conversation } from '$lib/store';
+	import { activeConversation, conversation, lnc } from '$lib/store';
 	import { errorToast, formatNumber, shortenPubkey, successToast } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Avatar, CopyButton, InfoTooltip, RowItem, SharedChannel } from 'comp';
@@ -18,11 +17,11 @@
 	onMount(async () => {
 		try {
 			await Promise.all([
-				lnc.lnd.lightning.getNodeInfo({
+				$lnc.lnd.lightning.getNodeInfo({
 					pubKey: $activeConversation,
 					includeChannels: false
 				}),
-				lnc.lnd.lightning.listChannels({
+				$lnc.lnd.lightning.listChannels({
 					peer: bufferHexToBase64($activeConversation)
 				})
 			]).then((values) => {

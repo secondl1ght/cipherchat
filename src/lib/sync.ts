@@ -1,8 +1,7 @@
 import { bufferBase64ToUtf, bufferUtfToBase64 } from '$lib/buffer';
 import { encrypt } from '$lib/crypto';
 import { db } from '$lib/db';
-import { lnc } from '$lib/lnc';
-import { firstUpdate, userPubkey } from '$lib/store';
+import { firstUpdate, lnc as lncStore, LNRPC as lnrpcStore, userPubkey } from '$lib/store';
 import { TLV_RECORDS } from '$lib/tlv';
 import {
 	MessageType,
@@ -11,8 +10,15 @@ import {
 	type Message
 } from '$lib/types';
 import { getUpdateTime, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
-import { lnrpc } from '@lightninglabs/lnc-web';
+import type LNC from '@lightninglabs/lnc-web';
+import type { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
+
+let lnc: LNC;
+let LNRPC: typeof lnrpc;
+
+lncStore.subscribe((value) => (lnc = value));
+lnrpcStore.subscribe((value) => (LNRPC = value));
 
 let updateTime: string;
 
@@ -124,9 +130,9 @@ export const initializeInvoices = async () => {
 			);
 			if (!type) return;
 			const timestamp = Number(bufferBase64ToUtf(successfulHTLC.customRecords[TIMESTAMP]));
-			const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
+			const status = LNRPC.Payment_PaymentStatus.SUCCEEDED;
 			const amount = Number(invoice.amtPaidSat);
-			const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+			const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
 			const self = false;
 
 			const messageObject: Message = {
@@ -182,9 +188,9 @@ export const initializeInvoices = async () => {
 				if (!messageEncrypted) return;
 				const type = MessageType.Text;
 				const timestamp = Number(invoice.creationDate) * 1000000000;
-				const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
+				const status = LNRPC.Payment_PaymentStatus.SUCCEEDED;
 				const amount = Number(invoice.amtPaidSat);
-				const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+				const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
 				const self = false;
 
 				const messageObject: Message = {

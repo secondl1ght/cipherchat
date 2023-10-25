@@ -1,14 +1,18 @@
-import { lnc } from '$lib/lnc';
 import { AppViewState, type Conversation, type MessageDecrypted } from '$lib/types';
 import { monthAgo } from '$lib/utils';
+import type LNC from '@lightninglabs/lnc-web';
+import type { lnrpc } from '@lightninglabs/lnc-web';
 import { readable, writable, type Writable } from 'svelte/store';
 import type { Instance } from 'tippy.js';
+
+export const lnc: Writable<LNC> = writable();
+export const LNRPC: Writable<typeof lnrpc> = writable();
 
 export const updatesAvailable = writable(false);
 
 export const firstUpdate = writable(monthAgo());
 
-export const paired = writable(lnc.credentials.isPaired);
+export const paired = writable(false);
 export const connected = writable(false);
 
 export const cryptoKey: Writable<CryptoKey | undefined> = writable();

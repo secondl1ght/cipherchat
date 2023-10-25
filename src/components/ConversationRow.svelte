@@ -3,6 +3,7 @@
 
 	import { clearUnread, statusIcon } from '$lib/chat';
 	import {
+		LNRPC,
 		activeConversation,
 		appView,
 		conversationLoading,
@@ -12,7 +13,6 @@
 	} from '$lib/store';
 	import { AppViewState, type Conversation } from '$lib/types';
 	import { formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
-	import { lnrpc } from '@lightninglabs/lnc-web';
 	import { Avatar, Icon, LoadingPing } from 'comp';
 	import { tick } from 'svelte';
 </script>
@@ -52,7 +52,7 @@
 
 	<div class="flex items-center space-x-2.5">
 		{#if c.latestMessageStatus}
-			{#if c.latestMessageStatus === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
+			{#if c.latestMessageStatus === $LNRPC.Payment_PaymentStatus.IN_FLIGHT}
 				<LoadingPing color="bg-header" size="w-[18px] h-[18px]" />
 			{:else}
 				<Icon icon={statusIcon(c.latestMessageStatus)} style="text-header" width="18" height="18" />

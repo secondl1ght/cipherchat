@@ -2,10 +2,10 @@
 	import { formatPaymentMsg } from '$lib/chat';
 	import { decrypt } from '$lib/crypto';
 	import { db } from '$lib/db';
-	import { activeMessage, bubbleColor, textColor } from '$lib/store';
+	import { LNRPC, activeMessage, bubbleColor, textColor } from '$lib/store';
 	import { MessageType } from '$lib/types';
 	import { errorToast, formatNumber, formatTimestamp } from '$lib/utils';
-	import { lnrpc } from '@lightninglabs/lnc-web';
+	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { CopyButton, Icon, RowItem } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
 	import { onDestroy } from 'svelte';
@@ -36,19 +36,19 @@
 
 	const failureReason = (reason: lnrpc.PaymentFailureReason) => {
 		switch (reason) {
-			case lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR:
+			case $LNRPC.PaymentFailureReason.FAILURE_REASON_ERROR:
 				return 'Error';
-			case lnrpc.PaymentFailureReason.FAILURE_REASON_INCORRECT_PAYMENT_DETAILS:
+			case $LNRPC.PaymentFailureReason.FAILURE_REASON_INCORRECT_PAYMENT_DETAILS:
 				return 'Incorrect Payment Details';
-			case lnrpc.PaymentFailureReason.FAILURE_REASON_INSUFFICIENT_BALANCE:
+			case $LNRPC.PaymentFailureReason.FAILURE_REASON_INSUFFICIENT_BALANCE:
 				return 'Insufficient Balance';
-			case lnrpc.PaymentFailureReason.FAILURE_REASON_NONE:
+			case $LNRPC.PaymentFailureReason.FAILURE_REASON_NONE:
 				return 'None';
-			case lnrpc.PaymentFailureReason.FAILURE_REASON_NO_ROUTE:
+			case $LNRPC.PaymentFailureReason.FAILURE_REASON_NO_ROUTE:
 				return 'No Route';
-			case lnrpc.PaymentFailureReason.FAILURE_REASON_TIMEOUT:
+			case $LNRPC.PaymentFailureReason.FAILURE_REASON_TIMEOUT:
 				return 'Timeout';
-			case lnrpc.PaymentFailureReason.UNRECOGNIZED:
+			case $LNRPC.PaymentFailureReason.UNRECOGNIZED:
 			default:
 				return 'Unrecognized';
 		}
@@ -91,11 +91,11 @@
 
 		<RowItem title="Status">
 			<p
-				class={$message.status === lnrpc.Payment_PaymentStatus.SUCCEEDED
+				class={$message.status === $LNRPC.Payment_PaymentStatus.SUCCEEDED
 					? 'text-success'
-					: $message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT
+					: $message.status === $LNRPC.Payment_PaymentStatus.IN_FLIGHT
 					? 'text-warning'
-					: $message.status === lnrpc.Payment_PaymentStatus.FAILED
+					: $message.status === $LNRPC.Payment_PaymentStatus.FAILED
 					? 'text-error'
 					: ''}
 			>
@@ -103,7 +103,7 @@
 			</p>
 		</RowItem>
 
-		{#if $message.failureReason !== lnrpc.PaymentFailureReason.FAILURE_REASON_NONE}
+		{#if $message.failureReason !== $LNRPC.PaymentFailureReason.FAILURE_REASON_NONE}
 			<RowItem title="Failure Reason">
 				<p class="whitespace-nowrap uppercase">
 					{failureReason($message.failureReason)}

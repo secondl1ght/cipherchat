@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { generateKey } from '$lib/crypto';
-	import { lnc } from '$lib/lnc';
-	import { connected, firstUpdate, scanActive } from '$lib/store';
+	import { connected, firstUpdate, lnc, scanActive } from '$lib/store';
 	import { errorToast, warningToast } from '$lib/utils';
 	import { Button, Icon, InfoTooltip, MessageHistory } from 'comp';
 	import QrScanner from 'qr-scanner';
@@ -32,14 +31,14 @@
 		try {
 			loading = true;
 
-			lnc.credentials.serverHost = mailbox;
-			lnc.credentials.pairingPhrase = pairingPhrase;
+			$lnc.credentials.serverHost = mailbox;
+			$lnc.credentials.pairingPhrase = pairingPhrase;
 
-			await lnc.connect();
+			await $lnc.connect();
 
-			await lnc.lnd.lightning.getInfo();
+			await $lnc.lnd.lightning.getInfo();
 
-			lnc.credentials.password = password;
+			$lnc.credentials.password = password;
 
 			await generateKey(password);
 
@@ -120,13 +119,22 @@
 </script>
 
 {#if !start}
-	<h2
-		class="press-start mx-auto mb-8 max-w-4xl text-center text-xl leading-10 text-header md:text-2xl md:!leading-[50px] lg:mb-16 lg:text-3xl xl:text-4xl"
-	>
-		Encrypted Messaging Over The Bitcoin Lightning Network.
-	</h2>
+	<div class="space-y-8 text-center lg:space-y-16">
+		<h2
+			class="press-start mx-auto max-w-4xl text-xl leading-10 text-header md:text-2xl md:!leading-[50px] lg:text-3xl xl:text-4xl"
+		>
+			Encrypted Messaging Over The Bitcoin Lightning Network.
+		</h2>
 
-	<Button click={() => (start = true)} title="Get started" />
+		<Button click={() => (start = true)} title="Get started" disabled={!$lnc} />
+
+		{#if !$lnc}
+			<p class="mx-auto max-w-xl items-center font-bold text-warning md:flex">
+				<Icon icon="alert-octagon" style="min-w-[24px] min-h-[24px] md:mr-2 mb-2 md:mb-0 mx-auto" />
+				WebAssembly is required to run Cipherchat. Enable this feature in your browser settings to continue.
+			</p>
+		{/if}
+	</div>
 {:else}
 	<form transition:blur={{ amount: 10 }} on:submit|preventDefault>
 		<label

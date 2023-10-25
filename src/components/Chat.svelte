@@ -8,7 +8,6 @@
 	} from '$lib/chat';
 	import { decrypt } from '$lib/crypto';
 	import { db } from '$lib/db';
-	import { lnc } from '$lib/lnc';
 	import {
 		activeConversation,
 		appView,
@@ -16,6 +15,7 @@
 		conversationLoading,
 		conversations,
 		innerWidth,
+		lnc,
 		messageHistory,
 		messages,
 		messagesLoading,
@@ -216,7 +216,7 @@
 
 			const firstSyncComplete = localStorage.getItem('firstSyncComplete');
 
-			const nodeInfo = await lnc.lnd.lightning.getInfo();
+			const nodeInfo = await $lnc.lnd.lightning.getInfo();
 			$userPubkey = nodeInfo.identityPubkey;
 			$userAlias = nodeInfo.alias;
 			$userColor = nodeInfo.color;

@@ -6,7 +6,6 @@ import {
 } from '$lib/buffer';
 import { createHash, encrypt, randomBytes } from '$lib/crypto';
 import { db } from '$lib/db';
-import { lnc } from '$lib/lnc';
 import {
 	activeConversation,
 	appView,
@@ -14,6 +13,8 @@ import {
 	clearMessage,
 	convoState,
 	homeState,
+	lnc as lncStore,
+	LNRPC as lnrpcStore,
 	lockMessage,
 	messageHistory,
 	sendLoading,
@@ -31,9 +32,16 @@ import {
 	shortenPubkey,
 	warningToast
 } from '$lib/utils';
-import { lnrpc } from '@lightninglabs/lnc-web';
+import type LNC from '@lightninglabs/lnc-web';
+import type { lnrpc } from '@lightninglabs/lnc-web';
 import { tick } from 'svelte';
 import { get } from 'svelte/store';
+
+let lnc: LNC;
+let LNRPC: typeof lnrpc;
+
+lncStore.subscribe((value) => (lnc = value));
+lnrpcStore.subscribe((value) => (LNRPC = value));
 
 const { KEYSEND_PREIMAGE, SENDERS_PUBKEY, TIMESTAMP, MESSAGE_CONTENT, SIGNATURE, CONTENT_TYPE } =
 	TLV_RECORDS;
@@ -48,11 +56,11 @@ export const formatPaymentMsg = (self: boolean, amount: number) =>
 
 export const statusIcon = (status: lnrpc.Payment_PaymentStatus) => {
 	switch (status) {
-		case lnrpc.Payment_PaymentStatus.IN_FLIGHT:
+		case LNRPC.Payment_PaymentStatus.IN_FLIGHT:
 			return 'loader';
-		case lnrpc.Payment_PaymentStatus.SUCCEEDED:
+		case LNRPC.Payment_PaymentStatus.SUCCEEDED:
 			return 'check-circle';
-		case lnrpc.Payment_PaymentStatus.FAILED:
+		case LNRPC.Payment_PaymentStatus.FAILED:
 			return 'x-circle';
 		default:
 			return 'alert-circle';
@@ -198,9 +206,9 @@ export const subscribeInvoices = () => {
 					if (!type) return;
 					const timestamp = Number(bufferBase64ToUtf(successfulHTLC.customRecords[TIMESTAMP]));
 					const receivedTime = getTimestamp();
-					const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
+					const status = LNRPC.Payment_PaymentStatus.SUCCEEDED;
 					const amount = Number(msg.amtPaidSat);
-					const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+					const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
 					const self = false;
 
 					const messageObject: Message = {
@@ -278,9 +286,9 @@ export const subscribeInvoices = () => {
 					const type = MessageType.Text;
 					const timestamp = Number(msg.creationDate) * 1000000000;
 					const receivedTime = getTimestamp();
-					const status = lnrpc.Payment_PaymentStatus.SUCCEEDED;
+					const status = LNRPC.Payment_PaymentStatus.SUCCEEDED;
 					const amount = Number(msg.amtPaidSat);
-					const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+					const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
 					const self = false;
 
 					const messageObject: Message = {
@@ -440,8 +448,8 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	const typeFormatted = bufferUtfToBase64(type);
 
 	const id = preimageFormatted;
-	const status = lnrpc.Payment_PaymentStatus.IN_FLIGHT;
-	const failureReason = lnrpc.PaymentFailureReason.FAILURE_REASON_NONE;
+	const status = LNRPC.Payment_PaymentStatus.IN_FLIGHT;
+	const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
 	const self = true;
 	const finalAmount = amount || 1;
 
@@ -506,12 +514,12 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 		db.transaction('rw', db.messages, db.conversations, () => {
 			if (type === 'SIGNATURE') {
 				db.messages.update(id, {
-					status: lnrpc.Payment_PaymentStatus.FAILED,
-					failureReason: lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR
+					status: LNRPC.Payment_PaymentStatus.FAILED,
+					failureReason: LNRPC.PaymentFailureReason.FAILURE_REASON_ERROR
 				});
 
 				db.conversations.update(recipient, {
-					latestMessageStatus: lnrpc.Payment_PaymentStatus.FAILED
+					latestMessageStatus: LNRPC.Payment_PaymentStatus.FAILED
 				});
 			} else if (type === 'FAILED') {
 				if (!msg) return;
@@ -533,13 +541,13 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 				db.conversations.update(recipient, { latestMessageStatus: msg.status });
 			} else if (type === 'ERROR') {
 				db.messages.update(id, {
-					status: lnrpc.Payment_PaymentStatus.FAILED,
-					failureReason: lnrpc.PaymentFailureReason.FAILURE_REASON_ERROR,
+					status: LNRPC.Payment_PaymentStatus.FAILED,
+					failureReason: LNRPC.PaymentFailureReason.FAILURE_REASON_ERROR,
 					signature: signature.signature
 				});
 
 				db.conversations.update(recipient, {
-					latestMessageStatus: lnrpc.Payment_PaymentStatus.FAILED
+					latestMessageStatus: LNRPC.Payment_PaymentStatus.FAILED
 				});
 			}
 		});
@@ -588,14 +596,14 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 				noInflightUpdates: true
 			},
 			(msg) => {
-				if (msg.status === lnrpc.Payment_PaymentStatus.FAILED) {
+				if (msg.status === LNRPC.Payment_PaymentStatus.FAILED) {
 					try {
 						updateMessage('FAILED', msg);
 					} catch (error) {
 						console.log(error);
 						errorToast(`Could not send ${errText}.`);
 					}
-				} else if (msg.status === lnrpc.Payment_PaymentStatus.SUCCEEDED) {
+				} else if (msg.status === LNRPC.Payment_PaymentStatus.SUCCEEDED) {
 					try {
 						updateMessage('SUCCESS', msg);
 					} catch (error) {

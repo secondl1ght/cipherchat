@@ -4,6 +4,7 @@
 	import { statusIcon } from '$lib/chat';
 	import { db } from '$lib/db';
 	import {
+		LNRPC,
 		activeConversation,
 		activeMenu,
 		activeMessage,
@@ -17,7 +18,7 @@
 	import type { MessageDecrypted } from '$lib/types';
 	import { MessageType } from '$lib/types';
 	import { copy, errorToast, formatTimestamp, successToast } from '$lib/utils';
-	import { lnrpc } from '@lightninglabs/lnc-web';
+	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
 	import { tick } from 'svelte';
 	import type { Action } from 'svelte/action';
@@ -67,11 +68,11 @@
 
 	const statusMessage = (status: lnrpc.Payment_PaymentStatus, self: boolean) => {
 		switch (status) {
-			case lnrpc.Payment_PaymentStatus.IN_FLIGHT:
+			case $LNRPC.Payment_PaymentStatus.IN_FLIGHT:
 				return 'Sending';
-			case lnrpc.Payment_PaymentStatus.SUCCEEDED:
+			case $LNRPC.Payment_PaymentStatus.SUCCEEDED:
 				return self ? 'Sent' : 'Received';
-			case lnrpc.Payment_PaymentStatus.FAILED:
+			case $LNRPC.Payment_PaymentStatus.FAILED:
 				return 'Failed';
 			default:
 				return 'Unknown';
@@ -243,7 +244,7 @@
 
 		<p class="flex items-center space-x-1 text-xs {message.self ? 'justify-end' : ''}">
 			{#if message.self}
-				{#if message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
+				{#if message.status === $LNRPC.Payment_PaymentStatus.IN_FLIGHT}
 					<LoadingPing color="bg-body" size="w-3.5 h-3.5" />
 				{:else}
 					<Icon icon={statusIcon(message.status)} width="14" height="14" />
@@ -253,7 +254,7 @@
 			<span class="inline-block">{statusMessage(message.status, message.self)}</span>
 
 			{#if !message.self}
-				{#if message.status === lnrpc.Payment_PaymentStatus.IN_FLIGHT}
+				{#if message.status === $LNRPC.Payment_PaymentStatus.IN_FLIGHT}
 					<LoadingPing color="bg-body" size="w-3.5 h-3.5" />
 				{:else}
 					<Icon icon={statusIcon(message.status)} width="14" height="14" />

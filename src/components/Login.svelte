@@ -2,8 +2,7 @@
 	import { clearBadge } from '$lib/chat';
 	import { generateKey, resetKey } from '$lib/crypto';
 	import { db } from '$lib/db';
-	import { lnc } from '$lib/lnc';
-	import { connected, firstUpdate, paired } from '$lib/store';
+	import { connected, firstUpdate, lnc, paired } from '$lib/store';
 	import { errorToast, monthAgo, successToast } from '$lib/utils';
 	import { Button, Icon, MessageHistory } from 'comp';
 
@@ -15,9 +14,9 @@
 		try {
 			loading = true;
 
-			lnc.credentials.password = password;
+			$lnc.credentials.password = password;
 
-			await lnc.connect();
+			await $lnc.connect();
 
 			await generateKey(password);
 
@@ -43,7 +42,7 @@
 			await db.delete();
 			localStorage.clear();
 			await clearBadge();
-			lnc.credentials.clear();
+			$lnc.credentials.clear();
 			resetKey();
 			$firstUpdate = monthAgo();
 
