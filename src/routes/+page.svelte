@@ -1,12 +1,56 @@
 <script lang="ts">
 	import { PUBLIC_WASM_VERSION } from '$env/static/public';
-	import { LNRPC, connected, error, lnc, paired } from '$lib/store';
+	import {
+		LNRPC,
+		bubbleColor,
+		connected,
+		error,
+		indexedDBAvailable,
+		lnc,
+		localStorageAvailable,
+		paired,
+		serviceWorkerAvailable,
+		textColor,
+		userAvatar,
+		webAssemblyAvailable
+	} from '$lib/store';
 	import { setError } from '$lib/utils';
 	import { Chat, Connect, Error, Login, PublicLayout, ShareHandler } from 'comp';
 
 	const initializeLNC = async () => {
+		const registration = await navigator.serviceWorker
+			.getRegistration()
+			.catch((error) => console.log(error));
+
+		if (registration) {
+			$serviceWorkerAvailable = true;
+		}
+
+		if ('WebAssembly' in window && typeof WebAssembly.instantiateStreaming === 'function') {
+			$webAssemblyAvailable = true;
+		}
+
 		try {
-			if ('WebAssembly' in window && typeof WebAssembly.instantiateStreaming === 'function') {
+			$userAvatar = localStorage.getItem('userAvatar');
+			$bubbleColor = localStorage.getItem('bubbleColor');
+			$textColor = localStorage.getItem('textColor');
+
+			$localStorageAvailable = true;
+		} catch (err) {
+			console.log(err);
+		}
+
+		if ('indexedDB' in window) {
+			$indexedDBAvailable = true;
+		}
+
+		if (
+			$serviceWorkerAvailable &&
+			$webAssemblyAvailable &&
+			$localStorageAvailable &&
+			$indexedDBAvailable
+		) {
+			try {
 				const LNC = (await import('@lightninglabs/lnc-web')).default;
 
 				$lnc = new LNC({
@@ -19,10 +63,10 @@
 				const { lnrpc } = await import('@lightninglabs/lnc-web');
 
 				$LNRPC = lnrpc;
+			} catch (err) {
+				console.log(err);
+				setError('503', 'Lightning Node Connect failed to initialize.');
 			}
-		} catch (err) {
-			console.log(err);
-			setError('503', 'Lightning Node Connect failed to initialize.');
 		}
 	};
 </script>

@@ -1,8 +1,17 @@
 <script lang="ts">
 	import { generateKey } from '$lib/crypto';
-	import { connected, firstUpdate, lnc, scanActive } from '$lib/store';
+	import {
+		connected,
+		firstUpdate,
+		indexedDBAvailable,
+		lnc,
+		localStorageAvailable,
+		scanActive,
+		serviceWorkerAvailable,
+		webAssemblyAvailable
+	} from '$lib/store';
 	import { errorToast, warningToast } from '$lib/utils';
-	import { Button, Icon, InfoTooltip, MessageHistory } from 'comp';
+	import { Button, Icon, InfoTooltip, MessageHistory, Warning } from 'comp';
 	import QrScanner from 'qr-scanner';
 	import { tick } from 'svelte';
 	import type { Action } from 'svelte/action';
@@ -126,13 +135,38 @@
 			Encrypted Messaging Over The Bitcoin Lightning Network.
 		</h2>
 
-		<Button click={() => (start = true)} title="Get started" disabled={!$lnc} />
+		<Button
+			click={() => (start = true)}
+			title="Get started"
+			disabled={!$serviceWorkerAvailable ||
+				!$webAssemblyAvailable ||
+				!$localStorageAvailable ||
+				!$indexedDBAvailable ||
+				!$lnc}
+		/>
 
-		{#if !$lnc}
-			<p class="mx-auto max-w-xl items-center font-bold text-warning md:flex">
-				<Icon icon="alert-octagon" style="min-w-[24px] min-h-[24px] md:mr-2 mb-2 md:mb-0 mx-auto" />
-				WebAssembly is required to run Cipherchat. Enable this feature in your browser settings to continue.
-			</p>
+		{#if !$serviceWorkerAvailable}
+			<Warning
+				text="ServiceWorker is required to run Cipherchat. Enable this feature in your browser settings to continue."
+			/>
+		{/if}
+
+		{#if !$webAssemblyAvailable}
+			<Warning
+				text="WebAssembly is required to run Cipherchat. Enable this feature in your browser settings to continue."
+			/>
+		{/if}
+
+		{#if !$localStorageAvailable}
+			<Warning
+				text="LocalStorage is required to run Cipherchat. Enable this feature in your browser settings to continue."
+			/>
+		{/if}
+
+		{#if !$indexedDBAvailable}
+			<Warning
+				text="IndexedDB is required to run Cipherchat. Enable this feature in your browser settings to continue."
+			/>
 		{/if}
 	</div>
 {:else}

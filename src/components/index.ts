@@ -41,4 +41,5 @@ export { default as ShareHandler } from './ShareHandler.svelte';
 export { default as SharedChannel } from './SharedChannel.svelte';
 export { default as SyncPing } from './SyncPing.svelte';
 export { default as Version } from './Version.svelte';
+export { default as Warning } from './Warning.svelte';
 export { default as Wrapper } from './Wrapper.svelte';

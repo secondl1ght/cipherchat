@@ -8,6 +8,11 @@ import type { Instance } from 'tippy.js';
 export const lnc: Writable<LNC> = writable();
 export const LNRPC: Writable<typeof lnrpc> = writable();
 
+export const serviceWorkerAvailable = writable(false);
+export const webAssemblyAvailable = writable(false);
+export const localStorageAvailable = writable(false);
+export const indexedDBAvailable = writable(false);
+
 export const updatesAvailable = writable(false);
 
 export const firstUpdate = writable(monthAgo());
@@ -20,7 +25,7 @@ export const cryptoKey: Writable<CryptoKey | undefined> = writable();
 export const userPubkey = writable('');
 export const userAlias = writable('');
 export const userColor = writable('');
-export const userAvatar = writable(localStorage.getItem('userAvatar'));
+export const userAvatar: Writable<string | null> = writable();
 
 export const appView = writable(AppViewState.Home);
 export const homeState: Writable<'HOME' | 'PROFILE' | 'ADD' | 'SETTINGS'> = writable('HOME');
@@ -40,8 +45,8 @@ export const clearMessage = writable(false);
 export const messageMemory: Writable<any> = writable({});
 export const activeMenu: Writable<Instance | undefined> = writable();
 export const activeMessage = writable('');
-export const bubbleColor = writable(localStorage.getItem('bubbleColor'));
-export const textColor = writable(localStorage.getItem('textColor'));
+export const bubbleColor: Writable<string | null> = writable();
+export const textColor: Writable<string | null> = writable();
 
 export const links = readable({
 	github: 'https://github.com/secondl1ght/cipherchat',
