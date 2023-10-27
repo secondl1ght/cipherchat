@@ -137,6 +137,18 @@
 				are running the latest software. You can also check for updates in the
 				<strong>Settings</strong> view.
 			</FaqItem>
+			<FaqItem question="What are the browser requirements?">
+				Cipherchat requires the following browser features to be enabled in order to run the app.
+				These features are standard across all major browsers. However, it is possible that they can
+				be disabled in the browser settings. If you receive warnings about missing these features
+				they will have to be adjusted to continue.
+				<ul class="mt-4 list-inside list-disc space-y-2">
+					<li>Service Workers</li>
+					<li>Web Assembly</li>
+					<li>Local Storage</li>
+					<li>IndexedDB</li>
+				</ul>
+			</FaqItem>
 			<FaqItem question="How do I start a conversation?">
 				The only information needed to start a conversation is another node's pubkey.
 			</FaqItem>

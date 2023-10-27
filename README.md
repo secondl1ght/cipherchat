@@ -18,6 +18,15 @@ A large part of the app is the LNC WASM binary which comes bundled with the appl
 
 For a full list of dependencies check out the `package.json`.
 
+## Browser Requirements
+
+Cipherchat requires the following browser features to be enabled in order to run the app. These features are standard across all major browsers. However, it is possible that they can be disabled in the browser settings. If you receive warnings about missing these features they will have to be adjusted to continue.
+
+- Service Workers
+- Web Assembly
+- Local Storage
+- IndexedDB
+
 ## PWA
 
 Cipherchat is a Progressive Web App that can be installed on many devices and uses native features.
