@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { copy, successToast } from '$lib/utils';
+	import { copy, errorToast, successToast } from '$lib/utils';
 
 	export let pubkey: string;
 	export let alias: string | undefined;
@@ -34,8 +34,19 @@
 		<button
 			class="absolute bottom-1 right-1 flex items-center justify-center rounded bg-header p-0.5 text-borderIn"
 			on:click={() => {
-				copy(`https://cipherchat.app?pubkey=${pubkey}`);
-				successToast('Share link copied!');
+				const shareLink = `https://cipherchat.app?pubkey=${pubkey}`;
+
+				if ('share' in navigator) {
+					try {
+						navigator.share({ text: 'Message me on Cipherchat!', url: shareLink });
+					} catch (error) {
+						console.log(error);
+						errorToast('Could not share link.');
+					}
+				} else {
+					copy(shareLink);
+					successToast('Share link copied!');
+				}
 			}}
 		>
 			<Icon icon="share-2" width="16" height="16" />
