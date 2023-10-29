@@ -137,7 +137,7 @@
 		<div
 			style:background-color={$bubbleColor}
 			style:color={$textColor}
-			class="max-w-[90%] rounded p-2 text-left md:max-w-[75%] {$message.type ===
+			class="max-w-[90%] whitespace-pre-line rounded p-2 text-left md:max-w-[75%] {$message.type ===
 				MessageType.Payment || $message.hide
 				? 'flex items-center space-x-2'
 				: ''} {$bubbleColor ? '' : 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor

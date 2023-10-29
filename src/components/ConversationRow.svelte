@@ -9,7 +9,8 @@
 		conversationLoading,
 		convoState,
 		innerWidth,
-		messageHistory
+		messageHistory,
+		scrollDivPosition
 	} from '$lib/store';
 	import { AppViewState, type Conversation } from '$lib/types';
 	import { formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
@@ -21,6 +22,7 @@
 	on:click={async () => {
 		$conversationLoading = true;
 		await tick();
+		$scrollDivPosition = undefined;
 		$messageHistory = 25;
 		$activeConversation = c.pubkey;
 		$convoState = 'CHAT';

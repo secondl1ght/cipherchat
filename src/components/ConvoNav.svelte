@@ -31,8 +31,11 @@
 			$convoState = 'NODE';
 		} else {
 			$convoState = 'CHAT';
-			await tick();
-			$scrollDiv.scrollTop = $scrollDivPosition;
+			
+			if ($scrollDivPosition !== undefined) {
+				await tick();
+				$scrollDiv.scrollTop = $scrollDivPosition;
+			}
 		}
 	};
 

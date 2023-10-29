@@ -196,7 +196,10 @@
 		}
 
 		if ($messagesLoading) {
-			$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
+			if ($scrollDivPosition !== undefined) {
+				$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
+			}
+
 			$messagesLoading = false;
 		}
 

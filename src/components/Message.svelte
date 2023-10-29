@@ -10,7 +10,6 @@
 		activeMessage,
 		bubbleColor,
 		convoState,
-		messageHistory,
 		scrollDiv,
 		scrollDivPosition,
 		textColor
@@ -21,7 +20,6 @@
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
 	import { tick } from 'svelte';
-	import type { Action } from 'svelte/action';
 	import tippy from 'tippy.js';
 
 	let contextMenu: HTMLButtonElement;
@@ -54,17 +52,14 @@
 			trigger: 'manual'
 		});
 
-	const setToBottom: Action<HTMLDivElement, string> = () => {
-		if ($messageHistory === 25) {
-			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-		}
+	const setToBottom = async () => {
+		if ($scrollDivPosition !== undefined) return;
 
-		return {
-			update() {
-				$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-			}
-		};
+		await tick();
+		$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
 	};
+
+	$: $activeConversation && setToBottom();
 
 	const statusMessage = (status: lnrpc.Payment_PaymentStatus, self: boolean) => {
 		switch (status) {
@@ -148,7 +143,7 @@
 {/if}
 
 <!-- message component -->
-<div use:setToBottom={$activeConversation} class="flex w-full {message.self ? 'justify-end' : ''}">
+<div class="flex w-full {message.self ? 'justify-end' : ''}">
 	<div class="w-full space-y-1">
 		<p class="text-xs {message.self ? 'text-right' : ''}">
 			{message.self
@@ -163,7 +158,7 @@
 				bind:this={contextMenu}
 				style:background-color={$bubbleColor}
 				style:color={$textColor}
-				class="max-w-[90%] cursor-default select-none rounded p-2 text-left md:max-w-[75%] md:select-text {message.type ===
+				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left md:max-w-[75%] md:select-text {message.type ===
 					MessageType.Payment || message.hide
 					? 'flex items-center space-x-2'
 					: ''} {$bubbleColor ? '' : 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor
