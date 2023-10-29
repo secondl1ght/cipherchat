@@ -802,9 +802,16 @@
 	],
 	"screenshots": [
 		{
-			"src": "/images/screenshots/0.webp",
+			"src": "/images/screenshots/desktop.webp",
 			"sizes": "1920x1411",
-			"type": "image/webp"
+			"type": "image/webp",
+			"form_factor": "wide"
+		},
+		{
+			"src": "/images/screenshots/mobile.webp",
+			"sizes": "320x1277",
+			"type": "image/webp",
+			"form_factor": "narrow"
 		}
 	]
 }
