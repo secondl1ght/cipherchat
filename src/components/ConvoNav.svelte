@@ -31,7 +31,7 @@
 			$convoState = 'NODE';
 		} else {
 			$convoState = 'CHAT';
-			
+
 			if ($scrollDivPosition !== undefined) {
 				await tick();
 				$scrollDiv.scrollTop = $scrollDivPosition;
