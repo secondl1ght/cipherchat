@@ -30,6 +30,7 @@
 	import {
 		combineConversations,
 		finalizeConversations,
+		fixPendingMessages,
 		initializeInvoices,
 		initializePayments,
 		saveToDB
@@ -236,6 +237,8 @@
 				} else {
 					setLastUpdate(updateTime);
 				}
+
+				fixPendingMessages();
 			} else {
 				let invoices: ConversationConstruction[] | undefined;
 				let payments: ConversationConstruction[] | undefined;

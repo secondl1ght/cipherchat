@@ -9,7 +9,7 @@ import {
 	type ConversationConstruction,
 	type Message
 } from '$lib/types';
-import { getUpdateTime, setFirstSyncComplete, setLastUpdate } from '$lib/utils';
+import { getUpdateTime, setFirstSyncComplete, setLastUpdate, warningToast } from '$lib/utils';
 import type LNC from '@lightninglabs/lnc-web';
 import type { lnrpc } from '@lightninglabs/lnc-web';
 import { get } from 'svelte/store';
@@ -459,5 +459,24 @@ export const saveToDB = async (conversations: ConversationConstruction[]) => {
 
 		setLastUpdate(updateTime);
 		setFirstSyncComplete();
+	}
+};
+
+export const fixPendingMessages = () => {
+	try {
+		db.transaction('rw', db.messages, db.conversations, () => {
+			db.messages
+				.where('status')
+				.equals(LNRPC.Payment_PaymentStatus.IN_FLIGHT)
+				.modify({ status: LNRPC.Payment_PaymentStatus.UNKNOWN });
+
+			db.conversations
+				.where('latestMessageStatus')
+				.equals(LNRPC.Payment_PaymentStatus.IN_FLIGHT)
+				.modify({ latestMessageStatus: LNRPC.Payment_PaymentStatus.UNKNOWN });
+		});
+	} catch (error) {
+		console.log(error);
+		warningToast('Could not fix unknown message status.');
 	}
 };
