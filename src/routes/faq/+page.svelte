@@ -73,13 +73,20 @@
 				/> if you would prefer not to deal with hardware.
 			</FaqItem>
 			<FaqItem question="How do I connect my node to the app?">
+				These steps may be different if you are running your node on a hosting provider such as
+				<Link
+					external
+					href="https://docs.voltage.cloud/guides/lightning-node-connect-and-terminal-web"
+					title="Voltage"
+				/>.
+
 				<!-- svelte-ignore a11y-media-has-caption -->
 				<video
 					controls
 					controlslist="nodownload noplaybackrate"
 					disablepictureinpicture
 					src="/videos/lnc-tutorial.webm"
-					class="mb-4"
+					class="my-4"
 				/>
 				<ol class="mb-4 list-inside list-decimal space-y-8">
 					<li>
@@ -88,19 +95,22 @@
 						<strong>Lightning Node Connect</strong> tab in the menu.
 					</li>
 					<li>
-						Next you <strong>create a new session</strong>. You can use the <strong>Admin</strong>
-						permissions or choose <strong>Custom</strong>
-						options. At minimum Cipherchat needs access to <strong>Send</strong> and
+						Next you <strong>create a new session</strong>. You must use the <strong>Admin</strong>
+						permissions so that Cipherchat is able to <strong>Send</strong> and
 						<strong>Receive</strong>
-						payments. You can select the preset <strong>Payments Manager</strong> option for this.
+						payments, <strong>Sign</strong> and <strong>Verify</strong> messages, and
+						<strong>Read</strong> data from your node and the network.
 					</li>
 					<li>
 						If you would like to use your own LNC Mailbox instead of the default Lightning Labs
-						option you will need to click <strong>Advanced Options</strong> and enter the domain and
-						port. For example: <strong class="bg-borderIn">cipherchatmailbox.net:443</strong>.
+						option you will need to select <strong>Custom</strong> permissions from the dropdown
+						menu. Then choose <strong>Admin</strong> and click <strong>Advanced Options</strong> to
+						enter the domain and port. For example:
+						<strong class="bg-borderIn">cipherchatmailbox.net:443</strong>.
 					</li>
 					<li>
-						Finally you can choose an <strong>expiry</strong> for this pairing phrase if you would like.
+						You can also set an <strong>expiry</strong> for this pairing phrase if you would like in
+						the <strong>Custom</strong> permissions view.
 					</li>
 					<li>
 						Your pairing phrase will be generated and <strong>copied to the clipboard</strong>. You
