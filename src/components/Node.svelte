@@ -15,6 +15,8 @@
 	let charLimit = $conversation.charLimit;
 
 	onMount(async () => {
+		let activeConvo = $activeConversation;
+
 		try {
 			await Promise.all([
 				$lnc.lnd.lightning.getNodeInfo({
@@ -24,15 +26,38 @@
 				$lnc.lnd.lightning.listChannels({
 					peer: bufferHexToBase64($activeConversation)
 				})
-			]).then((values) => {
-				nodeInfo = values[0];
-				channels = values[1].channels;
+			]).then(async (values) => {
+				try {
+					if (activeConvo === $activeConversation) {
+						await db.transaction(
+							'rw',
+							db.conversations,
+							async () =>
+								await db.conversations.update($activeConversation, {
+									alias: values[0].node?.alias,
+									color: values[0].node?.color
+								})
+						);
+					}
+				} catch (error) {
+					console.log(error);
+					errorToast('Could not save node alias and color to database, please try again.');
+				} finally {
+					nodeInfo = values[0];
+					channels = values[1].channels;
+					loading = false;
+				}
 			});
-
-			loading = false;
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
-			errorToast('Could not fetch node information, please try again.');
+			if (
+				error?.message &&
+				error.message === 'rpc error: code = NotFound desc = unable to find node'
+			) {
+				errorToast('Unable to find node in the graph.');
+			} else {
+				errorToast('Could not fetch node information, please try again.');
+			}
 		}
 	});
 </script>
@@ -65,7 +90,7 @@
 			</RowItem>
 
 			<RowItem title="Color">
-				<p style:color={$conversation.color}>{$conversation.color}</p>
+				<p style:color={$conversation.color || '#F7931A'}>{$conversation.color || '#F7931A'}</p>
 			</RowItem>
 
 			<RowItem title="Channels">
