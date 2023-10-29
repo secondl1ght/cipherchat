@@ -4,10 +4,8 @@
 		activeConversation,
 		chatInput,
 		chatInputHeight,
-		clearMessage,
 		conversation,
 		innerWidth,
-		lockMessage,
 		messageMemory,
 		scrollDiv
 	} from '$lib/store';
@@ -86,10 +84,13 @@
 
 	const handleMessage = () => {
 		sendMessage($activeConversation, message);
+		clearText();
 	};
 
 	const handleEnter = (e: any) => {
-		if (e.key === 'Enter' && !e.shiftKey && message.trim().length) {
+		if (e.key === 'Enter' && !e.shiftKey && message.trim().length && $innerWidth > 640) {
+			e.preventDefault();
+
 			handleMessage();
 			hideEmoji();
 		}
@@ -100,8 +101,6 @@
 		await tick();
 		textareaAutoSize();
 	};
-
-	$: $clearMessage === true && clearText();
 
 	const addToMemory = () => {
 		$messageMemory[$activeConversation] = message;
@@ -145,13 +144,15 @@
 			/>
 
 			<button
-				class="hidden md:block {$lockMessage ? 'cursor-wait' : ''}"
+				class="hidden md:block"
 				on:click={() => {
 					lockEmoji = true;
 					showEmoji = !showEmoji;
 					setTimeout(() => (lockEmoji = false), 1000);
+
+					$chatInput?.focus();
 				}}
-				disabled={$lockMessage || $activeConversation === 'ANON'}
+				disabled={$activeConversation === 'ANON'}
 				class:cursor-not-allowed={$activeConversation === 'ANON'}
 				class:opacity-50={$activeConversation === 'ANON'}
 			>
@@ -168,26 +169,25 @@
 				spellcheck="true"
 				wrap="soft"
 				rows="1"
-				disabled={$lockMessage || $activeConversation === 'ANON'}
+				disabled={$activeConversation === 'ANON'}
 				class:cursor-not-allowed={$activeConversation === 'ANON'}
 				class:opacity-50={$activeConversation === 'ANON'}
 				bind:value={message}
 				on:keydown={handleEnter}
 				on:input={textareaAutoSize}
-				class="hide-scroll max-h-16 min-h-[42px] w-full resize-none border border-header bg-borderOut p-2 text-header md:max-h-36 {$lockMessage
-					? 'cursor-wait'
-					: ''}"
+				class="hide-scroll max-h-16 min-h-[42px] w-full resize-none border border-header bg-borderOut p-2 text-header md:max-h-36"
 			/>
 
 			<button
 				class="flex h-[42px] min-w-[42px] items-center justify-center rounded bg-button {message.trim()
 					.length === 0
 					? 'cursor-not-allowed opacity-50'
-					: $lockMessage
-					? 'cursor-wait'
 					: ''}"
-				on:click={handleMessage}
-				disabled={message.trim().length === 0 || $lockMessage}
+				on:click={() => {
+					handleMessage();
+					$chatInput?.focus();
+				}}
+				disabled={message.trim().length === 0}
 			>
 				<Icon icon="message-square" style="text-header" />
 			</button>

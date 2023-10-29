@@ -9,13 +9,10 @@ import { db } from '$lib/db';
 import {
 	activeConversation,
 	appView,
-	chatInput,
-	clearMessage,
 	convoState,
 	homeState,
 	lnc as lncStore,
 	LNRPC as lnrpcStore,
-	lockMessage,
 	messageHistory,
 	sendLoading,
 	sharePubkey,
@@ -34,7 +31,6 @@ import {
 } from '$lib/utils';
 import type LNC from '@lightninglabs/lnc-web';
 import type { lnrpc } from '@lightninglabs/lnc-web';
-import { tick } from 'svelte';
 import { get } from 'svelte/store';
 
 let lnc: LNC;
@@ -419,10 +415,6 @@ export const addConversation = async (pubkey: string) => {
 export const sendMessage = async (recipient: string, message: string, amount?: number) => {
 	sendLoading.set(true);
 
-	if (!amount) {
-		lockMessage.set(true);
-	}
-
 	// setup data
 	const timestamp = getTimestamp();
 	const timestampFormmatted = bufferUtfToBase64(timestamp.toString());
@@ -434,11 +426,6 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 
 	const messageEncrypted = await encrypt(message);
 	if (!messageEncrypted) {
-		if (!amount) {
-			lockMessage.set(false);
-			await tick();
-			get(chatInput)?.focus();
-		}
 		errorToast('Could not encrypt message, please try again.');
 		return;
 	}
@@ -486,14 +473,6 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 			await db.messages.add(newMessage);
 		});
 
-		if (!amount) {
-			clearMessage.set(true);
-			lockMessage.set(false);
-			await tick();
-			clearMessage.set(false);
-			get(chatInput)?.focus();
-		}
-
 		const playAudio = localStorage.getItem('playAudio') === 'true';
 
 		if (playAudio) {
@@ -502,11 +481,6 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 	} catch (error) {
 		console.log(error);
 		errorToast(`Could not attempt sending ${errText}, please try again.`);
-		if (!amount) {
-			lockMessage.set(false);
-			await tick();
-			get(chatInput)?.focus();
-		}
 		return;
 	}
 

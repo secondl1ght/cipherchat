@@ -40,8 +40,6 @@ export const messages: Writable<MessageDecrypted[]> = writable([]);
 export const messageHistory = writable(25);
 export const messagesLoading = writable(false);
 export const sendLoading = writable(false);
-export const lockMessage = writable(false);
-export const clearMessage = writable(false);
 export const messageMemory: Writable<any> = writable({});
 export const activeMenu: Writable<Instance | undefined> = writable();
 export const activeMessage = writable('');
@@ -60,7 +58,7 @@ export const innerWidth: Writable<number> = writable();
 export const chatInput: Writable<HTMLTextAreaElement> = writable();
 export const chatInputHeight: Writable<number> = writable();
 export const scrollDiv: Writable<HTMLDivElement> = writable();
-export const scrollDivPosition = writable(0);
+export const scrollDivPosition: Writable<number | undefined> = writable();
 export const homeScrollDiv: Writable<HTMLDivElement> = writable();
 export const scanActive = writable(false);
 
