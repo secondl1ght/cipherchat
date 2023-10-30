@@ -18,6 +18,8 @@
 	import { Chat, Connect, Error, Login, PublicLayout, ShareHandler } from 'comp';
 
 	const initializeLNC = async () => {
+		if ($lnc && $LNRPC) return;
+
 		const registration =
 			'serviceWorker' in navigator
 				? await navigator.serviceWorker.getRegistration().catch((error) => console.log(error))
