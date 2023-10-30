@@ -123,20 +123,19 @@ const messageNotification = async (
 			vibrate: [210],
 			renotify: true
 		};
-		const clickActions = () => {
-			messageHistory.set(25);
-			activeConversation.set(pubkey);
-			convoState.set('CHAT');
-			homeState.set('HOME');
-			appView.set(AppViewState.Convo);
-			window.focus();
-			clearUnread();
-		};
 
 		try {
 			const notification = new Notification(sendersNode, options);
 
-			notification.addEventListener('click', () => clickActions());
+			notification.addEventListener('click', () => {
+				messageHistory.set(25);
+				activeConversation.set(pubkey);
+				convoState.set('CHAT');
+				homeState.set('HOME');
+				appView.set(AppViewState.Convo);
+				window.focus();
+				clearUnread();
+			});
 
 			document.addEventListener(
 				'visibilitychange',
@@ -164,18 +163,6 @@ const messageNotification = async (
 
 				if (registration) {
 					registration.showNotification(sendersNode, options);
-
-					self.addEventListener(
-						'notificationclick',
-						() => {
-							try {
-								clickActions();
-							} catch (error) {
-								console.log(error);
-							}
-						},
-						{ once: true }
-					);
 
 					document.addEventListener(
 						'visibilitychange',

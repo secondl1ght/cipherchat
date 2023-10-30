@@ -69,3 +69,5 @@ sw.addEventListener('fetch', (event) => {
 
 	event.respondWith(respond());
 });
+
+sw.addEventListener('notificationclick', (event) => event.notification.close());
