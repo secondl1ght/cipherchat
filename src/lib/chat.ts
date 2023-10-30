@@ -406,7 +406,7 @@ export const subscribeInvoices = () => {
 		},
 		(err) => {
 			console.log(err);
-			
+
 			if (
 				err.message ===
 				'rpc error: code = Unavailable desc = error reading from server: error decrypting payload: error receiving from go-back-n connection: cannot receive, gbn exited'
