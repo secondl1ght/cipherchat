@@ -50,7 +50,7 @@
 				}
 			} else {
 				console.log(nodeResult.reason);
-				
+
 				if (nodeResult.reason === 'rpc error: code = NotFound desc = unable to find node') {
 					errorToast('Unable to find node in the graph.');
 				} else {
