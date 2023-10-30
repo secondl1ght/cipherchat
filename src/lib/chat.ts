@@ -411,7 +411,7 @@ export const subscribeInvoices = () => {
 				err.message ===
 				'rpc error: code = Unavailable desc = error reading from server: error decrypting payload: error receiving from go-back-n connection: cannot receive, gbn exited'
 			) {
-				errorToast('Lost connection to node, please logout and reconnect.');
+				warningToast('Lost connection to node, trying to reconnect...');
 			} else {
 				errorToast('Message receive failed.');
 			}
