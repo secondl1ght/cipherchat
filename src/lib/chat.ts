@@ -128,13 +128,15 @@ const messageNotification = async (
 			const notification = new Notification(sendersNode, options);
 
 			notification.addEventListener('click', () => {
-				messageHistory.set(25);
-				activeConversation.set(pubkey);
-				convoState.set('CHAT');
-				homeState.set('HOME');
-				appView.set(AppViewState.Convo);
-				window.focus();
-				clearUnread();
+				if (typeof window !== 'undefined') {
+					messageHistory.set(25);
+					activeConversation.set(pubkey);
+					convoState.set('CHAT');
+					homeState.set('HOME');
+					appView.set(AppViewState.Convo);
+					window.focus();
+					clearUnread();
+				}
 			});
 
 			document.addEventListener(
