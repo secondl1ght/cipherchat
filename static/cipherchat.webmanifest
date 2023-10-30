@@ -808,8 +808,8 @@
 			"form_factor": "wide"
 		},
 		{
-			"src": "/images/screenshots/mobile.webp",
-			"sizes": "320x1277",
+			"src": "/images/screenshots/desktop.webp",
+			"sizes": "1920x1411",
 			"type": "image/webp",
 			"form_factor": "narrow"
 		}
