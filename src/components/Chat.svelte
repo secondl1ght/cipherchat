@@ -279,9 +279,17 @@
 			subscribeInvoices();
 
 			loading = false;
-		} catch (err) {
+		} catch (err: any) {
 			console.log(err);
-			setError('503', 'Initial sync failed, please try again.');
+			if (
+				err?.message &&
+				err.message ===
+					'QuotaExceededError Encountered full disk while opening backing store for indexedDB.open. QuotaExceededError: Encountered full disk while opening backing store for indexedDB.open.'
+			) {
+				setError('503', 'Your storage is full, please clear some data and try again.');
+			} else {
+				setError('503', 'Initial sync failed, please try again.');
+			}
 		}
 	});
 </script>
