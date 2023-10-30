@@ -98,7 +98,7 @@ export const clearUnread = async () => {
 	}
 };
 
-const messageNotification = (
+const messageNotification = async (
 	pubkey: string,
 	alias: string | undefined,
 	type: MessageType,
@@ -115,20 +115,15 @@ const messageNotification = (
 		const notificationMessage =
 			type === MessageType.Payment ? formatPaymentMsg(false, amount) : message;
 
-		const notification = new Notification(sendersNode, {
+		const options = {
 			badge: '/images/logo.png',
 			body: notificationMessage,
 			tag: pubkey,
 			icon: '/images/logo-bg.png',
 			vibrate: [210],
 			renotify: true
-		});
-
-		if (playAudio) {
-			notificationSound.play();
-		}
-
-		notification.addEventListener('click', () => {
+		};
+		const clickActions = () => {
 			messageHistory.set(25);
 			activeConversation.set(pubkey);
 			convoState.set('CHAT');
@@ -136,26 +131,80 @@ const messageNotification = (
 			appView.set(AppViewState.Convo);
 			window.focus();
 			clearUnread();
-		});
+		};
 
-		document.addEventListener(
-			'visibilitychange',
-			() => {
-				if (document.visibilityState === 'visible') {
+		try {
+			const notification = new Notification(sendersNode, options);
+
+			notification.addEventListener('click', () => clickActions());
+
+			document.addEventListener(
+				'visibilitychange',
+				() => {
+					if (document.visibilityState === 'visible') {
+						notification.close();
+					}
+				},
+				{ once: true }
+			);
+
+			const body = document.querySelector('body');
+			body?.addEventListener(
+				'mouseover',
+				() => {
 					notification.close();
-				}
-			},
-			{ once: true }
-		);
+				},
+				{ once: true }
+			);
+		} catch (error) {
+			console.log(error);
 
-		const body = document.querySelector('body');
-		body?.addEventListener(
-			'mouseover',
-			() => {
-				notification.close();
-			},
-			{ once: true }
-		);
+			try {
+				const registration = await navigator.serviceWorker.getRegistration();
+
+				if (registration) {
+					registration.showNotification(sendersNode, options);
+
+					self.addEventListener(
+						'notificationclick',
+						() => {
+							try {
+								clickActions();
+							} catch (error) {
+								console.log(error);
+							}
+						},
+						{ once: true }
+					);
+
+					document.addEventListener(
+						'visibilitychange',
+						() => {
+							if (document.visibilityState === 'visible') {
+								registration.getNotifications().then((n) => n.forEach((i) => i.close()));
+							}
+						},
+						{ once: true }
+					);
+
+					const body = document.querySelector('body');
+					body?.addEventListener(
+						'mouseover',
+						() => {
+							registration.getNotifications().then((n) => n.forEach((i) => i.close()));
+						},
+						{ once: true }
+					);
+				}
+			} catch (error) {
+				console.log(error);
+				warningToast('Could not show notification for message.');
+			}
+		}
+
+		if (playAudio && window.innerWidth > 640) {
+			notificationSound.play();
+		}
 	} else if (
 		get(activeConversation) === pubkey &&
 		document.visibilityState === 'visible' &&
@@ -345,14 +394,27 @@ export const subscribeInvoices = () => {
 				} else {
 					setLastUpdate((Number(msg.creationDate) + 1).toString());
 				}
-			} catch (error) {
+			} catch (error: any) {
 				console.log(error);
+
+				if (error?.message?.includes('Key already exists in the object store')) {
+					return;
+				}
+
 				errorToast('Message received but could not save.');
 			}
 		},
 		(err) => {
 			console.log(err);
-			errorToast('Message receive failed.');
+			
+			if (
+				err.message ===
+				'rpc error: code = Unavailable desc = error reading from server: error decrypting payload: error receiving from go-back-n connection: cannot receive, gbn exited'
+			) {
+				errorToast('Lost connection to node, please logout and reconnect.');
+			} else {
+				errorToast('Message receive failed.');
+			}
 		}
 	);
 };
