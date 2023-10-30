@@ -14,19 +14,22 @@
 
 	let charLimit = $conversation.charLimit;
 
-	onMount(async () => {
+	onMount(() => {
 		let activeConvo = $activeConversation;
 
-		try {
-			await Promise.all([
-				$lnc.lnd.lightning.getNodeInfo({
-					pubKey: $activeConversation,
-					includeChannels: false
-				}),
-				$lnc.lnd.lightning.listChannels({
-					peer: bufferHexToBase64($activeConversation)
-				})
-			]).then(async (values) => {
+		Promise.allSettled([
+			$lnc.lnd.lightning.getNodeInfo({
+				pubKey: $activeConversation,
+				includeChannels: false
+			}),
+			$lnc.lnd.lightning.listChannels({
+				peer: bufferHexToBase64($activeConversation)
+			})
+		]).then(async (results) => {
+			const nodeResult = results[0];
+			const channelsResult = results[1];
+
+			if (nodeResult.status === 'fulfilled') {
 				try {
 					if (activeConvo === $activeConversation) {
 						await db.transaction(
@@ -34,8 +37,8 @@
 							db.conversations,
 							async () =>
 								await db.conversations.update($activeConversation, {
-									alias: values[0].node?.alias,
-									color: values[0].node?.color
+									alias: nodeResult.value.node?.alias,
+									color: nodeResult.value.node?.color
 								})
 						);
 					}
@@ -43,22 +46,26 @@
 					console.log(error);
 					errorToast('Could not save node alias and color to database, please try again.');
 				} finally {
-					nodeInfo = values[0];
-					channels = values[1].channels;
-					loading = false;
+					nodeInfo = nodeResult.value;
 				}
-			});
-		} catch (error: any) {
-			console.log(error);
-			if (
-				error?.message &&
-				error.message === 'rpc error: code = NotFound desc = unable to find node'
-			) {
-				errorToast('Unable to find node in the graph.');
 			} else {
-				errorToast('Could not fetch node information, please try again.');
+				console.log(nodeResult.reason);
+				
+				if (nodeResult.reason === 'rpc error: code = NotFound desc = unable to find node') {
+					errorToast('Unable to find node in the graph.');
+				} else {
+					errorToast('Could not fetch node information, please try again.');
+				}
 			}
-		}
+
+			if (channelsResult.status === 'fulfilled') {
+				channels = channelsResult.value.channels;
+				loading = false;
+			} else {
+				console.log(channelsResult.reason);
+				errorToast('Could not fetch shared channels, please try again.');
+			}
+		});
 	});
 </script>
 
