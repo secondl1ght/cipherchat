@@ -9,7 +9,11 @@
 
 	onMount(async () => {
 		try {
-			nodeInfo = await $lnc.lnd.lightning.getInfo();
+			const response = await $lnc.lnd.lightning.getInfo();
+			$userPubkey = response.identityPubkey;
+			$userAlias = response.alias;
+			$userColor = response.color;
+			nodeInfo = response;
 		} catch (error) {
 			console.log(error);
 			errorToast('Could not fetch node information, please try again.');
