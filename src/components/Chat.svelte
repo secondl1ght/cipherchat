@@ -20,6 +20,7 @@
 		messages,
 		messagesLoading,
 		offline,
+		receiveLoading,
 		scrollDiv,
 		scrollDivPosition,
 		sendLoading,
@@ -197,17 +198,22 @@
 			$conversationLoading = false;
 		}
 
+		if ($sendLoading) {
+			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+			$sendLoading = false;
+		}
+
+		if ($receiveLoading) {
+			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+			$receiveLoading = false;
+		}
+
 		if ($messagesLoading) {
 			if ($scrollDivPosition !== undefined) {
 				$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
 			}
 
 			$messagesLoading = false;
-		}
-
-		if ($sendLoading) {
-			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-			$sendLoading = false;
 		}
 	};
 

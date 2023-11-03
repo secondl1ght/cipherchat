@@ -14,6 +14,7 @@ import {
 	lnc as lncStore,
 	LNRPC as lnrpcStore,
 	messageHistory,
+	receiveLoading,
 	sendLoading,
 	sharePubkey,
 	userPubkey
@@ -260,6 +261,10 @@ export const subscribeInvoices = () => {
 						self
 					};
 
+					if (get(activeConversation) === pubkey) {
+						receiveLoading.set(true);
+					}
+
 					await db.transaction('rw', db.conversations, db.messages, async () => {
 						const conversationExists = await db.conversations.get(pubkey);
 
@@ -341,6 +346,10 @@ export const subscribeInvoices = () => {
 
 					const showAnon = localStorage.getItem('showAnon') === 'true' ? true : false;
 
+					if (get(activeConversation) === pubkey) {
+						receiveLoading.set(true);
+					}
+
 					await db.transaction('rw', db.conversations, db.messages, async () => {
 						const conversationExists = await db.conversations.get(pubkey);
 
@@ -354,10 +363,6 @@ export const subscribeInvoices = () => {
 							await db.messages.add(messageObject);
 
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
-
-							if (showAnon) {
-								messageNotification(pubkey, alias, type, amount, message);
-							}
 						} else {
 							await db.conversations.add({
 								pubkey,
@@ -374,12 +379,12 @@ export const subscribeInvoices = () => {
 							await db.messages.add(messageObject);
 
 							setLastUpdate((Number(msg.creationDate) + 1).toString());
-
-							if (showAnon) {
-								messageNotification(pubkey, alias, type, amount, message);
-							}
 						}
 					});
+
+					if (showAnon) {
+						messageNotification(pubkey, alias, type, amount, message);
+					}
 				} else {
 					setLastUpdate((Number(msg.creationDate) + 1).toString());
 				}

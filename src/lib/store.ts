@@ -41,6 +41,7 @@ export const messages: Writable<MessageDecrypted[]> = writable([]);
 export const messageHistory = writable(25);
 export const messagesLoading = writable(false);
 export const sendLoading = writable(false);
+export const receiveLoading = writable(false);
 export const messageMemory: Writable<any> = writable({});
 export const activeMenu: Writable<Instance | undefined> = writable();
 export const activeMessage = writable('');
