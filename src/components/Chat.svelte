@@ -223,6 +223,11 @@
 
 			const firstSyncComplete = localStorage.getItem('firstSyncComplete');
 
+			const showAnon = localStorage.getItem('showAnon');
+			if (!showAnon) {
+				localStorage.setItem('showAnon', 'true');
+			}
+
 			const nodeInfo = await $lnc.lnd.lightning.getInfo();
 			$userPubkey = nodeInfo.identityPubkey;
 			$userAlias = nodeInfo.alias;

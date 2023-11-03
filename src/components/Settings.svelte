@@ -42,8 +42,8 @@
 		localStorage.removeItem('textColor');
 		$textColor = null;
 		textColorSelected = '#0C0E16';
-		localStorage.removeItem('showAnon');
-		showAnon = false;
+		localStorage.setItem('showAnon', 'true');
+		showAnon = true;
 
 		successToast('Defaults reset.');
 	};
