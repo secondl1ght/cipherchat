@@ -2,7 +2,8 @@
 	import { PUBLIC_WASM_VERSION } from '$env/static/public';
 	import {
 		LNRPC,
-		bubbleColor,
+		bubbleColorOne,
+		bubbleColorTwo,
 		connected,
 		error,
 		indexedDBAvailable,
@@ -11,7 +12,8 @@
 		offline,
 		paired,
 		serviceWorkerAvailable,
-		textColor,
+		textColorOne,
+		textColorTwo,
 		userAvatar,
 		webAssemblyAvailable
 	} from '$lib/store';
@@ -36,8 +38,10 @@
 
 		try {
 			$userAvatar = localStorage.getItem('userAvatar');
-			$bubbleColor = localStorage.getItem('bubbleColor');
-			$textColor = localStorage.getItem('textColor');
+			$bubbleColorOne = localStorage.getItem('bubbleColorOne');
+			$bubbleColorTwo = localStorage.getItem('bubbleColorTwo');
+			$textColorOne = localStorage.getItem('textColorOne');
+			$textColorTwo = localStorage.getItem('textColorTwo');
 
 			$localStorageAvailable = true;
 		} catch (err) {

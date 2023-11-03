@@ -45,8 +45,10 @@ export const receiveLoading = writable(false);
 export const messageMemory: Writable<any> = writable({});
 export const activeMenu: Writable<Instance | undefined> = writable();
 export const activeMessage = writable('');
-export const bubbleColor: Writable<string | null> = writable();
-export const textColor: Writable<string | null> = writable();
+export const bubbleColorOne: Writable<string | null> = writable();
+export const bubbleColorTwo: Writable<string | null> = writable();
+export const textColorOne: Writable<string | null> = writable();
+export const textColorTwo: Writable<string | null> = writable();
 
 export const links = readable({
 	github: 'https://github.com/secondl1ght/cipherchat',

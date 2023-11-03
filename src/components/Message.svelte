@@ -8,11 +8,13 @@
 		activeConversation,
 		activeMenu,
 		activeMessage,
-		bubbleColor,
+		bubbleColorOne,
+		bubbleColorTwo,
 		convoState,
 		scrollDiv,
 		scrollDivPosition,
-		textColor
+		textColorOne,
+		textColorTwo
 	} from '$lib/store';
 	import type { MessageDecrypted } from '$lib/types';
 	import { MessageType } from '$lib/types';
@@ -156,14 +158,20 @@
 		<div class="flex {message.self ? 'justify-end' : ''}">
 			<button
 				bind:this={contextMenu}
-				style:background-color={$bubbleColor}
-				style:color={$textColor}
-				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left md:max-w-[75%] md:select-text {message.type ===
+				style:background-color={message.self ? $bubbleColorTwo : $bubbleColorOne}
+				style:color={message.self ? $textColorTwo : $textColorOne}
+				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left md:max-w-[75%] md:cursor-auto md:select-text {message.type ===
 					MessageType.Payment || message.hide
 					? 'flex items-center space-x-2'
-					: ''} {$bubbleColor ? '' : 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor
-					? ''
-					: 'text-borderIn'}"
+					: ''} {message.self && !$bubbleColorTwo
+					? 'bg-header'
+					: !message.self && !$bubbleColorOne
+					? 'bg-boxFill'
+					: ''} {message.self && !$textColorTwo
+					? 'text-borderIn'
+					: !message.self && !$textColorOne
+					? 'text-header'
+					: ''}"
 				on:contextmenu={async (e) => {
 					e.preventDefault();
 					// @ts-expect-error - property is added when tippy is created

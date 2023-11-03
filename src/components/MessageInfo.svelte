@@ -2,7 +2,14 @@
 	import { formatPaymentMsg } from '$lib/chat';
 	import { decrypt } from '$lib/crypto';
 	import { db } from '$lib/db';
-	import { LNRPC, activeMessage, bubbleColor, textColor } from '$lib/store';
+	import {
+		LNRPC,
+		activeMessage,
+		bubbleColorOne,
+		bubbleColorTwo,
+		textColorOne,
+		textColorTwo
+	} from '$lib/store';
 	import { MessageType } from '$lib/types';
 	import { breakAll, errorToast, formatNumber, formatTimestamp } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
@@ -135,14 +142,20 @@
 
 	<div class="mt-4 flex justify-center md:mx-4">
 		<div
-			style:background-color={$bubbleColor}
-			style:color={$textColor}
+			style:background-color={$message.self ? $bubbleColorTwo : $bubbleColorOne}
+			style:color={$message.self ? $textColorTwo : $textColorOne}
 			class="max-w-[90%] whitespace-pre-line rounded p-2 text-left md:max-w-[75%] {$message.type ===
 				MessageType.Payment || $message.hide
 				? 'flex items-center space-x-2'
-				: ''} {$bubbleColor ? '' : 'bg-gradient-to-r from-gradientOne to-gradientTwo'} {$textColor
-				? ''
-				: 'text-borderIn'}"
+				: ''} {$message.self && !$bubbleColorTwo
+				? 'bg-header'
+				: !$message.self && !$bubbleColorOne
+				? 'bg-boxFill'
+				: ''} {$message.self && !$textColorTwo
+				? 'text-borderIn'
+				: !$message.self && !$textColorOne
+				? 'text-header'
+				: ''}"
 		>
 			{#if !$message.hide}
 				{#if $message.type === MessageType.Payment && $message.self}

@@ -4,10 +4,12 @@
 	import { db } from '$lib/db';
 	import {
 		activeConversation,
-		bubbleColor,
+		bubbleColorOne,
+		bubbleColorTwo,
 		homeScrollDiv,
 		innerWidth,
-		textColor,
+		textColorOne,
+		textColorTwo,
 		updatesAvailable
 	} from '$lib/store';
 	import { errorToast, infoToast, shortenPubkey, successToast } from '$lib/utils';
@@ -21,8 +23,10 @@
 	let sounds = localStorage.getItem('playAudio') === 'true' ? true : false;
 	let feeLimit = localStorage.getItem('feeLimit') || '10';
 	let timePref = localStorage.getItem('timePref') || '0';
-	let bubbleColorSelected = $bubbleColor || '#F5F7FA';
-	let textColorSelected = $textColor || '#0C0E16';
+	let bubbleColorOneSelected = $bubbleColorOne || '#23273C';
+	let bubbleColorTwoSelected = $bubbleColorTwo || '#D9E7FA';
+	let textColorOneSelected = $textColorOne || '#D9E7FA';
+	let textColorTwoSelected = $textColorTwo || '#0C0E16';
 	let showAnon = localStorage.getItem('showAnon') === 'true' ? true : false;
 
 	const updateSetting = (setting: string, value: string) => {
@@ -36,12 +40,18 @@
 		feeLimit = '10';
 		localStorage.removeItem('timePref');
 		timePref = '0';
-		localStorage.removeItem('bubbleColor');
-		$bubbleColor = null;
-		bubbleColorSelected = '#F5F7FA';
-		localStorage.removeItem('textColor');
-		$textColor = null;
-		textColorSelected = '#0C0E16';
+		localStorage.removeItem('bubbleColorOne');
+		$bubbleColorOne = null;
+		bubbleColorOneSelected = '#23273C';
+		localStorage.removeItem('bubbleColorTwo');
+		$bubbleColorTwo = null;
+		bubbleColorTwoSelected = '#D9E7FA';
+		localStorage.removeItem('textColorOne');
+		$textColorOne = null;
+		textColorOneSelected = '#D9E7FA';
+		localStorage.removeItem('textColorTwo');
+		$textColorTwo = null;
+		textColorTwoSelected = '#0C0E16';
 		localStorage.setItem('showAnon', 'true');
 		showAnon = true;
 
@@ -180,32 +190,62 @@
 		</select>
 	</RowItem>
 
-	<RowItem title="Bubble Color" label="bubble-color">
+	<RowItem title="Bubble Color 1" label="bubble-color-one">
 		<input
-			bind:value={bubbleColorSelected}
-			on:input={() => ($bubbleColor = bubbleColorSelected)}
+			bind:value={bubbleColorOneSelected}
+			on:input={() => ($bubbleColorOne = bubbleColorOneSelected)}
 			on:change={() => {
-				updateSetting('bubbleColor', bubbleColorSelected);
+				updateSetting('bubbleColorOne', bubbleColorOneSelected);
 				successToast('Setting updated.');
 			}}
 			type="color"
-			id="bubble-color"
-			name="bubble-color"
+			id="bubble-color-one"
+			name="bubble-color-one"
 			class="cursor-pointer rounded-sm"
 		/>
 	</RowItem>
 
-	<RowItem title="Text Color" label="text-color">
+	<RowItem title="Bubble Color 2" label="bubble-color-two">
 		<input
-			bind:value={textColorSelected}
-			on:input={() => ($textColor = textColorSelected)}
+			bind:value={bubbleColorTwoSelected}
+			on:input={() => ($bubbleColorTwo = bubbleColorTwoSelected)}
 			on:change={() => {
-				updateSetting('textColor', textColorSelected);
+				updateSetting('bubbleColorTwo', bubbleColorTwoSelected);
 				successToast('Setting updated.');
 			}}
 			type="color"
-			id="text-color"
-			name="text-color"
+			id="bubble-color-two"
+			name="bubble-color-two"
+			class="cursor-pointer rounded-sm"
+		/>
+	</RowItem>
+
+	<RowItem title="Text Color 1" label="text-color-one">
+		<input
+			bind:value={textColorOneSelected}
+			on:input={() => ($textColorOne = textColorOneSelected)}
+			on:change={() => {
+				updateSetting('textColorOne', textColorOneSelected);
+				successToast('Setting updated.');
+			}}
+			type="color"
+			id="text-color-one"
+			name="text-color-one"
+			class="cursor-pointer rounded-sm"
+		/>
+	</RowItem>
+
+	<RowItem title="Text Color 2" label="text-color-two">
+		<input
+			bind:value={textColorTwoSelected}
+			on:input={() => ($textColorTwo = textColorTwoSelected)}
+			on:change={() => {
+				updateSetting('textColorTwo', textColorTwoSelected);
+				successToast('Setting updated.');
+			}}
+			type="color"
+			id="text-color-two"
+			name="text-color-two"
 			class="cursor-pointer rounded-sm"
 		/>
 	</RowItem>
