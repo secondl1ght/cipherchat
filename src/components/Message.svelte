@@ -16,7 +16,7 @@
 	} from '$lib/store';
 	import type { MessageDecrypted } from '$lib/types';
 	import { MessageType } from '$lib/types';
-	import { copy, errorToast, formatTimestamp, successToast } from '$lib/utils';
+	import { breakAll, copy, errorToast, formatTimestamp, successToast } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { Icon, LoadingPing } from 'comp';
 	import { tick } from 'svelte';
@@ -210,10 +210,11 @@
 						<span
 							contenteditable="false"
 							bind:innerHTML={message.linkified}
-							class="inline-block break-all"
+							class="inline-block"
+							class:break-all={breakAll(message.message)}
 						/>
 					{:else}
-						<span class="inline-block break-all">
+						<span class="inline-block" class:break-all={breakAll(message.message)}>
 							{message.message}
 						</span>
 					{/if}

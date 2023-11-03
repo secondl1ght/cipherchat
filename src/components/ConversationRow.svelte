@@ -13,7 +13,7 @@
 		scrollDivPosition
 	} from '$lib/store';
 	import { AppViewState, type Conversation } from '$lib/types';
-	import { formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
+	import { breakAll, formatTimestamp, shortenLatestMessage, shortenPubkey } from '$lib/utils';
 	import { Avatar, Icon, LoadingPing } from 'comp';
 	import { tick } from 'svelte';
 </script>
@@ -39,11 +39,14 @@
 		<Avatar pubkey={c.pubkey} alias={c.alias} color={c.color} avatar={c.avatar} />
 
 		<div>
-			<h2 class="break-all text-sm font-bold text-header">
+			<h2
+				class="text-sm font-bold text-header"
+				class:break-all={c.alias ? breakAll(c.alias, 12) : true}
+			>
 				{c.alias || shortenPubkey(c.pubkey)}
 			</h2>
 			{#if c.latestMessage}
-				<h3 class="break-all text-sm">
+				<h3 class="text-sm" class:break-all={breakAll(c.latestMessage, 12)}>
 					{shortenLatestMessage(
 						c.latestMessage,
 						$innerWidth > 1536 ? 60 : $innerWidth > 475 ? 50 : 40

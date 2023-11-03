@@ -79,6 +79,9 @@ export const shortenLatestMessage = (message: string, limit: number) => {
 	return message.slice(0, limit) + '...';
 };
 
+export const breakAll = (text: string, limit: number | undefined = 21) =>
+	text.match(`([^ ]{${limit}})`);
+
 export const formatNumber = (number: number) => new Intl.NumberFormat().format(number);
 
 // TIME

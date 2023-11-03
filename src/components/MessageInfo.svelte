@@ -4,7 +4,7 @@
 	import { db } from '$lib/db';
 	import { LNRPC, activeMessage, bubbleColor, textColor } from '$lib/store';
 	import { MessageType } from '$lib/types';
-	import { errorToast, formatNumber, formatTimestamp } from '$lib/utils';
+	import { breakAll, errorToast, formatNumber, formatTimestamp } from '$lib/utils';
 	import type { lnrpc } from '@lightninglabs/lnc-web';
 	import { CopyButton, Icon, RowItem } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
@@ -149,7 +149,9 @@
 					<Icon icon="gift" width="16" height="16" />
 				{/if}
 
-				<span class="inline-block break-all">{$message.message}</span>
+				<span class="inline-block" class:break-all={breakAll($message.message)}
+					>{$message.message}</span
+				>
 
 				{#if $message.type === MessageType.Payment && !$message.self}
 					<Icon icon="heart" width="16" height="16" />
