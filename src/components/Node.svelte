@@ -130,7 +130,7 @@
 						{#each nodeInfo.node.addresses as address}
 							<li class="flex items-center space-x-2">
 								<CopyButton text={address.addr} width="16" height="16" />
-								<span class="inline-block">
+								<span class="inline-block lg:break-all">
 									{address.addr}
 								</span>
 							</li>
