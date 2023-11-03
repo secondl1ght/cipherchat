@@ -87,12 +87,18 @@
 		clearText();
 	};
 
-	const handleEnter = (e: any) => {
+	const handleKeys = (e: any) => {
 		if (e.key === 'Enter' && !e.shiftKey && message.trim().length && $innerWidth > 640) {
 			e.preventDefault();
 
 			handleMessage();
 			hideEmoji();
+		}
+
+		if (e.key === 'e' && e.ctrlKey && e.altKey && $innerWidth > 640) {
+			e.preventDefault();
+
+			showEmoji = !showEmoji;
 		}
 	};
 
@@ -173,7 +179,7 @@
 				class:cursor-not-allowed={$activeConversation === 'ANON'}
 				class:opacity-50={$activeConversation === 'ANON'}
 				bind:value={message}
-				on:keydown={handleEnter}
+				on:keydown={handleKeys}
 				on:input={textareaAutoSize}
 				class="hide-scroll max-h-16 min-h-[42px] w-full resize-none border border-header bg-borderOut p-2 text-header md:max-h-36"
 			/>
