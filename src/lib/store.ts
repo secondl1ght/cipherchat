@@ -19,6 +19,7 @@ export const firstUpdate = writable(monthAgo());
 
 export const paired = writable(false);
 export const connected = writable(false);
+export const offline = writable(false);
 
 export const cryptoKey: Writable<CryptoKey | undefined> = writable();
 

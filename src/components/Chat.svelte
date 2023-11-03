@@ -19,6 +19,7 @@
 		messageHistory,
 		messages,
 		messagesLoading,
+		offline,
 		scrollDiv,
 		scrollDivPosition,
 		sendLoading,
@@ -46,7 +47,7 @@
 	import { ChatLoading, ConvoView, HomeView } from 'comp';
 	import Dexie, { liveQuery } from 'dexie';
 	import linkifyStr from 'linkify-string';
-	import { onMount, tick } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { blur } from 'svelte/transition';
 
 	let loading = true;
@@ -214,6 +215,8 @@
 
 	$: console.log($conversationsQuery, $conversationQuery, $unreadQuery, $messagesQuery);
 
+	let offlineCheckInterval: number;
+
 	onMount(async () => {
 		try {
 			db.open();
@@ -278,6 +281,12 @@
 
 			subscribeInvoices();
 
+			offlineCheckInterval = setInterval(() => {
+				if ($lnc.status === 'Not Connected') {
+					$offline = true;
+				}
+			}, 10000);
+
 			loading = false;
 		} catch (err: any) {
 			console.log(err);
@@ -292,6 +301,8 @@
 			}
 		}
 	});
+
+	onDestroy(() => clearInterval(offlineCheckInterval));
 </script>
 
 <svelte:window bind:innerWidth={$innerWidth} />

@@ -18,6 +18,8 @@
 
 			await $lnc.connect();
 
+			await $lnc.lnd.lightning.getInfo();
+
 			await generateKey(password);
 
 			$connected = true;

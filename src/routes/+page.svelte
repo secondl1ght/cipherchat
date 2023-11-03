@@ -8,6 +8,7 @@
 		indexedDBAvailable,
 		lnc,
 		localStorageAvailable,
+		offline,
 		paired,
 		serviceWorkerAvailable,
 		textColor,
@@ -15,7 +16,7 @@
 		webAssemblyAvailable
 	} from '$lib/store';
 	import { setError } from '$lib/utils';
-	import { Chat, Connect, Error, Login, PublicLayout, ShareHandler } from 'comp';
+	import { Chat, Connect, Error, Login, Offline, PublicLayout, ShareHandler } from 'comp';
 
 	const initializeLNC = async () => {
 		if ($lnc && $LNRPC) return;
@@ -83,6 +84,8 @@
 	{#if $connected}
 		{#if $error.status && $error.message}
 			<Error />
+		{:else if $offline}
+			<Offline />
 		{:else}
 			<Chat />
 		{/if}
