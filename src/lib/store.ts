@@ -63,6 +63,8 @@ export const chatInput: Writable<HTMLTextAreaElement> = writable();
 export const chatInputHeight: Writable<number> = writable();
 export const scrollDiv: Writable<HTMLDivElement> = writable();
 export const scrollDivPosition: Writable<number | undefined> = writable();
+export const showScrollButton = writable(false);
+export const scrollBottom: Writable<HTMLSpanElement> = writable();
 export const homeScrollDiv: Writable<HTMLDivElement> = writable();
 export const scanActive = writable(false);
 

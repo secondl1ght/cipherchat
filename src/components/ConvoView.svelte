@@ -7,12 +7,26 @@
 		messages,
 		messagesLoading,
 		scrollDiv,
-		scrollDivPosition
+		scrollDivPosition,
+		showScrollButton
 	} from '$lib/store';
 	import { ChatWindow, ConvoNav, MessageInfo, Node } from 'comp';
 	import { blur } from 'svelte/transition';
 
 	const handleScroll = () => {
+		if ($activeMenu) {
+			$activeMenu.hide();
+		}
+
+		if (
+			$scrollDiv.scrollHeight - $scrollDiv.scrollTop - $scrollDiv.clientHeight >
+			$scrollDiv.clientHeight
+		) {
+			$showScrollButton = true;
+		} else {
+			$showScrollButton = false;
+		}
+
 		if (
 			$scrollDiv.scrollTop === 0 &&
 			$messages.length === $messageHistory &&
@@ -22,10 +36,6 @@
 			$scrollDivPosition = $scrollDiv.scrollHeight;
 			$messagesLoading = true;
 			setTimeout(() => ($messageHistory = $messageHistory + 25), 2100);
-		}
-
-		if ($activeMenu) {
-			$activeMenu.hide();
 		}
 	};
 </script>

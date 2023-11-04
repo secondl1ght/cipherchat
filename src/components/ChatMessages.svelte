@@ -4,6 +4,7 @@
 		conversationLoading,
 		messages,
 		messagesLoading,
+		scrollBottom,
 		scrollDiv
 	} from '$lib/store';
 	import { Message } from 'comp';
@@ -21,6 +22,8 @@
 		{#each $messages as message}
 			<Message {message} />
 		{/each}
+
+		<span bind:this={$scrollBottom} />
 	</div>
 {/if}
 

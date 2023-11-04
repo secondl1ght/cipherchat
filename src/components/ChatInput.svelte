@@ -7,7 +7,9 @@
 		conversation,
 		innerWidth,
 		messageMemory,
-		scrollDiv
+		scrollBottom,
+		scrollDiv,
+		showScrollButton
 	} from '$lib/store';
 	import { warningToast } from '$lib/utils';
 	import data from '@emoji-mart/data';
@@ -138,6 +140,16 @@
 </script>
 
 {#if $conversation}
+	{#if $showScrollButton}
+		<button
+			style:bottom={`${$chatInputHeight + 20}px`}
+			class="absolute right-5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-button text-header shadow-lg"
+			on:click={() => $scrollBottom.scrollIntoView({ behavior: 'smooth' })}
+		>
+			<Icon icon="arrow-down" />
+		</button>
+	{/if}
+
 	<div
 		bind:clientHeight={$chatInputHeight}
 		class="absolute bottom-0 left-0 z-10 w-full bg-borderIn p-4"
