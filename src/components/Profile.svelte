@@ -13,6 +13,9 @@
 			$userPubkey = response.identityPubkey;
 			$userAlias = response.alias;
 			$userColor = response.color;
+			localStorage.setItem('userPubkey', response.identityPubkey);
+			localStorage.setItem('userAlias', response.alias);
+			localStorage.setItem('userColor', response.color);
 			nodeInfo = response;
 		} catch (error) {
 			console.log(error);

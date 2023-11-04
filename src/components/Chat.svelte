@@ -238,6 +238,9 @@
 			$userPubkey = nodeInfo.identityPubkey;
 			$userAlias = nodeInfo.alias;
 			$userColor = nodeInfo.color;
+			localStorage.setItem('userPubkey', nodeInfo.identityPubkey);
+			localStorage.setItem('userAlias', nodeInfo.alias);
+			localStorage.setItem('userColor', nodeInfo.color);
 
 			if (firstSyncComplete) {
 				const updateTime = getUpdateTime();

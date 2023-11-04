@@ -3,12 +3,16 @@
 	import { generateKey, resetKey } from '$lib/crypto';
 	import { db } from '$lib/db';
 	import { connected, firstUpdate, lnc, paired } from '$lib/store';
-	import { errorToast, monthAgo, successToast } from '$lib/utils';
+	import { errorToast, monthAgo, shortenPubkey, successToast } from '$lib/utils';
 	import { Button, Icon, MessageHistory } from 'comp';
 
 	let loading = false;
 	let password = '';
 	let showPass = false;
+
+	const pubkey = localStorage.getItem('userPubkey');
+	const alias = localStorage.getItem('userAlias');
+	const color = localStorage.getItem('userColor');
 
 	const login = async () => {
 		try {
@@ -58,6 +62,17 @@
 		}
 	};
 </script>
+
+{#if alias || pubkey}
+	<h2 class="press-start mb-10 text-xl text-header md:text-2xl lg:text-3xl xl:text-4xl">
+		Welcome, <span
+			style:text-decoration-color={color || '#F7931A'}
+			class="mt-2 block break-words leading-10 underline decoration-4 underline-offset-8 md:!leading-[50px]"
+		>
+			{alias || shortenPubkey(pubkey || '')}
+		</span>
+	</h2>
+{/if}
 
 <form on:submit|preventDefault>
 	<label
