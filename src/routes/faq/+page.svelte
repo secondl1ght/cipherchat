@@ -78,6 +78,10 @@
 					external
 					href="https://docs.voltage.cloud/guides/lightning-node-connect-and-terminal-web"
 					title="Voltage"
+				/> or using the <Link
+					external
+					href="https://docs.lightning.engineering/lightning-network-tools/lightning-terminal/connect#create-a-session-using-the-command-line"
+					title="command line"
 				/>.
 
 				<!-- svelte-ignore a11y-media-has-caption -->
@@ -202,7 +206,8 @@
 			<FaqItem question="Why do messages fail?">
 				Just like any lightning transaction a route must be found from your node to the destination
 				in order for the payment (message) to be successful. This requires being well connected to
-				the network.
+				the network. Sending requires having outbound liquidity and receiving requires having
+				inbound liquidity (via lightning channels).
 			</FaqItem>
 			<FaqItem question="Why is there a character limit?">
 				A default character limit of <strong>300</strong> is set for all conversations. This is to give
