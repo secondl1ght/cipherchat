@@ -14,6 +14,7 @@
 		conversation,
 		conversationLoading,
 		conversations,
+		convoState,
 		innerWidth,
 		lnc,
 		messageHistory,
@@ -180,13 +181,11 @@
 			const result = await Promise.all(msgsFormatted);
 
 			messages.set(result);
-
-			messagesQueryLoading = false;
-
 			return 'Messages query complete.';
 		} catch (error) {
 			console.log(error);
 			errorToast('Could not query messages.');
+		} finally {
 			messagesQueryLoading = false;
 		}
 	});
@@ -199,7 +198,10 @@
 		}
 
 		if ($sendLoading) {
-			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+			if (!$messagesLoading) {
+				$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
+			}
+
 			$sendLoading = false;
 		}
 
@@ -209,7 +211,7 @@
 		}
 
 		if ($messagesLoading) {
-			if ($scrollDivPosition !== undefined) {
+			if ($scrollDivPosition !== undefined && $convoState === 'CHAT' && $activeConversation) {
 				$scrollDiv.scrollTop = $scrollDiv.scrollHeight - ($scrollDivPosition + 56);
 			}
 

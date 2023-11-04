@@ -7,6 +7,7 @@
 		conversation,
 		innerWidth,
 		messageMemory,
+		messagesLoading,
 		scrollBottom,
 		scrollDiv,
 		showScrollButton
@@ -145,6 +146,7 @@
 			style:bottom={`${$chatInputHeight + 20}px`}
 			class="absolute right-5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-button text-header shadow-lg"
 			on:click={() => $scrollBottom.scrollIntoView({ behavior: 'smooth' })}
+			disabled={$messagesLoading}
 		>
 			<Icon icon="arrow-down" />
 		</button>

@@ -7,6 +7,7 @@
 		conversation,
 		convoState,
 		innerWidth,
+		messagesLoading,
 		scrollDiv,
 		scrollDivPosition
 	} from '$lib/store';
@@ -143,7 +144,7 @@
 				<button
 					on:click={toggleConvo}
 					class="order-last lg:order-first"
-					disabled={$activeConversation === 'ANON'}
+					disabled={$activeConversation === 'ANON' || $messagesLoading}
 					class:cursor-not-allowed={$activeConversation === 'ANON'}
 				>
 					{#if $convoState === 'CHAT'}

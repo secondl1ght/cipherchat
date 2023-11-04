@@ -11,6 +11,7 @@
 		bubbleColorOne,
 		bubbleColorTwo,
 		convoState,
+		messagesLoading,
 		scrollDiv,
 		scrollDivPosition,
 		textColorOne,
@@ -138,6 +139,7 @@
 				$activeMessage = message.id;
 				$convoState = 'MESSAGE';
 			}}
+			disabled={$messagesLoading}
 		>
 			<Icon icon="book-open" width="20" height="20" /> <span class="inline-block">Details</span>
 		</button>

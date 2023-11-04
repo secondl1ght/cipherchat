@@ -35,7 +35,11 @@
 		) {
 			$scrollDivPosition = $scrollDiv.scrollHeight;
 			$messagesLoading = true;
-			setTimeout(() => ($messageHistory = $messageHistory + 25), 2100);
+			setTimeout(() => {
+				if ($messagesLoading) {
+					$messageHistory = $messageHistory + 25;
+				}
+			}, 2100);
 		}
 	};
 </script>
@@ -45,7 +49,7 @@
 		<div
 			on:scroll={handleScroll}
 			bind:this={$scrollDiv}
-			class="hide-scroll h-full w-full overflow-y-auto"
+			class="hide-scroll h-full w-full {$messagesLoading ? 'overflow-y-hidden' : 'overflow-y-auto'}"
 		>
 			<ConvoNav />
 

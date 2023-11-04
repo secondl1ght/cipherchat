@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { addConversation } from '$lib/chat';
-	import { homeScrollDiv } from '$lib/store';
+	import { homeScrollDiv, messagesLoading, scrollDivPosition } from '$lib/store';
 	import { Button, Icon, Link } from 'comp';
 	import { onDestroy } from 'svelte';
 
@@ -10,6 +10,8 @@
 
 	const add = async () => {
 		loading = true;
+		$messagesLoading = false;
+		$scrollDivPosition = undefined;
 		await addConversation(pubkey);
 		loading = false;
 	};
