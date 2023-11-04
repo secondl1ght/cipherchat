@@ -16,11 +16,12 @@
 		if (
 			$scrollDiv.scrollTop === 0 &&
 			$messages.length === $messageHistory &&
-			$convoState === 'CHAT'
+			$convoState === 'CHAT' &&
+			!$messagesLoading
 		) {
 			$scrollDivPosition = $scrollDiv.scrollHeight;
 			$messagesLoading = true;
-			$messageHistory = $messageHistory + 25;
+			setTimeout(() => ($messageHistory = $messageHistory + 25), 2100);
 		}
 
 		if ($activeMenu) {

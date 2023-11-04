@@ -210,7 +210,7 @@
 
 		if ($messagesLoading) {
 			if ($scrollDivPosition !== undefined) {
-				$scrollDiv.scrollTop = $scrollDiv.scrollHeight - $scrollDivPosition;
+				$scrollDiv.scrollTop = $scrollDiv.scrollHeight - ($scrollDivPosition + 56);
 			}
 
 			$messagesLoading = false;
