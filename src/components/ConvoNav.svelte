@@ -128,7 +128,11 @@
 		finalAmount = 1000;
 	};
 
-	const handleEnter = (e: any) => {
+	const handleEnter = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
 		if (e.key === 'Enter' && finalAmount) {
 			sendPayment();
 		}

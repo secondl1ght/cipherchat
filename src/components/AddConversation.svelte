@@ -16,7 +16,11 @@
 		loading = false;
 	};
 
-	const handleEnter = (e: any) => {
+	const handleEnter = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
 		if (e.key === 'Enter' && pubkey) {
 			add();
 		}

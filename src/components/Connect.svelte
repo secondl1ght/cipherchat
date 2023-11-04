@@ -60,7 +60,11 @@
 		}
 	};
 
-	const handleEnter = (e: any) => {
+	const handleEnter = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
 		if (e.key === 'Enter' && pairingPhrase && password && $firstUpdate && mailbox) {
 			connect();
 		}

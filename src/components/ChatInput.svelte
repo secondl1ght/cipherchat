@@ -90,7 +90,11 @@
 		clearText();
 	};
 
-	const handleKeys = (e: any) => {
+	const handleKeys = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLTextAreaElement;
+		}
+	) => {
 		if (e.key === 'Enter' && !e.shiftKey && message.trim().length && $innerWidth > 640) {
 			e.preventDefault();
 
