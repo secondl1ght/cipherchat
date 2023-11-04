@@ -29,12 +29,25 @@
 		}
 	};
 
-	let tooltip: HTMLSpanElement;
+	let notificationButton: HTMLSpanElement;
+	let settingButton: HTMLButtonElement;
+	let logoutButton: HTMLButtonElement;
 
-	$: tooltip &&
-		notificationsEnabled &&
-		tippy([tooltip], {
-			content: 'To disable notifications update your browser settings.'
+	$: notificationButton &&
+		tippy([notificationButton], {
+			content: notificationsEnabled
+				? 'To disable notifications update your browser settings.'
+				: 'Notifications'
+		});
+
+	$: settingButton &&
+		tippy([settingButton], {
+			content: 'Settings'
+		});
+
+	$: logoutButton &&
+		tippy([logoutButton], {
+			content: 'Logout'
 		});
 </script>
 
@@ -55,20 +68,20 @@
 	</button>
 
 	<div class="space-x-4">
-		<span bind:this={tooltip}>
+		<span bind:this={notificationButton}>
 			<button on:click={allowNotifications} disabled={notificationsEnabled}>
 				<Icon icon={notificationsEnabled ? 'bell' : 'bell-off'} style="text-header" />
 			</button>
 		</span>
 
-		<button on:click={() => ($homeState = 'SETTINGS')}>
+		<button bind:this={settingButton} on:click={() => ($homeState = 'SETTINGS')}>
 			<Icon
 				icon="settings"
 				style="hover:rotate-180 transition-transform text-header duration-500"
 			/>
 		</button>
 
-		<button on:click={() => location.reload()}>
+		<button bind:this={logoutButton} on:click={() => location.reload()}>
 			<Icon icon="lock" style="text-header" />
 		</button>
 	</div>

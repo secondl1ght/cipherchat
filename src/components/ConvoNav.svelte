@@ -14,6 +14,26 @@
 	import { errorToast, shortenAlias, shortenPubkey, successToast } from '$lib/utils';
 	import { Avatar, Banner, Icon } from 'comp';
 	import { tick } from 'svelte';
+	import tippy from 'tippy.js';
+
+	let payButton: HTMLButtonElement;
+	let bookmarkButton: HTMLButtonElement;
+	let blockButton: HTMLButtonElement;
+
+	$: payButton &&
+		tippy([payButton], {
+			content: 'Zap'
+		});
+
+	$: bookmarkButton &&
+		tippy([bookmarkButton], {
+			content: 'Bookmark'
+		});
+
+	$: blockButton &&
+		tippy([blockButton], {
+			content: 'Block'
+		});
 
 	let showPayment = false;
 	const paymentAmounts = [1000, 10000, 100000, 'Custom'];
@@ -180,6 +200,7 @@
 
 				<div class="space-x-4">
 					<button
+						bind:this={payButton}
 						on:click={togglePayment}
 						disabled={disabledPayment.includes($activeConversation)}
 						class:cursor-not-allowed={disabledPayment.includes($activeConversation)}
@@ -188,11 +209,12 @@
 						<Icon icon="cloud-lightning" style="text-header" />
 					</button>
 
-					<button on:click={toggleBookmark}>
+					<button bind:this={bookmarkButton} on:click={toggleBookmark}>
 						<Icon icon="bookmark" style="text-header" />
 					</button>
 
 					<button
+						bind:this={blockButton}
 						on:click={blockNode}
 						disabled={$activeConversation === 'ANON'}
 						class:cursor-not-allowed={$activeConversation === 'ANON'}
@@ -262,3 +284,7 @@
 		{/if}
 	</div>
 {/if}
+
+<style>
+	@import 'tippy.js/dist/tippy.css';
+</style>
