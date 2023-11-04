@@ -172,8 +172,7 @@
 					: !message.self && !$textColorOne
 					? 'text-header'
 					: ''}"
-				on:contextmenu={async (e) => {
-					e.preventDefault();
+				on:contextmenu|preventDefault={async (e) => {
 					// @ts-expect-error - property is added when tippy is created
 					if (contextMenu._tippy) {
 						// @ts-expect-error - property is added when tippy is created
