@@ -89,6 +89,7 @@
 		}
 	});
 
+	// eslint-disable-next-line no-undef
 	let storageUsage: StorageEstimate;
 	let storageUsagePercent: string;
 	let storageBar: HTMLDivElement;
