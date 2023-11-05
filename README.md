@@ -4,6 +4,8 @@
 
 ![image](https://github.com/secondl1ght/cipherchat/assets/85003930/d03f1f2c-a1b8-4c5b-bad9-33e6837bb139)
 
+[secondl1ght@protonmail.com](mailto:secondl1ght@protonmail.com)
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7de7da8a-f171-47c1-8d30-1a4d328bd24a/deploy-status)](https://app.netlify.com/sites/cipherchat/deploys)
 
 ## Tech Stack
@@ -123,6 +125,19 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
         </tr>
     </tbody>
 </table>
+
+## License
+
+[GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0-standalone.html)
+
+This program is free software: you can redistribute it and/or modify it under the terms of the
+GNU Affero General Public License as published by the Free Software Foundation, either version
+3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+**WITHOUT ANY WARRANTY**; without even the implied warranty of
+**MERCHANTABILITY** or **FITNESS FOR A PARTICULAR PURPOSE**. See the
+GNU Affero General Public License for more details.
 
 ---
 
