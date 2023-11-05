@@ -12,10 +12,11 @@
 		textColorTwo,
 		updatesAvailable
 	} from '$lib/store';
-	import { errorToast, infoToast, shortenPubkey, successToast } from '$lib/utils';
+	import { errorToast, infoToast, shortenPubkey, successToast, warningToast } from '$lib/utils';
 	import { Button, Icon, InfoTooltip, Link, RowItem, Version } from 'comp';
 	import { liveQuery } from 'dexie';
 	import { onDestroy } from 'svelte';
+	import tippy from 'tippy.js';
 
 	let resyncLoading = false;
 	let blockedLoading = false;
@@ -87,6 +88,79 @@
 			errorToast('Could not load blocked list.');
 		}
 	});
+
+	let storageUsage: StorageEstimate;
+	let storageUsagePercent: string;
+	let storageBar: HTMLDivElement;
+
+	if (navigator.storage) {
+		navigator.storage
+			.estimate()
+			.then((estimate) => {
+				storageUsage = estimate;
+				storageUsagePercent =
+					estimate.usage && estimate.quota
+						? ((estimate.usage / estimate.quota) * 100).toFixed(2) + '%'
+						: '';
+			})
+			.catch((error) => {
+				console.log(error);
+				errorToast('Could not check storage usage.');
+			});
+	} else {
+		warningToast('Your browser does not support checking storage usage.');
+	}
+
+	$: storageBar &&
+		storageUsage?.usage &&
+		storageUsage?.quota &&
+		tippy([storageBar], {
+			content: `${(storageUsage.usage / 1024 / 1024).toFixed(2)}MB used of ${(
+				storageUsage.quota /
+				1024 /
+				1024
+			).toFixed(2)}MB available.`
+		});
+
+	let storageCheckbox: HTMLInputElement;
+	let persistedStorage: boolean;
+
+	if (navigator.storage) {
+		navigator.storage
+			.persisted()
+			.then((persistent) => {
+				persistedStorage = persistent;
+				storageCheckbox.checked = persistent;
+			})
+			.catch((error) => {
+				console.log(error);
+				errorToast('Could not check storage setting.');
+			});
+	} else {
+		warningToast('Your browser does not support checking persistent storage.');
+	}
+
+	const persistStorage = () => {
+		if (navigator.storage && navigator.storage.persist) {
+			navigator.storage
+				.persist()
+				.then((persistent) => {
+					if (persistent) {
+						successToast('Storage persisted.');
+						persistedStorage = true;
+						storageCheckbox.checked = true;
+					} else {
+						errorToast('Permission denied.');
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+					errorToast('Could not persist storage.');
+				});
+		} else {
+			warningToast('Your browser does not support persistent storage.');
+		}
+	};
 
 	let updatesLoading = false;
 
@@ -280,7 +354,7 @@
 
 <ul class="my-4 space-y-4">
 	<RowItem title="Resync Messages" flex={$innerWidth > 640 ? true : false}>
-		<div class="mt-2 flex items-center text-header md:mt-0">
+		<div class="mt-2 flex items-center text-header sm:mt-0">
 			<InfoTooltip
 				style="mr-3"
 				text="This will clear the local database and logout. Messages will then be resynced from your node the next time you login."
@@ -341,6 +415,50 @@
 			{/if}
 		{/if}
 	</RowItem>
+
+	<RowItem title="Storage Usage" flex={$innerWidth > 640 ? true : false}>
+		<div class="mt-2 flex items-center text-header sm:mt-0">
+			<InfoTooltip
+				style="mr-3"
+				text="This is amount of space your browser has allocated for the app."
+			/>
+			<div
+				bind:this={storageBar}
+				class="w-full select-none bg-button/25 sm:w-40 {storageUsagePercent
+					? 'cursor-help'
+					: 'cursor-wait'}"
+			>
+				<div
+					class="bg-button p-1 text-center transition-all"
+					style:width={storageUsagePercent || '0%'}
+				>
+					{storageUsagePercent || 'Loading...'}
+				</div>
+			</div>
+		</div>
+	</RowItem>
+
+	<RowItem title="Persist Storage" label="persist-storage">
+		<div class="flex items-center">
+			<InfoTooltip
+				style="mr-3 text-header"
+				text="Browsers will sometimes clear stored data without notifying the user. To ensure data stored locally by Cipherchat does not get deleted automatically, you can enable this setting."
+			/>
+			<input
+				bind:this={storageCheckbox}
+				on:click|preventDefault={persistStorage}
+				disabled={persistedStorage === undefined || persistedStorage}
+				type="checkbox"
+				id="persist-storage"
+				name="persist-storage"
+				class="h-5 w-5 accent-button {persistedStorage === undefined
+					? 'cursor-wait'
+					: persistedStorage
+					? 'cursor-default'
+					: 'cursor-pointer'}"
+			/>
+		</div>
+	</RowItem>
 </ul>
 
 <hr class="border-header" />
@@ -376,3 +494,7 @@
 	loading={updatesLoading}
 	loadingText={$updatesAvailable ? 'Refreshing...' : 'Checking...'}
 />
+
+<style>
+	@import 'tippy.js/dist/tippy.css';
+</style>
