@@ -71,7 +71,7 @@
 		<RowItem title="Preimage">
 			<p class="flex items-center space-x-2">
 				<CopyButton text={$message.id} width="16" height="16" />
-				<span class="inline-block">
+				<span class="inline-block lg:break-all">
 					{$message.id}
 				</span>
 			</p>
@@ -81,7 +81,7 @@
 			{#if $message.signature}
 				<p class="flex items-center space-x-2">
 					<CopyButton text={$message.signature} width="16" height="16" />
-					<span class="inline-block">
+					<span class="inline-block lg:break-all">
 						{$message.signature}
 					</span>
 				</p>
