@@ -2,6 +2,7 @@
 	import {
 		chatInputHeight,
 		conversationLoading,
+		messageHistory,
 		messages,
 		messagesLoading,
 		scrollBottom,
@@ -17,6 +18,8 @@
 	>
 		{#if $messagesLoading}
 			<div class="loading-dots mx-auto h-10 w-10 bg-header" />
+		{:else if $messages.length !== $messageHistory && $messages.length > 25}
+			<p class="text-center text-xs font-bold">End of message history. 😸</p>
 		{/if}
 
 		{#each $messages as message}
