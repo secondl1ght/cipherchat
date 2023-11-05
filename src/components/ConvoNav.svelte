@@ -146,8 +146,9 @@
 				<button
 					on:click={toggleConvo}
 					class="order-last lg:order-first"
-					disabled={$activeConversation === 'ANON' || $messagesLoading}
-					class:cursor-not-allowed={$activeConversation === 'ANON'}
+					disabled={($activeConversation === 'ANON' && $convoState !== 'MESSAGE') ||
+						$messagesLoading}
+					class:cursor-not-allowed={$activeConversation === 'ANON' && $convoState !== 'MESSAGE'}
 				>
 					{#if $convoState === 'CHAT'}
 						<Avatar
