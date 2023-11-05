@@ -18,14 +18,19 @@
 		if (!('Notification' in window)) {
 			warningToast('Your browser does not support notifications.');
 		} else {
-			Notification.requestPermission().then((permission) => {
-				if (permission === 'granted') {
-					notificationsEnabled = true;
-					successToast('Notifications enabled.');
-				} else {
-					errorToast('Permission denied.');
-				}
-			});
+			Notification.requestPermission()
+				.then((permission) => {
+					if (permission === 'granted') {
+						notificationsEnabled = true;
+						successToast('Notifications enabled.');
+					} else {
+						errorToast('Permission denied.');
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+					errorToast('Could not enable notifications.');
+				});
 		}
 	};
 
