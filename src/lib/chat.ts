@@ -9,12 +9,15 @@ import { db } from '$lib/db';
 import {
 	activeConversation,
 	appView,
+	conversationLoading,
 	convoState,
 	homeState,
 	lnc as lncStore,
 	LNRPC as lnrpcStore,
 	messageHistory,
+	messagesLoading,
 	scrollDiv,
+	scrollDivPosition,
 	sendLoading,
 	sharePubkey,
 	userPubkey
@@ -132,6 +135,10 @@ const messageNotification = async (
 			notification.addEventListener('click', async () => {
 				if (typeof window !== 'undefined') {
 					if (get(activeConversation) !== pubkey) {
+						conversationLoading.set(true);
+						await tick();
+						messagesLoading.set(false);
+						scrollDivPosition.set(undefined);
 						messageHistory.set(25);
 						activeConversation.set(pubkey);
 						convoState.set('CHAT');
