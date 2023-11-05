@@ -16,6 +16,10 @@
 		style:padding-bottom={`${$chatInputHeight}px`}
 		class="h-full w-full space-y-4 md:px-4 {$conversationLoading ? 'invisible' : 'visible'}"
 	>
+		{#if !$messages.length}
+			<p class="text-center text-xs font-bold">Encrypted messaging over lightning. ⚡</p>
+		{/if}
+
 		{#if $messagesLoading}
 			<div class="loading-dots mx-auto h-10 w-10 bg-header" />
 		{:else if $messages.length !== $messageHistory && $messages.length > 25}
