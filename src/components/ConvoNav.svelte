@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clearUnread, sendMessage } from '$lib/chat';
+	import { sendMessage } from '$lib/chat';
 	import { db } from '$lib/db';
 	import {
 		activeConversation,
@@ -67,8 +67,6 @@
 				db.conversations,
 				async () => await db.conversations.update($activeConversation, { blocked: 'true' })
 			);
-
-			await clearUnread();
 
 			$appView = AppViewState.Home;
 			$activeConversation = '';
@@ -193,10 +191,8 @@
 			<div class="order-first flex justify-between lg:order-last lg:block">
 				<button
 					class="lg:hidden"
-					on:click={async () => {
+					on:click={() => {
 						$appView = AppViewState.Home;
-
-						await clearUnread();
 						$activeConversation = '';
 					}}
 				>

@@ -21,7 +21,6 @@
 		messages,
 		messagesLoading,
 		offline,
-		receiveLoading,
 		scrollDiv,
 		scrollDivPosition,
 		sendLoading,
@@ -203,11 +202,6 @@
 			}
 
 			$sendLoading = false;
-		}
-
-		if ($receiveLoading) {
-			$scrollDiv.scrollTop = $scrollDiv.scrollHeight;
-			$receiveLoading = false;
 		}
 
 		if ($messagesLoading) {

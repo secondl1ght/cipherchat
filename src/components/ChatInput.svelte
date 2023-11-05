@@ -146,6 +146,18 @@
 
 {#if $conversation}
 	{#if $showScrollButton}
+		{#if $conversation.unread}
+			<div
+				style:bottom={`${$chatInputHeight + 60}px`}
+				class="absolute right-10 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-boxFill text-header shadow-lg"
+			>
+				<div class="relative">
+					<div class="absolute -right-2 -top-2 h-3 w-3 animate-bounce rounded-full bg-button" />
+					<Icon icon="message-circle" />
+				</div>
+			</div>
+		{/if}
+
 		<button
 			style:bottom={`${$chatInputHeight + 20}px`}
 			class="absolute right-5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-button text-header shadow-lg"

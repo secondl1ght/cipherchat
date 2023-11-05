@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { clearUnread } from '$lib/chat';
 	import {
 		activeConversation,
 		activeMenu,
@@ -14,14 +15,15 @@
 	import { blur } from 'svelte/transition';
 
 	const handleScroll = () => {
+		if ($scrollDiv.scrollHeight - $scrollDiv.scrollTop - $scrollDiv.clientHeight === 0) {
+			clearUnread();
+		}
+
 		if ($activeMenu) {
 			$activeMenu.hide();
 		}
 
-		if (
-			$scrollDiv.scrollHeight - $scrollDiv.scrollTop - $scrollDiv.clientHeight >
-			$scrollDiv.clientHeight
-		) {
+		if ($scrollDiv.scrollHeight - $scrollDiv.scrollTop - $scrollDiv.clientHeight > 1) {
 			$showScrollButton = true;
 		} else {
 			$showScrollButton = false;

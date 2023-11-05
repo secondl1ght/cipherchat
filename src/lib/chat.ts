@@ -14,7 +14,7 @@ import {
 	lnc as lncStore,
 	LNRPC as lnrpcStore,
 	messageHistory,
-	receiveLoading,
+	scrollDiv,
 	sendLoading,
 	sharePubkey,
 	userPubkey
@@ -32,6 +32,7 @@ import {
 } from '$lib/utils';
 import type LNC from '@lightninglabs/lnc-web';
 import type { lnrpc } from '@lightninglabs/lnc-web';
+import { tick } from 'svelte';
 import { get } from 'svelte/store';
 
 let lnc: LNC;
@@ -128,15 +129,27 @@ const messageNotification = async (
 		try {
 			const notification = new Notification(sendersNode, options);
 
-			notification.addEventListener('click', () => {
+			notification.addEventListener('click', async () => {
 				if (typeof window !== 'undefined') {
-					messageHistory.set(25);
-					activeConversation.set(pubkey);
-					convoState.set('CHAT');
-					homeState.set('HOME');
-					appView.set(AppViewState.Convo);
-					window.focus();
-					clearUnread();
+					if (get(activeConversation) !== pubkey) {
+						messageHistory.set(25);
+						activeConversation.set(pubkey);
+						convoState.set('CHAT');
+						homeState.set('HOME');
+						appView.set(AppViewState.Convo);
+						window.focus();
+						clearUnread();
+					} else {
+						const scroll = get(scrollDiv);
+
+						convoState.set('CHAT');
+						homeState.set('HOME');
+						appView.set(AppViewState.Convo);
+						await tick();
+						scroll.scrollTop = scroll.scrollHeight;
+						window.focus();
+						clearUnread();
+					}
 				}
 			});
 
@@ -261,10 +274,6 @@ export const subscribeInvoices = () => {
 						self
 					};
 
-					if (get(activeConversation) === pubkey) {
-						receiveLoading.set(true);
-					}
-
 					await db.transaction('rw', db.conversations, db.messages, async () => {
 						const conversationExists = await db.conversations.get(pubkey);
 
@@ -345,10 +354,6 @@ export const subscribeInvoices = () => {
 					};
 
 					const showAnon = localStorage.getItem('showAnon') === 'true' ? true : false;
-
-					if (get(activeConversation) === pubkey) {
-						receiveLoading.set(true);
-					}
 
 					await db.transaction('rw', db.conversations, db.messages, async () => {
 						const conversationExists = await db.conversations.get(pubkey);
