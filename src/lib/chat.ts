@@ -124,7 +124,7 @@ const messageNotification = async (
 			badge: '/images/logo.png',
 			body: notificationMessage,
 			tag: pubkey,
-			icon: '/images/logo-bg.png',
+			icon: '/icons/icon.png',
 			vibrate: [210],
 			renotify: true
 		};
