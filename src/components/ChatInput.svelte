@@ -19,6 +19,8 @@
 	import { tick } from 'svelte';
 	import type { Action } from 'svelte/action';
 
+	let inputFocused: boolean;
+
 	const focusInput: Action<HTMLTextAreaElement> = (node) => {
 		if ($innerWidth > 640) {
 			node.focus();
@@ -180,6 +182,7 @@
 			/>
 
 			<button
+				title={inputFocused ? 'Ctrl+Alt+E' : undefined}
 				class="hidden md:block"
 				on:click={() => {
 					lockEmoji = true;
@@ -211,6 +214,8 @@
 				bind:value={message}
 				on:keydown={handleKeys}
 				on:input={textareaAutoSize}
+				on:focusin={() => (inputFocused = true)}
+				on:focusout={() => (inputFocused = false)}
 				class="hide-scroll max-h-16 min-h-[42px] w-full resize-none border border-header bg-borderOut p-2 text-header md:max-h-36"
 			/>
 
