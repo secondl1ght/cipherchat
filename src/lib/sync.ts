@@ -130,6 +130,7 @@ export const initializeInvoices = async () => {
 			);
 			if (!type) return;
 			const timestamp = Number(bufferBase64ToUtf(successfulHTLC.customRecords[TIMESTAMP]));
+			const receivedTime = Number(invoice.settleDate) * 1000000000;
 			const status = LNRPC.Payment_PaymentStatus.SUCCEEDED;
 			const amount = Number(invoice.amtPaidSat);
 			const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
@@ -143,7 +144,7 @@ export const initializeInvoices = async () => {
 				signature,
 				type,
 				timestamp,
-				receivedTime: timestamp,
+				receivedTime,
 				status,
 				amount,
 				failureReason,
@@ -188,6 +189,7 @@ export const initializeInvoices = async () => {
 				if (!messageEncrypted) return;
 				const type = MessageType.Text;
 				const timestamp = Number(invoice.creationDate) * 1000000000;
+				const receivedTime = Number(invoice.settleDate) * 1000000000;
 				const status = LNRPC.Payment_PaymentStatus.SUCCEEDED;
 				const amount = Number(invoice.amtPaidSat);
 				const failureReason = LNRPC.PaymentFailureReason.FAILURE_REASON_NONE;
@@ -200,7 +202,7 @@ export const initializeInvoices = async () => {
 					message: messageEncrypted.content,
 					type,
 					timestamp,
-					receivedTime: timestamp,
+					receivedTime,
 					status,
 					amount,
 					failureReason,
@@ -214,7 +216,7 @@ export const initializeInvoices = async () => {
 			}
 		}
 
-		anonInvoicesFormatted.sort((a, b) => a.timestamp - b.timestamp);
+		anonInvoicesFormatted.sort((a, b) => a.receivedTime - b.receivedTime);
 	}
 
 	return invoicesGrouped;
@@ -356,7 +358,7 @@ export const combineConversations = (
 
 export const finalizeConversations = async (conversations: ConversationConstruction[]) => {
 	for await (const conversation of conversations) {
-		conversation.messages.sort((a, b) => a.timestamp - b.timestamp);
+		conversation.messages.sort((a, b) => a.receivedTime - b.receivedTime);
 
 		try {
 			const nodeInfo = await lnc.lnd.lightning.getNodeInfo({
