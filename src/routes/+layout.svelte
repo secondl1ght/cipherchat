@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 
-	document.querySelector('#loading-splash')?.remove()
+	document.querySelector('#loading-splash')?.remove();
 
 	const options = {
 		pausable: true,
