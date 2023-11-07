@@ -82,7 +82,6 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
         <tr>
             <th>Key</th>
             <th>Value</th>
-            <th>Length (bytes)</th>
             <th>Additional Info</th>
         </tr>
     </thead>
@@ -90,37 +89,31 @@ to [keysend](https://docs.lightning.engineering/lightning-network-tools/lnd/send
         <tr>
             <td>5482373484</td>
             <td>Keysend Preimage</td>
-            <td>32</td>
             <td>Preimage for the invoice.</td>
         </tr>
         <tr>
             <td>34349334</td>
             <td>Message Content</td>
-            <td>Variable</td>
             <td>The chat text, image, or a random UUID if 'PAYMENT' type.</td>
         </tr>
         <tr>
             <td>34349343</td>
             <td>Timestamp</td>
-            <td>8</td>
             <td>When the message was created measured in nanoseconds since the unix epoch.</td>
         </tr>
         <tr>
             <td>34349337</td>
             <td>Signature</td>
-            <td>~71</td>
             <td>The output from signing the: (receiver pubkey + timestamp + message) using the private key counterpart of the public key attached.</td>
         </tr>
         <tr>
             <td>34349339</td>
             <td>Sender's Pubkey</td>
-            <td>33</td>
             <td>This identifies the node associated with the message.</td>
         </tr>
         <tr>
             <td>34349345</td>
             <td>Content Type</td>
-            <td>Variable</td>
             <td>Can be one of: 'TEXT', 'IMAGE', 'PAYMENT'. (Currently images are not yet implemented).</td>
         </tr>
     </tbody>
