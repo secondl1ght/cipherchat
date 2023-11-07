@@ -85,18 +85,7 @@
 </svelte:head>
 
 {#await initializeLNC()}
-	<img
-		style="
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	transform: translateX(-50%) translateY(-50%);
-"
-		src="/images/logo.png"
-		alt="logo"
-	/>
+	<img class="center-fixed" src="/images/logo.png" alt="logo" />
 {:then}
 	{#if $connected}
 		{#if $error.status && $error.message}
