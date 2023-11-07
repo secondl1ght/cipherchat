@@ -808,16 +808,15 @@
 	],
 	"screenshots": [
 		{
-			"src": "/images/screenshots/desktop.webp",
+			"src": "/images/screenshots/0.webp",
 			"sizes": "1920x1411",
 			"type": "image/webp",
 			"form_factor": "wide"
 		},
 		{
-			"src": "/images/screenshots/desktop.webp",
-			"sizes": "1920x1411",
-			"type": "image/webp",
-			"form_factor": "narrow"
+			"src": "/images/screenshots/1.webp",
+			"sizes": "1920x1543",
+			"type": "image/webp"
 		}
 	]
 }
