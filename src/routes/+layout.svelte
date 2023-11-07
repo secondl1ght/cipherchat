@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 
+	document.querySelector('#loading-splash')?.remove()
+
 	const options = {
 		pausable: true,
 		reversed: $innerWidth < 640 ? true : false,
