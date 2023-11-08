@@ -5,11 +5,6 @@
 	let loading = false;
 </script>
 
-<svelte:head>
-	<title>Cipherchat - Error</title>
-	<meta property="twitter:title" content="Cipherchat - Error" />
-</svelte:head>
-
 <PublicLayout heroText="ERROR">
 	<h2
 		class="press-start mb-8 text-center text-xl leading-10 text-header md:text-2xl md:!leading-[50px] lg:mb-16 lg:text-3xl xl:text-4xl"

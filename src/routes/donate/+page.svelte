@@ -7,11 +7,6 @@
 	let showQr = false;
 </script>
 
-<svelte:head>
-	<title>Cipherchat - Donate</title>
-	<meta property="twitter:title" content="Cipherchat - Donate" />
-</svelte:head>
-
 <PublicLayout heroText="DONATE">
 	<div class="space-y-8">
 		<h1 class="press-start text-center leading-8 text-header md:text-xl md:leading-10">

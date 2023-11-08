@@ -2,11 +2,6 @@
 	import { Icon, Link, PublicLayout } from 'comp';
 </script>
 
-<svelte:head>
-	<title>Cipherchat - Privacy</title>
-	<meta property="twitter:title" content="Cipherchat - Privacy" />
-</svelte:head>
-
 <PublicLayout heroText="PRIVACY">
 	<div class="space-y-8">
 		<h1 class="press-start text-center leading-8 text-header md:text-xl md:leading-10">

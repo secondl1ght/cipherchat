@@ -3,11 +3,6 @@
 	import { FaqItem, Link, PublicLayout } from 'comp';
 </script>
 
-<svelte:head>
-	<title>Cipherchat - FAQ</title>
-	<meta property="twitter:title" content="Cipherchat - FAQ" />
-</svelte:head>
-
 <PublicLayout heroText="FAQ">
 	<div class="space-y-8">
 		<h1 class="press-start text-center leading-8 text-header md:text-xl md:leading-10">

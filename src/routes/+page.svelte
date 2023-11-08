@@ -79,11 +79,6 @@
 	};
 </script>
 
-<svelte:head>
-	<title>Cipherchat</title>
-	<meta property="twitter:title" content="Cipherchat" />
-</svelte:head>
-
 {#await initializeLNC()}
 	<img class="center-fixed" src="/images/logo.png" alt="logo" />
 {:then}

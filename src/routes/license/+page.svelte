@@ -4,11 +4,6 @@
 	const year = new Date().getFullYear();
 </script>
 
-<svelte:head>
-	<title>Cipherchat - License</title>
-	<meta property="twitter:title" content="Cipherchat - License" />
-</svelte:head>
-
 <PublicLayout heroText="LICENSE">
 	<div class="space-y-8">
 		<h1 class="press-start text-center leading-8 text-header md:text-xl md:leading-10">
