@@ -50,11 +50,11 @@ export const textColorOne: Writable<string | null> = writable();
 export const textColorTwo: Writable<string | null> = writable();
 
 export const links = readable({
-	github: 'https://github.com/secondl1ght/cipherchat',
-	twitter: '',
-	nostr: '',
-	matrix: '',
-	rumble: ''
+	GitHub: 'https://github.com/secondl1ght/cipherchat',
+	X: '',
+	Nostr: '',
+	Matrix: '',
+	Rumble: ''
 });
 
 export const innerWidth: Writable<number> = writable();

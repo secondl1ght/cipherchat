@@ -322,10 +322,10 @@
 			<FaqItem question="Where can I follow updates?">
 				Updates about the software and project will come from the <Link
 					external
-					href={$links.twitter}
+					href={$links.X}
 					title="Twitter"
-				/> and <Link external href={$links.nostr} title="Nostr" /> accounts. You can subscribe to receive
-				notifications on the <Link external href={$links.github} title="GitHub" /> repo about activity
+				/> and <Link external href={$links.Nostr} title="Nostr" /> accounts. You can subscribe to receive
+				notifications on the <Link external href={$links.GitHub} title="GitHub" /> repo about activity
 				such as new releases.
 			</FaqItem>
 			<FaqItem question="Where can I learn more?">
@@ -335,7 +335,7 @@
 					title="here"
 				/>. I will also release some tutorial videos in the future on <Link
 					external
-					href={$links.rumble}
+					href={$links.Rumble}
 					title="Rumble"
 				/>.
 			</FaqItem>
@@ -343,7 +343,7 @@
 				If you are having issues getting started using Cipherchat or just want to find other users
 				to connect with you can join our public <Link
 					external
-					href={$links.matrix}
+					href={$links.Matrix}
 					title="Matrix"
 				/>
 				room.
