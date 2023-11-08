@@ -169,15 +169,6 @@ const messageNotification = async (
 				},
 				{ once: true }
 			);
-
-			const body = document.querySelector('body');
-			body?.addEventListener(
-				'mouseover',
-				() => {
-					notification.close();
-				},
-				{ once: true }
-			);
 		} catch (error) {
 			console.log(error);
 
@@ -193,15 +184,6 @@ const messageNotification = async (
 							if (document.visibilityState === 'visible') {
 								registration.getNotifications().then((n) => n.forEach((i) => i.close()));
 							}
-						},
-						{ once: true }
-					);
-
-					const body = document.querySelector('body');
-					body?.addEventListener(
-						'mouseover',
-						() => {
-							registration.getNotifications().then((n) => n.forEach((i) => i.close()));
 						},
 						{ once: true }
 					);
