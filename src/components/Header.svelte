@@ -8,12 +8,12 @@
 		<Link
 			href="/"
 			title="Home"
-			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/' ? 'text-button' : ''}"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/' ? '!text-button' : ''}"
 		/>
 		<Link
 			href="/faq"
 			title="FAQ"
-			style="text-lg md:text-xl lg:text-2xl  {$page.route.id === '/faq' ? 'text-button' : ''}"
+			style="text-lg md:text-xl lg:text-2xl  {$page.route.id === '/faq' ? '!text-button' : ''}"
 		/>
 	</nav>
 </header>

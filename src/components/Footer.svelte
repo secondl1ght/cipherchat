@@ -14,17 +14,17 @@
 		<Link
 			href="/privacy"
 			title="Privacy"
-			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/privacy' ? 'text-button' : ''}"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/privacy' ? '!text-button' : ''}"
 		/>
 		<Link
 			href="/license"
 			title="License"
-			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/license' ? 'text-button' : ''}"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/license' ? '!text-button' : ''}"
 		/>
 		<Link
 			href="/donate"
 			title="Donate"
-			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/donate' ? 'text-button' : ''}"
+			style="text-lg md:text-xl lg:text-2xl {$page.route.id === '/donate' ? '!text-button' : ''}"
 		/>
 	</nav>
 
