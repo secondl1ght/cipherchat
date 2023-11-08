@@ -47,7 +47,7 @@ If you only want to use Cipherchat on your local machine you can follow these st
 4. run `yarn build` to build the application
 5. run `yarn preview` and the app will be served on `localhost:4173`
 
-To run in development mode you can skip steps 4 & 5 and instead run `yarn dev`.
+To run in development mode you can skip steps 4 & 5 and instead run `yarn dev` which will serve the app on `localhost:5173`. Note that the Service Worker will be unable to register in dev mode if you are using Firefox because that browser does not support [modules](https://web.dev/articles/es-modules-in-sw).
 
 ### Deploy Globally
 
