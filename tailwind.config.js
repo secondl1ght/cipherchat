@@ -34,6 +34,9 @@ export default {
 				gradientOne: '#F5F7FA',
 				gradientTwo: '#C3CFE2',
 				banner: '#35488e'
+			},
+			screens: {
+				'3xl': '1792px'
 			}
 		}
 	},

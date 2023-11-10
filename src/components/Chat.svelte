@@ -322,12 +322,12 @@
 {:else}
 	<div class="h-[100dvh] w-full overflow-hidden lg:flex">
 		{#if $appView === AppViewState.Home || $innerWidth > 1024}
-			<div in:blur={{ amount: 10 }} class="h-full w-full lg:w-1/3 lg:min-w-[396px] lg:max-w-xl">
+			<div in:blur={{ amount: 10 }} class="h-full w-full lg:w-2/5 xl:w-1/3 3xl:w-1/4">
 				<HomeView />
 			</div>
 		{/if}
 		{#if $appView === AppViewState.Convo || $innerWidth > 1024}
-			<div in:blur={{ amount: 10 }} class="h-full w-full">
+			<div in:blur={{ amount: 10 }} class="h-full w-full lg:w-3/5 xl:w-2/3 3xl:w-3/4">
 				<ConvoView />
 			</div>
 		{/if}
