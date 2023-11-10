@@ -46,6 +46,9 @@
 		'03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'
 	];
 
+	const hidePayment = () => (showPayment = false);
+	$: disabledPayment.includes($activeConversation) && hidePayment();
+
 	const toggleConvo = async () => {
 		if ($convoState === 'CHAT') {
 			$scrollDivPosition = $scrollDiv.scrollTop;
@@ -279,7 +282,11 @@
 			</div>
 		{/if}
 
-		{#if $activeConversation === '03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'}
+		{#if $activeConversation === 'ANON'}
+			<Banner
+				text="Messages received from nodes that have not revealed their identity or could not be verified are shown here. You are not able to respond to these messages. 🥷"
+			/>
+		{:else if $activeConversation === '03006fcf3312dae8d068ea297f58e2bd00ec1ffe214b793eda46966b6294a53ce6'}
 			<Banner
 				text="Messages sent to this node will be displayed publicly on the Amboss billboard. 👾"
 			/>
