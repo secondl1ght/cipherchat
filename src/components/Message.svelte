@@ -160,19 +160,18 @@
 		<div class="flex {message.self ? 'justify-end' : ''}">
 			<button
 				bind:this={contextMenu}
-				style:background-color={message.self ? $bubbleColorTwo : $bubbleColorOne}
-				style:color={message.self ? $textColorTwo : $textColorOne}
+				style:background-color={message.self
+					? $bubbleColorTwo || '#D9E7FA'
+					: $bubbleColorOne || '#23273C'}
+				style:color={message.self ? $textColorTwo || '#0C0E16' : $textColorOne || '#D9E7FA'}
+				style:border={message.type === MessageType.Payment
+					? message.self
+						? `2px dashed ${$textColorTwo || '#0C0E16'}`
+						: `2px dashed ${$textColorOne || '#D9E7FA'}`
+					: null}
 				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left md:max-w-[75%] md:cursor-auto md:select-text {message.type ===
 					MessageType.Payment || message.hide
 					? 'flex items-center space-x-2'
-					: ''} {message.self && !$bubbleColorTwo
-					? 'bg-header'
-					: !message.self && !$bubbleColorOne
-					? 'bg-boxFill'
-					: ''} {message.self && !$textColorTwo
-					? 'text-borderIn'
-					: !message.self && !$textColorOne
-					? 'text-header'
 					: ''}"
 				on:contextmenu|preventDefault={async (e) => {
 					// @ts-expect-error - property is added when tippy is created
