@@ -164,14 +164,21 @@
 					? $bubbleColorTwo || '#D9E7FA'
 					: $bubbleColorOne || '#23273C'}
 				style:color={message.self ? $textColorTwo || '#0C0E16' : $textColorOne || '#D9E7FA'}
-				style:border={message.type === MessageType.Payment
+				style:border={message.type === MessageType.Payment || message.hide
 					? message.self
 						? `2px dashed ${$textColorTwo || '#0C0E16'}`
 						: `2px dashed ${$textColorOne || '#D9E7FA'}`
 					: null}
+				class:chat-bubble={message.type === MessageType.Text && !message.hide}
+				class:chat-bubble-left={message.type === MessageType.Text && !message.hide && !message.self}
+				class:chat-bubble-right={message.type === MessageType.Text && !message.hide && message.self}
 				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left sm:cursor-auto sm:select-text md:max-w-[75%] {message.type ===
 					MessageType.Payment || message.hide
 					? 'flex items-center space-x-2'
+					: ''} {message.type === MessageType.Text && !message.hide
+					? message.self
+						? 'rounded-br-none'
+						: 'rounded-bl-none'
 					: ''}"
 				on:contextmenu|preventDefault={async (e) => {
 					// @ts-expect-error - property is added when tippy is created
@@ -271,4 +278,31 @@
 <style>
 	@import 'tippy.js/dist/tippy.css';
 	@import 'tippy.js/animations/shift-away.css';
+
+	.chat-bubble {
+		position: relative;
+	}
+
+	.chat-bubble::before {
+		mask-size: contain;
+		mask-repeat: no-repeat;
+		mask-position: center;
+
+		position: absolute;
+		bottom: 0;
+		height: 0.75rem;
+		width: 0.75rem;
+		background-color: inherit;
+		content: '';
+	}
+
+	.chat-bubble-left::before {
+		mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMycgaGVpZ2h0PSczJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxwYXRoIGZpbGw9J2JsYWNrJyBkPSdtIDAgMyBMIDMgMyBMIDMgMCBDIDMgMSAxIDMgMCAzJy8+PC9zdmc+);
+		left: -0.75rem;
+	}
+
+	.chat-bubble-right::before {
+		mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMycgaGVpZ2h0PSczJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxwYXRoIGZpbGw9J2JsYWNrJyBkPSdtIDAgMyBMIDEgMyBMIDMgMyBDIDIgMyAwIDEgMCAwJy8+PC9zdmc+);
+		right: -0.75rem;
+	}
 </style>

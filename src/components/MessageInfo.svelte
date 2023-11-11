@@ -155,7 +155,7 @@
 				? $bubbleColorTwo || '#D9E7FA'
 				: $bubbleColorOne || '#23273C'}
 			style:color={$message.self ? $textColorTwo || '#0C0E16' : $textColorOne || '#D9E7FA'}
-			style:border={$message.type === MessageType.Payment
+			style:border={$message.type === MessageType.Payment || $message.hide
 				? $message.self
 					? `2px dashed ${$textColorTwo || '#0C0E16'}`
 					: `2px dashed ${$textColorOne || '#D9E7FA'}`
