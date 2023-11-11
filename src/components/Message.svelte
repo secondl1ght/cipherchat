@@ -169,7 +169,7 @@
 						? `2px dashed ${$textColorTwo || '#0C0E16'}`
 						: `2px dashed ${$textColorOne || '#D9E7FA'}`
 					: null}
-				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left md:max-w-[75%] md:cursor-auto md:select-text {message.type ===
+				class="max-w-[90%] cursor-default select-none whitespace-pre-line rounded p-2 text-left sm:cursor-auto sm:select-text md:max-w-[75%] {message.type ===
 					MessageType.Payment || message.hide
 					? 'flex items-center space-x-2'
 					: ''}"
