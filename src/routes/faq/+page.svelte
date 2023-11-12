@@ -335,10 +335,6 @@
 					external
 					href="https://secondl1ght.site/blog/cipherchat"
 					title="here"
-				/>. I will also release some tutorial videos in the future on <Link
-					external
-					href={$links.Rumble}
-					title="Rumble"
 				/>.
 			</FaqItem>
 			<FaqItem question="I'm stuck, can I get support?">

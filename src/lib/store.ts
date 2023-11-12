@@ -52,8 +52,7 @@ export const textColorTwo: Writable<string | null> = writable();
 export const links = readable({
 	GitHub: 'https://github.com/secondl1ght/cipherchat',
 	X: '',
-	Telegram: '',
-	Rumble: ''
+	Telegram: ''
 });
 
 export const innerWidth: Writable<number> = writable();
