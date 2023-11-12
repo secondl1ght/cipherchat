@@ -37,7 +37,6 @@
 						<li>Pubkey</li>
 						<li>Payments</li>
 						<li>Balances</li>
-						<li>Forwards</li>
 						<li>Private node details</li>
 					</ul>
 				</div>
@@ -48,7 +47,6 @@
 					</p>
 					<ul class="list-inside list-disc">
 						<li>Your IP address</li>
-						<li>Size of data packets</li>
 					</ul>
 				</div>
 			</div>
