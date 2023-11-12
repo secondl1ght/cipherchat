@@ -2,7 +2,7 @@
 
 **Encrypted messaging over the bitcoin lightning network.**
 
-![image](https://github.com/secondl1ght/cipherchat/assets/85003930/d03f1f2c-a1b8-4c5b-bad9-33e6837bb139)
+![image](https://cipherchat.app/agplv3.png)
 
 [secondl1ght@protonmail.com](mailto:secondl1ght@protonmail.com)
 
