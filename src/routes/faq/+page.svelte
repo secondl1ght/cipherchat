@@ -345,8 +345,8 @@
 				If you are having issues getting started using Cipherchat or just want to find other users
 				to connect with you can join our public <Link
 					external
-					href={$links.Matrix}
-					title="Matrix"
+					href={$links.Telegram}
+					title="Telegram"
 				/>
 				room.
 			</FaqItem>
