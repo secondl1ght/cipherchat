@@ -323,10 +323,12 @@
 				Updates about the software and project will come from the <Link
 					external
 					href={$links.X}
-					title="Twitter"
-				/> and <Link external href={$links.Nostr} title="Nostr" /> accounts. You can subscribe to receive
-				notifications on the <Link external href={$links.GitHub} title="GitHub" /> repo about activity
-				such as new releases.
+					title="X"
+				/> account. You can also subscribe to receive notifications on the <Link
+					external
+					href={$links.GitHub}
+					title="GitHub"
+				/> repo about activity such as new releases.
 			</FaqItem>
 			<FaqItem question="Where can I learn more?">
 				I wrote a blog post for the launch of Cipherchat that you can read <Link
