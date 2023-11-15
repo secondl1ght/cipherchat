@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { clearBadge } from '$lib/chat';
-	import { generateKey, resetKey } from '$lib/crypto';
+	import { generateKey } from '$lib/crypto';
 	import { db } from '$lib/db';
-	import { connected, firstUpdate, lnc, paired } from '$lib/store';
-	import { errorToast, monthAgo, shortenPubkey, successToast } from '$lib/utils';
+	import { connected, firstUpdate, lnc } from '$lib/store';
+	import { errorToast, shortenPubkey } from '$lib/utils';
 	import { Button, Icon, MessageHistory } from 'comp';
 
 	let loading = false;
+	let clearing = false;
 	let password = '';
 	let showPass = false;
 
@@ -47,22 +48,20 @@
 
 	const clear = async () => {
 		try {
+			clearing = true;
 			loading = true;
 
 			await db.delete();
 			localStorage.clear();
 			await clearBadge();
 			$lnc.credentials.clear();
-			resetKey();
-			$firstUpdate = monthAgo();
 
-			$paired = false;
-			successToast('Node credentials cleared.');
+			location.reload();
 		} catch (error) {
 			console.log(error);
 			errorToast('Clear connection failed, please try again.');
-		} finally {
 			loading = false;
+			clearing = false;
 		}
 	};
 </script>
@@ -127,7 +126,7 @@
 		title="Login"
 		disabled={loading || !password || !$firstUpdate}
 		{loading}
-		loadingText="Logging in..."
+		loadingText={clearing ? 'Clearing...' : 'Logging in...'}
 	/>
 
 	<div class="flex justify-center">
