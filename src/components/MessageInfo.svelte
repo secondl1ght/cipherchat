@@ -101,10 +101,10 @@
 				class={$message.status === $LNRPC.Payment_PaymentStatus.SUCCEEDED
 					? 'text-success'
 					: $message.status === $LNRPC.Payment_PaymentStatus.IN_FLIGHT
-					? 'text-warning'
-					: $message.status === $LNRPC.Payment_PaymentStatus.FAILED
-					? 'text-error'
-					: ''}
+						? 'text-warning'
+						: $message.status === $LNRPC.Payment_PaymentStatus.FAILED
+							? 'text-error'
+							: ''}
 			>
 				{$message.status.replaceAll('_', ' ')}
 			</p>

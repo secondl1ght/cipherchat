@@ -176,18 +176,18 @@
 						$innerWidth > 1536
 							? 80
 							: $innerWidth > 1280
-							? 60
-							: $innerWidth > 1024
-							? 35
-							: $innerWidth > 768
-							? 70
-							: $innerWidth > 640
-							? 60
-							: $innerWidth > 475
-							? 40
-							: $innerWidth > 300
-							? 20
-							: 17
+								? 60
+								: $innerWidth > 1024
+									? 35
+									: $innerWidth > 768
+										? 70
+										: $innerWidth > 640
+											? 60
+											: $innerWidth > 475
+												? 40
+												: $innerWidth > 300
+													? 20
+													: 17
 					) || shortenPubkey($conversation.pubkey)}
 				</h1>
 			</div>

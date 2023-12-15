@@ -366,8 +366,8 @@
 				class="transition-colors hover:text-button {resyncLoading
 					? 'cursor-wait'
 					: blockedLoading
-					? 'cursor-not-allowed'
-					: 'cursor-pointer'}">Resync</button
+						? 'cursor-not-allowed'
+						: 'cursor-pointer'}">Resync</button
 			>
 		</div>
 	</RowItem>
@@ -402,8 +402,8 @@
 								class="text-header transition-colors hover:text-button {blockedLoading
 									? 'cursor-wait'
 									: resyncLoading
-									? 'cursor-not-allowed'
-									: 'cursor-pointer'}">Unblock</button
+										? 'cursor-not-allowed'
+										: 'cursor-pointer'}">Unblock</button
 							>
 						</li>
 					{/each}
@@ -455,8 +455,8 @@
 				class="h-5 w-5 accent-button {persistedStorage === undefined
 					? 'cursor-wait'
 					: persistedStorage
-					? 'cursor-default'
-					: 'cursor-pointer'}"
+						? 'cursor-default'
+						: 'cursor-pointer'}"
 			/>
 		</div>
 	</RowItem>

@@ -237,8 +237,8 @@
 				class="cursor-default text-sm md:text-base {charsRemaining <= 10
 					? 'text-error'
 					: charsRemaining <= 50
-					? 'text-warning'
-					: 'text-success'}"
+						? 'text-warning'
+						: 'text-success'}"
 			>
 				{charsRemaining}
 			</span>

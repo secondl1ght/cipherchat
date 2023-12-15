@@ -119,7 +119,7 @@
 					{nodeInfo?.node?.lastUpdate !== undefined
 						? new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'short' }).format(
 								new Date(nodeInfo.node.lastUpdate * 1000)
-						  )
+							)
 						: '-'}
 				</p>
 			</RowItem>
