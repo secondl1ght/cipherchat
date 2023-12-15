@@ -91,7 +91,3 @@
 		</button>
 	</div>
 </nav>
-
-<style>
-	@import 'tippy.js/dist/tippy.css';
-</style>

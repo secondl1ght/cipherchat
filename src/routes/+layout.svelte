@@ -2,6 +2,8 @@
 	import { innerWidth } from '$lib/store';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
+	import 'tippy.js/animations/shift-away.css';
+	import 'tippy.js/dist/tippy.css';
 	import '../app.css';
 
 	document.querySelector('#loading-splash')?.remove();

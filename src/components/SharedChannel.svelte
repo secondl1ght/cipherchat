@@ -110,8 +110,6 @@
 </div>
 
 <style>
-	@import 'tippy.js/dist/tippy.css';
-
 	.sats-label {
 		position: absolute;
 		top: 50%;

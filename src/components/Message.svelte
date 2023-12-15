@@ -276,9 +276,6 @@
 </div>
 
 <style>
-	@import 'tippy.js/dist/tippy.css';
-	@import 'tippy.js/animations/shift-away.css';
-
 	.chat-bubble {
 		position: relative;
 	}

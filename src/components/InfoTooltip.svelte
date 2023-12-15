@@ -16,7 +16,3 @@
 <span class="{style} cursor-help" bind:this={infoTooltip}>
 	<Icon icon="info" />
 </span>
-
-<style>
-	@import 'tippy.js/dist/tippy.css';
-</style>

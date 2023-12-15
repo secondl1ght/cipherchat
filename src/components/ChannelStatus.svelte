@@ -20,7 +20,3 @@
 	<p class="h-2.5 w-2.5 rounded-full {color}" />
 	<p>{channels ?? '-'}</p>
 </div>
-
-<style>
-	@import 'tippy.js/dist/tippy.css';
-</style>

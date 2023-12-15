@@ -293,7 +293,3 @@
 		{/if}
 	</div>
 {/if}
-
-<style>
-	@import 'tippy.js/dist/tippy.css';
-</style>

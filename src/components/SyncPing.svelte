@@ -33,7 +33,3 @@
 
 	<Icon icon={type === 'GRAPH' ? 'zap' : 'link'} style="text-header" width="20" height="20" />
 </div>
-
-<style>
-	@import 'tippy.js/dist/tippy.css';
-</style>

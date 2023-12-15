@@ -495,7 +495,3 @@
 	loading={updatesLoading}
 	loadingText={$updatesAvailable ? 'Refreshing...' : 'Checking...'}
 />
-
-<style>
-	@import 'tippy.js/dist/tippy.css';
-</style>
