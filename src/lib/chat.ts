@@ -584,8 +584,17 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 		signature = await lnc.lnd.lightning.signMessage({
 			msg: bufferUtfToBase64(recipient + timestamp.toString() + message)
 		});
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error);
+
+		if (
+			error?.message &&
+			error.message ===
+				'rpc error: code = Unknown desc = lnd macaroon validation failed: rpc error: code = InvalidArgument desc = permission denied'
+		) {
+			errorToast('Permission to sign message was denied.');
+		}
+
 		try {
 			updateMessage('SIGNATURE');
 		} catch (error) {
@@ -642,6 +651,14 @@ export const sendMessage = async (recipient: string, message: string, amount?: n
 				if (err.message === 'EOF') return;
 
 				console.log(err);
+
+				if (
+					err.message ===
+					'rpc error: code = Unknown desc = lnd macaroon validation failed: rpc error: code = InvalidArgument desc = permission denied'
+				) {
+					errorToast('Permission to send message was denied.');
+				}
+
 				try {
 					updateMessage('ERROR');
 				} catch (error) {
