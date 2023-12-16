@@ -12,37 +12,34 @@
 	src: url('/fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf') format('truetype');
 }
 
-html {
-	font-family: Roboto, sans-serif;
-	font-size: 16px;
-	color: #6e7493;
+@layer base {
+	html {
+		font-family: Roboto, sans-serif;
+		@apply text-base text-body;
+	}
+
+	::selection {
+		@apply bg-button text-header;
+	}
 }
 
-.press-start {
-	font-family: PressStart, sans-serif;
-}
+@layer utilities {
+	.press-start {
+		font-family: PressStart, sans-serif;
+	}
 
-::selection {
-	background-color: #5a7fff;
-	color: #d9e7fa;
-}
+	.center-fixed {
+		@apply fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+	}
 
-.center-fixed {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	transform: translateX(-50%) translateY(-50%);
-}
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.hide-scroll::-webkit-scrollbar {
+		@apply hidden;
+	}
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.hide-scroll::-webkit-scrollbar {
-	display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.hide-scroll {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.hide-scroll {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
 }
