@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { PUBLIC_VERSION } from '$env/static/public';
 	import { clearBadge } from '$lib/chat';
 	import { db } from '$lib/db';
@@ -17,6 +18,8 @@
 	import { liveQuery } from 'dexie';
 	import { onDestroy } from 'svelte';
 	import tippy from 'tippy.js';
+
+	const production = $page.url.host === 'cipherchat.app';
 
 	let resyncLoading = false;
 	let blockedLoading = false;
@@ -482,16 +485,21 @@
 			external
 			href="https://github.com/secondl1ght/cipherchat/releases/latest"
 			title="released"
-		/>! Refresh the page to download and install the updates. Then close all running instances of
-		the app and relaunch to complete the update. 🚀
+		/>!
+		{#if production}
+			<span>
+				Refresh the page to download and install the updates. Then close all running instances of
+				the app and relaunch to complete the update. 🚀
+			</span>
+		{/if}
 	</p>
 {/if}
 
 <Button
 	click={checkForUpdates}
 	style="!w-full !h-12"
-	title={$updatesAvailable ? 'Refresh' : 'Check for Updates'}
-	disabled={updatesLoading}
+	title={$updatesAvailable && production ? 'Refresh' : 'Check for Updates'}
+	disabled={updatesLoading || ($updatesAvailable && !production)}
 	loading={updatesLoading}
 	loadingText={$updatesAvailable ? 'Refreshing...' : 'Checking...'}
 />
