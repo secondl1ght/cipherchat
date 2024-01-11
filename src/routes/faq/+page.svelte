@@ -226,7 +226,8 @@
 				/> on the Cipherchat GitHub repository for instructions.
 			</FaqItem>
 			<FaqItem question="Can I install Cipherchat easily on myNode, Embassy, Umbrel etc.?">
-				I plan to release Cipherchat for these plug-and-play app stores.
+				Cipherchat is available on Umbrel and I plan to make releases for other plug-and-play app
+				stores.
 			</FaqItem>
 			<FaqItem question="How can I run my own LNC Mailbox?">
 				Instructions on running your own relay proxy server can be found in the <Link

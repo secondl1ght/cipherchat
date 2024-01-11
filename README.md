@@ -65,7 +65,7 @@ I plan on releasing Cipherchat on these plug-and-play node app stores:
 
 - [ ] myNode
 - [ ] Start9 Embassy
-- [ ] Umbrel
+- [x] Umbrel
 
 If there are other app stores you would like to see Cipherchat, please let me know!
 
