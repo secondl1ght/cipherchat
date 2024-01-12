@@ -142,14 +142,14 @@
 		<Button
 			click={() => (start = true)}
 			title="Get started"
-			disabled={!$serviceWorkerAvailable ||
+			disabled={(!$serviceWorkerAvailable && !process.env.UMBREL) ||
 				!$webAssemblyAvailable ||
 				!$localStorageAvailable ||
 				!$indexedDBAvailable ||
 				!$lnc}
 		/>
 
-		{#if !$serviceWorkerAvailable}
+		{#if !$serviceWorkerAvailable && !process.env.UMBREL}
 			<Warning
 				text="ServiceWorker is required to run Cipherchat. Enable this feature in your browser settings to continue."
 			/>

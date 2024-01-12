@@ -53,7 +53,7 @@
 		}
 
 		if (
-			$serviceWorkerAvailable &&
+			($serviceWorkerAvailable || process.env.UMBREL) &&
 			$webAssemblyAvailable &&
 			$localStorageAvailable &&
 			$indexedDBAvailable
