@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_ADAPTER_NODE } from '$env/static/public';
 	import { generateKey } from '$lib/crypto';
 	import {
 		connected,
@@ -142,14 +143,14 @@
 		<Button
 			click={() => (start = true)}
 			title="Get started"
-			disabled={(!$serviceWorkerAvailable && !process.env.UMBREL) ||
+			disabled={(!$serviceWorkerAvailable && !PUBLIC_ADAPTER_NODE) ||
 				!$webAssemblyAvailable ||
 				!$localStorageAvailable ||
 				!$indexedDBAvailable ||
 				!$lnc}
 		/>
 
-		{#if !$serviceWorkerAvailable && !process.env.UMBREL}
+		{#if !$serviceWorkerAvailable && !PUBLIC_ADAPTER_NODE}
 			<Warning
 				text="ServiceWorker is required to run Cipherchat. Enable this feature in your browser settings to continue."
 			/>

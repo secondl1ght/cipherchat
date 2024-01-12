@@ -3,7 +3,7 @@ FROM node:lts-slim AS builder
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn
-ENV ADAPTER_NODE=true
+ENV PUBLIC_ADAPTER_NODE=true
 COPY . .
 RUN yarn build
 RUN yarn --prod

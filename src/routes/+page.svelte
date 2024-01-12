@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_WASM_VERSION } from '$env/static/public';
+	import { PUBLIC_ADAPTER_NODE, PUBLIC_WASM_VERSION } from '$env/static/public';
 	import {
 		LNRPC,
 		bubbleColorOne,
@@ -53,7 +53,7 @@
 		}
 
 		if (
-			($serviceWorkerAvailable || process.env.UMBREL) &&
+			($serviceWorkerAvailable || PUBLIC_ADAPTER_NODE) &&
 			$webAssemblyAvailable &&
 			$localStorageAvailable &&
 			$indexedDBAvailable
