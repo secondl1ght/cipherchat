@@ -94,7 +94,9 @@
 						<strong>Lightning Node Connect</strong> tab in the menu.
 					</li>
 					<li>
-						Next you <strong>create a new session</strong>. You must use the <strong>Admin</strong>
+						Next you <strong>create a new session</strong>. You must either use the
+						<strong>Keysend Messenger</strong>
+						(preferred) or <strong>Admin</strong>
 						permissions so that Cipherchat is able to <strong>Send</strong> and
 						<strong>Receive</strong>
 						payments, <strong>Sign</strong> and <strong>Verify</strong> messages, and
@@ -103,8 +105,8 @@
 					<li>
 						If you would like to use your own LNC Mailbox instead of the default Lightning Labs
 						option you will need to select <strong>Custom</strong> permissions from the dropdown
-						menu. Then choose <strong>Admin</strong> and click <strong>Advanced Options</strong> to
-						enter the domain and port. For example:
+						menu. Then click <strong>Advanced Options</strong> to enter the domain and port. For
+						example:
 						<strong class="bg-borderIn">cipherchatmailbox.net:443</strong>.
 					</li>
 					<li>
